@@ -12,6 +12,7 @@
 package VC.Scanner;
 
 import VC.ErrorReporter;
+import java.util.Optional;
 
 public final class Scanner {
 
@@ -20,6 +21,7 @@ public final class Scanner {
     private boolean debug;
 
     private StringBuilder currentSpelling;
+    private int spellingLengthBonus;
     private char currentChar;
     private SourcePosition sourcePos;
 
@@ -35,6 +37,7 @@ public final class Scanner {
         // Initiaise currentChar for the starter code.  Change it if necessary for your full implementation
         currentChar = sourceFile.getNextChar();
         currentSpelling = new StringBuilder();
+        spellingLengthBonus = 0;
 
         // Initialise your counters for counting line and column numbers here
         column = 1;
@@ -70,13 +73,38 @@ public final class Scanner {
         currentChar = sourceFile.getNextChar();
     }
 
+        private void accept_noSpellingAppend() {
+        switch (currentChar) {
+            case '\r' -> {
+                if (sourceFile.inspectChar(1) == '\n') {
+                    sourceFile.getNextChar(); // consume & ignore next char if '\r\n' found
+                }
+                line += 1;
+                column = 1;
+            }
+            case '\n' -> {
+                line += 1;
+                column = 1;
+            }
+            default ->
+                column += 1;
+        }
+
+        currentChar = sourceFile.getNextChar();
+    }
+
+    private void reject() {
+        column += 1;
+        currentChar = sourceFile.getNextChar();
+    }
+
     private boolean isFraction() {
         return currentChar == '.' && Character.isDigit(inspectChar(1));
     }
 
     private boolean isExponent() {
         char nextChar = inspectChar(1);
-        return (currentChar == 'E' || currentChar == 'e') && (nextChar == '+' || nextChar == '-' || Character.isDigit(nextChar));
+        return (currentChar == 'E' || currentChar == 'e') && (Character.isDigit(nextChar) || ((nextChar == '+' || nextChar == '-') && Character.isDigit(inspectChar(2))));
     }
 
     // inspectChar returns the n-th character after currentChar in the input stream.  If there are fewer than nthChar characters between currentChar 
@@ -268,10 +296,52 @@ public final class Scanner {
         } else if (currentChar == '\"') {
             accept();
             while (true) {
-                if (currentChar == '\"') {
+                if (currentChar == '\n' || currentChar == '\r') {
+                    // strings do not span multiple lines
+                    currentSpelling = new StringBuilder(currentSpelling.toString().replaceFirst("^\"", "")); // remove first and last " 
+                    errorReporter.reportError("%: unterminated string", currentSpelling.toString(), sourcePos);
+                    accept_noSpellingAppend();
+                    return Token.STRINGLITERAL;
+                } else if (currentChar == '\\') {
+                    char nextChar = inspectChar(1);
+                    Optional<Character> special = switch (nextChar) {
+                        case 'b' ->
+                            Optional.of('\b');
+                        case 'f' ->
+                            Optional.of('\f');
+                        case 'n' ->
+                            Optional.of('\n');
+                        case 'r' ->
+                            Optional.of('\r');
+                        case 't' ->
+                            Optional.of('\t');
+                        case '\'' ->
+                            Optional.of('\'');
+                        case '\"' ->
+                            Optional.of('\"');
+                        case '\\' ->
+                            Optional.of('\\');
+                        default ->
+                            Optional.empty();
+                    };
+
+                    // convert to desired special character and accept without accepting
+                    if (special.isPresent()) {
+                        currentSpelling.append(special.get());
+                        reject();
+                        reject();
+                        spellingLengthBonus += 1;
+                    } else {
+                        errorReporter.reportError("%: illegal escape character", "\\" + nextChar, sourcePos);
+                        accept();
+                        accept();
+                    }
+                } else if (currentChar == '\"') {
                     break;
+                } else {
+                    accept();
                 }
-                accept();
+
             }
             accept();
             currentSpelling = new StringBuilder(currentSpelling.toString().replaceFirst("^\"", "").replaceFirst("\"$", "")); // remove first and last " 
@@ -317,6 +387,14 @@ public final class Scanner {
 
     private void skipSpaceAndComments() {
         while (Character.isWhitespace(currentChar) || (currentChar == '/' && inspectChar(1) == '*') || (currentChar == '/' && inspectChar(1) == '/')) {
+            // skip tab but make sure it multiple of 8 aligned (A tab size of 8 characters is assumed)
+            if (currentChar == '\t') {
+                accept();
+                for (int i = column; i % 8 != 0; i++) {
+                    column++;
+                }
+            }
+
             // skipWhiteSpace
             while (Character.isWhitespace(currentChar)) {
                 accept();
@@ -366,6 +444,7 @@ public final class Scanner {
         // Skip white space and comments and reset thingos
         skipSpaceAndComments();
         currentSpelling = new StringBuilder();
+        spellingLengthBonus = 0;
         sourcePos = new SourcePosition();
 
         kind = nextToken();
@@ -374,7 +453,7 @@ public final class Scanner {
             sourcePos = new SourcePosition(line, line, column, column);
         } else if (kind == Token.STRINGLITERAL) {
             // position includes the quotes ever though spelling removes them
-            sourcePos = new SourcePosition(line, line, column - currentSpelling.toString().length() - 2, column - 1);
+            sourcePos = new SourcePosition(line, line, column - (currentSpelling.toString().length() + 2 + spellingLengthBonus), column - 1);
         } else if (currentSpelling.toString().length() == 1) {
             sourcePos = new SourcePosition(line, line, column - 1, column - 1);
         } else {
