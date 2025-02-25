@@ -369,7 +369,18 @@ public final class Scanner {
         sourcePos = new SourcePosition();
 
         kind = nextToken();
-        sourcePos = new SourcePosition(line, line, column, column);
+
+        if (kind == Token.EOF) {
+            sourcePos = new SourcePosition(line, line, column, column);
+        } else if (kind == Token.STRINGLITERAL) {
+            // position includes the quotes ever though spelling removes them
+            sourcePos = new SourcePosition(line, line, column - currentSpelling.toString().length() - 2, column - 1);
+        } else if (currentSpelling.toString().length() == 1) {
+            sourcePos = new SourcePosition(line, line, column - 1, column - 1);
+        } else {
+            sourcePos = new SourcePosition(line, line, column - currentSpelling.toString().length(), column - 1);
+        }
+
         token = new Token(kind, currentSpelling.toString(), sourcePos);
 
         // * do not remove these three lines below (for debugging purposes)
