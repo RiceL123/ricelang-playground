@@ -1,0 +1,11 @@
+int foo()
+{
+    return 0;
+}
+
+int main()
+{
+    2 = foo(); // err: invalid lvalue
+    2 = 2 + 3;
+    foo() = 40; // err: invalid lvalue
+}

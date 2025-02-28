@@ -1,0 +1,12 @@
+int foo(int a, int b, int c)
+{
+
+}
+
+int main()
+{
+    foo(1,2,3);
+    foo(1,2);
+    foo(1,2,3,4);    
+    foo(1.2,3,3,4);
+}

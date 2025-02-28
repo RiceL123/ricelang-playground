@@ -1,0 +1,6 @@
+void a(int a) { return; }
+
+int main() {
+    a(3.0);
+    return 1;
+}

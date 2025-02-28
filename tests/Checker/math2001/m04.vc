@@ -1,0 +1,18 @@
+// simple things
+
+int main()
+{
+    int a = 1;
+    float b = 2;
+    int i = a + b;    // wrong because a + b is a float
+    float ii = a + b; // fine
+    boolean t = a == b;
+    boolean tt = b;    // wrong because it's a float
+    boolean ttt = i || true; // can only use on boolean values
+    boolean tr = false || (true && true);
+
+    b = 23.4;
+    b = 4;
+    b = 12.4 + 4 + 1 + b + a;
+    return i;
+}

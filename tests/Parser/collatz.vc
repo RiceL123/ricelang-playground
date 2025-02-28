@@ -1,0 +1,23 @@
+int mod(int a, int b) {
+    return a - a / b * b;
+}
+
+void collatz(int n) {
+    putInt(n);
+
+    if (n == 1) {
+        putLn();
+        return;
+    }
+
+    if (mod(n, 2)) {
+        collatz(3 * n + 1);
+    } else {
+        collatz(n / 2);
+    }
+}
+
+int main() {
+    int n;
+    putString("Enter a number: ");
+}

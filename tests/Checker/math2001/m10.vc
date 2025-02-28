@@ -1,0 +1,32 @@
+int main()
+{
+    int a[10] = {1,2,3,4,5,6,7,8,9,10,11}; // Err: excess initialiser
+    int b[3] = {1,2};
+    int c[3] = {1,2,3};
+    int cc[10] = {0};
+    int ccc[] = {123, 234,4};
+
+    boolean d[4] = {1,2,3,4}; // err: wrong type
+    boolean e[4] = {true,true,true,false};
+    boolean f[4] = {true,true,3,false}; // Err wrong type
+
+    float g[5] = {1,2,3.5,4,5.123e45};
+    float h[2] = {1,true}; // Err: wrong type
+
+    float i[2] = {g, h}; // Err: wrong type
+
+    float j[3] = {1,2,3};
+    float k[] = {-1,-2,-3};
+    int kk[10] = {0};
+
+    boolean l[]; // Err: size is missing
+    boolean m[120];
+
+    boolean n[21] = 12; // ERR: Used scalar for array initialiser
+    int o = {1,2,3}; // ERR: used array initializer for scalar
+
+    j = 21; // Err: incompatible type for =
+    j = g; // Err: incompatible type for =
+
+    return 0;
+}

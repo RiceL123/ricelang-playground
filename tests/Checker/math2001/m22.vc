@@ -1,0 +1,13 @@
+int foo(float a[], float b)
+{
+    if (b > a[0])
+        return 1;
+    else
+        return 1 + 3;
+}
+
+int main()
+{
+    int x[12] = {3,23};
+    return foo(x, 12); // int[] should coerce to float[]
+}

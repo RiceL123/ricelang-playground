@@ -1,0 +1,16 @@
+float i = 3;
+int main()
+{
+    float a;
+    int b;
+    a = i;
+    {
+        int i = 2;
+        b = i;
+    }
+    if (a)
+    {
+        return 2;
+    }
+    return a * b;
+}

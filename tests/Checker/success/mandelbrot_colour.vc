@@ -1,0 +1,88 @@
+// NOTE: Requires modification to scanner to allow unicode escape sequences in strings.
+
+int MAX_DEPTH = 100;
+float LIMIT = 8.0;
+int WIDTH = 500;
+int HEIGHT = 130;
+float REAL_MIN = -2.5;
+float REAL_MAX = 1.0;
+float IMAG_MIN = -1.5;
+float IMAG_MAX = 1.5;
+int COLOUR_OFFSET = 2;
+
+int mod(int a, int b) {
+    return a - (a / b * b);
+}
+
+int mandelbrot(float real, float imag) {
+    float z_real = 0.0;
+    float z_imag = 0.0;
+    float z_real2 = 0.0;
+    float z_imag2 = 0.0;
+    int depth = 0;
+
+    while (depth < MAX_DEPTH && z_real2 + z_imag2 < LIMIT) {
+        z_imag = 2.0 * z_real * z_imag + imag;
+        z_real = z_real2 - z_imag2 + real;
+        z_real2 = z_real * z_real;
+        z_imag2 = z_imag * z_imag;
+        depth = depth + 1;
+    }
+
+    return depth;
+}
+
+int main() {
+    int x, y;
+    float real, imag;
+    int depth;
+
+    for (y = 0; y < HEIGHT; y = y + 1) {
+        for (x = 0; x < WIDTH; x = x + 1) {
+            real = REAL_MIN + (REAL_MAX - REAL_MIN) * x / WIDTH;
+            imag = IMAG_MIN + (IMAG_MAX - IMAG_MIN) * y / HEIGHT;
+            depth = mandelbrot(real, imag);
+            if (depth == MAX_DEPTH) {
+                putString("\u001b[38;2;0;0;0m0");
+            } else {
+                int m = mod(depth + COLOUR_OFFSET, 16);
+
+                // Have to do it like this since VC doesn't support arrays of strings.
+                if (m == 0) {
+                    putString("\u001b[38;2;29;31;32m0");
+                } else if (m == 1) {
+                    putString("\u001b[38;2;10;39;133m0");
+                } else if (m == 2) {
+                    putString("\u001b[38;2;28;94;189m0");
+                } else if (m == 3) {
+                    putString("\u001b[38;2;38;111;204m0");
+                } else if (m == 4) {
+                    putString("\u001b[38;2;87;146;217m0");
+                } else if (m == 5) {
+                    putString("\u001b[38;2;159;199;235m0");
+                } else if (m == 6) {
+                    putString("\u001b[38;2;220;243;251m0");
+                } else if (m == 7) {
+                    putString("\u001b[38;2;237;254;251m0");
+                } else if (m == 8) {
+                    putString("\u001b[38;2;242;230;181m0");
+                } else if (m == 9) {
+                    putString("\u001b[38;2;250;195;75m0");
+                } else if (m == 10) {
+                    putString("\u001b[38;2;255;171;4m0");
+                } else if (m == 11) {
+                    putString("\u001b[38;2;227;151;0m0");
+                } else if (m == 12) {
+                    putString("\u001b[38;2;148;75;0m0");
+                } else if (m == 13) {
+                    putString("\u001b[38;2;33;24;0m0");
+                } else if (m == 14) {
+                    putString("\u001b[38;2;0;2;3m0");
+                } else if (m == 15) {
+                    putString("\u001b[38;2;0;5;56m0");
+                }
+            }
+        }
+        putLn();
+    }
+}

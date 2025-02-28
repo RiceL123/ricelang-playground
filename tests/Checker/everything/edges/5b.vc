@@ -1,0 +1,10 @@
+int a = 1;
+
+void test() {
+    int a = 2;
+}
+
+int main() {
+    int b = a;
+    return 0;
+}

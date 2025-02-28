@@ -1,0 +1,15 @@
+// simple things
+
+int main()
+{
+    int a = 2;
+    boolean b = !a; // err, a is not a boolean
+    boolean bb;
+    boolean k = !(b && true); // fine
+
+    if (k)
+    {
+        return 2;
+    }
+    return 0;
+}

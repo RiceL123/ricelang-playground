@@ -1,0 +1,7 @@
+// simple things
+
+int main()
+{
+    void a;
+    return 0;
+}

@@ -1,0 +1,6 @@
+void f(float f[]) { return; }
+
+int main(int a[]) {
+    f(a);
+    return 0;
+}

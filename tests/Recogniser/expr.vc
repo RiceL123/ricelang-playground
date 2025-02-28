@@ -1,0 +1,42 @@
+int main(void x) {
+    i = true || false;
+    i = true && false;
+    i = true == false;
+    i = true != false;
+    i = 1 < 1;
+    i = 1 <= 1;
+    i = 1 > 1;
+    i = 1 >= 1;
+    i = 1 + 1;
+    i = 1 - 1;
+    i = 1 / 1;
+    i = 1 * 1;
+    i = 1 / 1;
+    i = + 1;
+    i = - 1;
+    i = ! true;
+    i = i;
+    i = i(true, false, 1);
+    i = i[1];
+    i = 1;
+    i = 1.0;
+    i = true;
+    i = "true";
+
+    12 = true || false && false == true != false = 1 < 1 = 1 > 1 = 100 >= 100 <= 100 = "this is syntactically valid";
+
+    1;
+    true;
+    1.0;
+    "true";
+
+    (1);
+
+    1 || "help";
+
+    array["can't believe this is valid!" + 23 = 1 + 1 = false - true = id / id2 * id3 == + 1 = - 1 = ! 1 = i[j[k[oh[my[god["help mum im stuck inside an array"]]]]]]];
+
+    ;
+
+    func((((((((((num))))))))));
+}

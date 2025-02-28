@@ -1,0 +1,27 @@
+int mod(int a, int b) {
+    return a - a / b * b;
+}
+
+void collatz(int n) {
+    putInt(n);
+    putString(" ");
+
+    if (n == 1) {
+        putLn();
+        return;
+    }
+
+    if (mod(n, 2) == 1) {
+        collatz(3 * n + 1);
+    } else {
+        collatz(n / 2);
+    }
+
+    return;
+}
+
+int main() {
+    int n;
+    collatz(27);
+    return 0;
+}
