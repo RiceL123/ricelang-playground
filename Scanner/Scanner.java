@@ -333,9 +333,9 @@ public final class Scanner {
 
             // althought the first and last "" have disappeared, they still needa be there for position calc 
             return new Token(Token.STRINGLITERAL, currentSpelling.toString(), new SourcePosition(line, line, column - currentSpelling.length() - 2 - spellingLengthBonus, column - 1));
-        } else if (Character.isLetter(currentChar)) {
+        } else if (Character.isLetter(currentChar) || currentChar == '_') {
             // identifier -> letter (letter | digit)*
-            while (Character.isLetter(currentChar) || Character.isDigit(currentChar)) {
+            while (Character.isLetter(currentChar) || currentChar == '_' || Character.isDigit(currentChar)) {
                 accept();
             }
             return switch (currentSpelling.toString()) {
