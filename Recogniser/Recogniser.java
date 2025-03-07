@@ -20,7 +20,6 @@ public class Recogniser {
         scanner = lexer;
         errorReporter = reporter;
         currentToken = scanner.getToken();
-        // System.out.println("current token: " + currentToken);
     }
 
     // match checks to see if the current token matches tokenExpected.
@@ -192,9 +191,8 @@ public class Recogniser {
     }
 
     // ======================= STATEMENTS ==============================
-    // Note: modern languages typically are 
-    // compound-stmt       -> "{" ( var-decl | stmt )* "}"
-    // but VC is an older language with forces declarations to be at the top
+    // Note: modern languages typically are `compound-stmt -> "{" ( var-decl | stmt )* "}"`
+    // but VC is an older language which forces all declarations to preceed all statements
     // compound-stmt       -> "{" var-decl* stmt* "}" 
     void parseCompoundStmt() throws SyntaxError {
         match(Token.LCURLY);

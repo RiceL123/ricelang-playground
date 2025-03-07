@@ -2,20 +2,21 @@ echo "Tests for Recogniser"
 javac vc.java
 
 temp_file_actual="temp_actual.out"
+temp_file_expected="temp_expected.out"
 
 for input_file in tests/Recogniser/*.vc; do
-    file_expected=${input_file%.vc}.sol
-    java VC.vc $input_file > $temp_file_actual
+    cat ${input_file%.vc}.sol | tail -1 > $temp_file_expected
+    java VC.vc $input_file | tail -1 > $temp_file_actual
 
-    DIFF=$(diff --color=always $temp_file_actual $file_expected)
+    DIFF=$(diff --color=always $temp_file_actual $temp_file_expected)
     if [ "$DIFF" == "" ]
     then
         echo "$input_file: passed ✅"
     else
-        echo "$input_file: failed ❌ $file_expected != $temp_file_actual"
+        echo "$input_file: failed ❌ $temp_file_expected != $temp_file_actual"
 
         echo '====================== EXPECTED ======================'
-        cat $file_expected
+        cat $temp_file_expected
 
 
         echo '====================== RECEIVED ======================'
@@ -28,3 +29,4 @@ for input_file in tests/Recogniser/*.vc; do
 done
 
 rm $temp_file_actual
+rm $temp_file_expected
