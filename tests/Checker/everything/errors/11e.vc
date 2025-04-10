@@ -1,0 +1,8 @@
+int a[1];
+void f() { }
+int main() {
+        a;
+        f;
+
+        return 1;
+}
