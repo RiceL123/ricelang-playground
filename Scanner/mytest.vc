@@ -1,35 +1,5 @@
-    boolean
-    break
-    continue
-    else
-    float
-    for
-    if
-    int
-    return
-    void
-    while
-    +
-    -
-    *
-    /
-    !
-    !=
-    =
-    ==
-    <
-    <=
-    >
-    >=
-    &&
-    ||
-    {
-    }
-    (
-    )
-    [
-    ]
-    ;
-    ,
-    <id>
-    truefalse
+.1E2.e12.321.1Ee2
+
+.123213
+
+.123123e123213E123
