@@ -1,0 +1,57 @@
+boolean hello[3] = { true, false, true };
+
+int main() {
+    int x;
+    int a[2] = {x = 10, 15};
+    int y = (x = 5) + 7;
+    boolean b = true;
+    if (b = 5 > 3) {
+        putStringLn("b = 5 > 3 evaluated to true");
+        putString("a[0] = ");
+        putIntLn(a[0]);
+        putString("y = ");
+        putIntLn(y);
+    }
+
+    b = false;
+    if (b = 100 == 1) {
+        putStringLn("incorrect ggs");
+    } else {
+        putString("b should be false: ");
+        putBoolLn(b);
+    }
+
+    while (b = 5 > 3) {
+        putString("b should be true: ");
+        putBoolLn(b);
+        break;
+    }
+
+    b = false;
+    for (;b = true;) {
+        putString("b should be true: ");
+        putBoolLn(b);
+        break;
+    }
+
+    while (hello[2] = hello[0] = b = 2.5 > 2 + 0.4) {
+        if (y == 0) {
+            b = false;
+            break;
+        }
+        putString("all should be true: ");
+        putBool(hello[2]);
+        putString(", ");
+        putBool(hello[0]);
+        putString(", ");
+        putBoolLn(b);
+        if (y == 12) {
+            y = 0;
+            continue;
+        }
+        putString("incorrect ggs");
+    }
+
+    putString("b should be false: ");
+    putBoolLn(b);
+}

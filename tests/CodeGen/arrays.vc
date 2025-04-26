@@ -1,0 +1,164 @@
+int a1[3];
+int a2[5] = {1, 2, 3};
+boolean b1[3];
+boolean b2[5] = { true, false, true };
+
+int main() {
+    putIntLn(a1[0]);  // 0
+    putIntLn(a1[1]);  // 0
+    putIntLn(a1[2]);  // 0
+
+    putLn();
+
+    {
+        a1[0] = 1;
+        a1[1] = 2;
+        a1[2] = 3;
+    }
+
+    putIntLn(a1[0]);  // 1
+    putIntLn(a1[1]);  // 2
+    putIntLn(a1[2]);  // 3
+
+    putLn();
+
+    putIntLn(a2[0]);  // 1
+    putIntLn(a2[1]);  // 2
+    putIntLn(a2[2]);  // 3
+    putIntLn(a2[3]);  // 0
+    putIntLn(a2[4]);  // 0
+
+    a2[4] = 5;
+    putIntLn(a2[4]);  // 5
+
+    putLn();
+
+    {
+        int a3[3];
+        int a4[5] = {1, 2, 3};
+
+        putIntLn(a3[0]);  // 0
+        putIntLn(a3[1]);  // 0
+        putIntLn(a3[2]);  // 0
+
+        putLn();
+
+        {
+            a3[0] = 1;
+            a3[1] = 2;
+            a3[2] = 3;
+        }
+
+        putIntLn(a3[0]);  // 1
+        putIntLn(a3[1]);  // 2
+        putIntLn(a3[2]);  // 3
+
+        putLn();
+
+        putIntLn(a4[0]);  // 1
+        putIntLn(a4[1]);  // 2
+        putIntLn(a4[2]);  // 3
+        putIntLn(a4[3]);  // 0
+        putIntLn(a4[4]);  // 0
+
+        a4[4] = 5;
+        putIntLn(a4[4]);  // 5
+    }
+
+    putLn();
+
+    {
+        int i;
+        float f;
+        int a[5] = {42, 69, 420};
+
+        f = a[3] = a[4] = i = a[0] = a[1] = a[2] = a[0] * a[1] + a[2];
+
+        putIntLn(a[0]);  // 3318
+        putIntLn(a[1]);  // 3318
+        putIntLn(a[2]);  // 3318
+        putIntLn(a[3]);  // 3318
+        putIntLn(a[4]);  // 3318
+        putIntLn(i);     // 3318
+        putFloatLn(f);   // 3318.0
+    }
+
+    putLn();
+
+    putBoolLn(b1[0]); // false
+    putBoolLn(b1[1]); // false
+    putBoolLn(b1[2]); // false
+
+    putLn();
+
+    b1[0] = true;
+    b1[1] = true;
+    b1[2] = true;
+
+    putBoolLn(b1[0]); // true
+    putBoolLn(b1[1]); // true
+    putBoolLn(b1[2]); // true
+
+    putLn();
+
+    putBoolLn(b2[0]);  // true
+    putBoolLn(b2[1]);  // false
+    putBoolLn(b2[2]);  // true
+    putBoolLn(b2[3]);  // false
+    putBoolLn(b2[4]);  // false
+
+    putLn();
+    b2[4] = true;
+    putBoolLn(b2[4]); // true;
+
+    putLn();
+
+    {
+        boolean b3[3];
+        boolean b4[5] = { true, false, true };
+        putBoolLn(b3[0]); // false
+        putBoolLn(b3[1]); // false
+        putBoolLn(b3[2]); // false
+
+        putLn();
+
+        b3[0] = true;
+        b3[1] = true;
+        b3[2] = true;
+
+        putBoolLn(b3[0]); // true
+        putBoolLn(b3[1]); // true
+        putBoolLn(b3[2]); // true
+
+        putLn();
+
+        putBoolLn(b4[0]);  // true
+        putBoolLn(b4[1]);  // false
+        putBoolLn(b4[2]);  // true
+        putBoolLn(b4[3]);  // false
+        putBoolLn(b4[4]);  // false
+
+        putLn();
+        
+        b4[4] = true;
+        putBoolLn(b4[4]); // true;
+    }
+
+    putLn();
+
+    {
+        boolean i;
+        boolean a[5] = {true, false, true};
+
+        a[3] = a[4] = i = a[0] = a[1] = a[2] = ! ((a[0] && a[1]) || a[2]);
+
+        putBoolLn(a[0]);  // false
+        putBoolLn(a[1]);  // false
+        putBoolLn(a[2]);  // false
+        putBoolLn(a[3]);  // false
+        putBoolLn(a[4]);  // false
+        putBoolLn(i);     // false
+    }
+
+    return 0;
+}

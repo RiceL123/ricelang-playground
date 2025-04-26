@@ -1,0 +1,67 @@
+void printSpaces(int n) {
+    int i;
+    i = 0;
+    while (i < n) {
+        putString(" ");
+        i = i + 1;
+    }
+}
+
+boolean andIsZero(int a, int b) {
+    while (a > 0 || b > 0) {
+        int abit;
+        int bbit;
+
+        abit = a - 2 * (a / 2);;
+        bbit = b - 2 * (b / 2);;
+
+        if (abit == 1 && bbit == 1) {
+            return false;
+        }
+
+        a = a / 2;
+        b = b / 2;
+    }
+
+    return true;
+}
+
+void printRow(int row, int size) {
+    int col;
+    int pad;
+    col = 0;
+
+    // Print leading spaces to center the triangle
+    pad = 0;
+    while (pad < row - 1) {
+        putString(" ");
+        pad = pad + 1;
+    }
+
+    while (col < size) {
+        if (andIsZero(row, col)) {
+            putString("*");
+        } else {
+            putString(" ");
+        }
+        putString(" ");
+        col = col + 1;
+    }
+
+    putString("\n");
+}
+
+int main() {
+    int size;
+    int row;
+
+    size = 32;
+    row = 0;
+
+    while (row < size) {
+        printRow(row, size);
+        row = row + 1;
+    }
+
+    return 0;
+}

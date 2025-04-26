@@ -4,7 +4,7 @@ Ensure that the environment variable is set to the parent of the `/VC` directory
 
 Written in Java (openjdk 17.0.14)
 
-## Scanner
+## run code
 ```
-javac vc.java && java VC.vc Scanner/mytest.vc 
+./run.sh path/to/file.vc
 ```
