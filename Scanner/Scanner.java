@@ -73,7 +73,7 @@ public final class Scanner {
         currentChar = sourceFile.getNextChar();
     }
 
-        private void accept_noSpellingAppend() {
+    private void accept_noSpellingAppend() {
         switch (currentChar) {
             case '\r' -> {
                 if (sourceFile.inspectChar(1) == '\n') {
@@ -95,6 +95,12 @@ public final class Scanner {
 
     private void reject() {
         column += 1;
+        currentChar = sourceFile.getNextChar();
+    }
+
+    private void reject_start() {
+        line += 1;
+        column = 1;
         currentChar = sourceFile.getNextChar();
     }
 
@@ -300,7 +306,7 @@ public final class Scanner {
                     // strings do not span multiple lines
                     currentSpelling = new StringBuilder(currentSpelling.toString().replaceFirst("^\"", "")); // remove first and last " 
                     errorReporter.reportError("%: unterminated string", currentSpelling.toString(), sourcePos);
-                    accept_noSpellingAppend();
+                    reject_start();
                     return Token.STRINGLITERAL;
                 } else if (currentChar == '\\') {
                     char nextChar = inspectChar(1);
