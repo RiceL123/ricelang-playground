@@ -380,10 +380,12 @@ public final class Scanner {
                 for (int i = column; i % 8 != 0; i++) {
                     column++;
                 }
+                column++;
             }
 
             // skipWhiteSpace
             while (Character.isWhitespace(currentChar)) {
+                if (currentChar == '\t') { break; }
                 accept();
             }
 
