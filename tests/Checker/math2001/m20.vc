@@ -1,0 +1,13 @@
+int foo(int a[], float b)
+{
+    if (b > 0)
+        return a[0];
+    else
+        return a[1];
+}
+
+int main()
+{
+    boolean x[12] = {true};
+    return foo(x, 12); // wrong array type
+}

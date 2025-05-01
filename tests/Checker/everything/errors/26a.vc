@@ -1,0 +1,6 @@
+void f(int a, float b) { return; }
+
+int main() {
+    f();
+    return 1;
+}

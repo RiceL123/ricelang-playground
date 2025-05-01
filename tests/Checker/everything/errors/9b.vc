@@ -1,0 +1,6 @@
+// extensive tests covered in coercion.vc
+
+int main() {
+    true && 1;
+    return 0;
+}

@@ -1,0 +1,13 @@
+int foo(int a[], float b)
+{
+    if (b > 0)
+        return a[0];
+    else
+        return a[1];
+}
+
+int main()
+{
+    int x[12] = {123};
+    return foo(x, 12);
+}

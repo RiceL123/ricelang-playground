@@ -1,0 +1,16 @@
+// simple things
+
+float main() // err should ret int
+{
+    return 1;
+}
+
+int foo()
+{
+    return 1.3; // Err, expected int
+}
+
+float bar()
+{
+    return 1; // coerced
+}

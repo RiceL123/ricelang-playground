@@ -1,0 +1,9 @@
+// simple things
+
+int main()
+{
+    int a = 1;
+    int b = 2;
+    i = a + b;
+    return a;
+}

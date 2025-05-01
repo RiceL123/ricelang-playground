@@ -1,0 +1,9 @@
+float foo()
+{
+    return 1;
+}
+
+int main()
+{
+    return foo(); // Err: incompatible type for return
+}

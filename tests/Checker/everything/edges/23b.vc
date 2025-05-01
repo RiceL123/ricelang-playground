@@ -1,0 +1,4 @@
+int main() {
+    while (false) break;
+    return 0;
+}

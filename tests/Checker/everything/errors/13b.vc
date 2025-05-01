@@ -1,0 +1,4 @@
+int main() {
+    boolean a[] = {1};
+    return 1;
+}

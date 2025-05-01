@@ -385,7 +385,9 @@ public final class Scanner {
 
             // skipWhiteSpace
             while (Character.isWhitespace(currentChar)) {
-                if (currentChar == '\t') { break; }
+                if (currentChar == '\t') {
+                    break;
+                }
                 accept();
             }
 

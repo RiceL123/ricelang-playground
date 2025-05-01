@@ -1,0 +1,3 @@
+void a[5];
+
+int main() { return 1; }

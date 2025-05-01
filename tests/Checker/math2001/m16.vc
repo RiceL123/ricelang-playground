@@ -1,0 +1,9 @@
+int foo(int a[], int a[]) // Err: same arguments name
+{
+    return 1;
+}
+
+int main()
+{
+    return 2;
+}
