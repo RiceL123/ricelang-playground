@@ -1,38 +1,44 @@
-/**
- * vc.java       
+/*
+ * vc.java           
+ *
+ * For Assigment 2
  * 
- **/
+ */
 
 package VC;
 
+import VC.Recogniser.Recogniser;
 import VC.Scanner.Scanner;
 import VC.Scanner.SourceFile;
-import VC.Scanner.Token;
 
 public class vc {
 
     private static Scanner scanner;
     private static ErrorReporter reporter;
-    private static Token currentToken;
+    private static Recogniser recogniser;
+
     private static String inputFilename; 
 
     public static void main(String[] args) {
-        if (args.length < 1) {
-            System.err.println("Please provide the source file as an argument.");
-            System.exit(1);
-        }
+        if (args.length != 1) {
+          System.out.println("Usage: java VC.vc filename\n");
+          System.exit(1); 
+        } else
+           inputFilename = args[0];
 
-        inputFilename = args[0];
         System.out.println("======= The VC compiler =======");
 
-        // Initialise the source file and error reporter
         SourceFile source = new SourceFile(inputFilename);
+
         reporter = new ErrorReporter();
         scanner  = new Scanner(source, reporter);
-        scanner.enableDebugging();
+        recogniser = new Recogniser(scanner, reporter);
 
-        do 
-	  currentToken = scanner.getToken();
-        while (currentToken.kind != Token.EOF);
+        recogniser.parseProgram();
+
+        if (reporter.getNumErrors() == 0)
+           System.out.println ("Compilation was successful.");
+        else
+           System.out.println ("Compilation was unsuccessful.");
     }
 }
