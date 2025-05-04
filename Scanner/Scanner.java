@@ -1,13 +1,5 @@
 /*
- * Scanner.java                        
- *
- * Sun 09 Feb 2025 13:31:52 AEDT
- *
- * The starter code here is provided as a high-level guide for implementation.
- *
- * You may completely disregard the starter code and develop your own solution, 
- * provided that it maintains the same public interface.
- *
+ * Scanner.java
  */
 package VC.Scanner;
 
