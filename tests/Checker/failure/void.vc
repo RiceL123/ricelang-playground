@@ -1,0 +1,16 @@
+void f() {}
+int main(){
+    void a = f();
+    f() = f();
+    f() + f();
+    f() == f();
+    f() >= f();
+    f() && f();
+    f() + 1;
+    f() + 1.;
+    f() + true;
+    f() + (true + 1);
+    !f();
+    +f();
+    return 0;
+}
