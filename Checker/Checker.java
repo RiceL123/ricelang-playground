@@ -148,7 +148,6 @@ public final class Checker implements Visitor {
         // not even syntatically possible
         if (ast.T instanceof ArrayType arrayType && arrayType.isVoidType()) { 
             reporter.reportError(ErrorMessage.IDENTIFIER_DECLARED_VOID_ARRAY.getMessage() + ": %", ast.I.spelling, ast.position);
-
         }
 
         idTable.insert(ast.I.spelling, ast);
@@ -745,6 +744,11 @@ public final class Checker implements Visitor {
         ast.E2.visit(this, null);
 
         ast.type = ast.E1.type;
+
+        if (ast.E1.type.isFloatType() && ast.E2.type.isIntType()) {
+            ast.E2 = new UnaryExpr(new Operator("i2f", dummyPos), ast.E2, dummyPos);
+            ast.E2.type = StdEnvironment.floatType;
+        }
 
         if (ast.E1.type.isArrayType()) {
             reporter.reportError(ErrorMessage.ARRAY_FUNCTION_AS_SCALAR.getMessage() + ": %", ast.E1.toString(), ast.E1.position);

@@ -389,7 +389,7 @@ public final class Scanner {
                 accept();
                 while (true) {
                     if (currentChar == SourceFile.eof) {
-                        errorReporter.reportError(": %", "unterminated comment", sourcePos);
+                        errorReporter.reportError(": %", "unterminated comment (please ensure \\n at end of file)", sourcePos);
                         return;
                     } else if (currentChar == '\n' || currentChar == '\r') {
                         accept();
@@ -406,7 +406,7 @@ public final class Scanner {
                 accept();
                 while (true) {
                     if (currentChar == SourceFile.eof) {
-                        errorReporter.reportError(": %", "unterminated comment", sourcePos);
+                        errorReporter.reportError(": %", "unterminated comment (please ensure \\n at end of file)", sourcePos);
                         return;
                     } else if (currentChar == '*' && inspectChar(1) == '/') {
                         accept();
