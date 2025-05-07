@@ -1,10 +1,15 @@
-# VC Language Compiler
+# ricelang playground
+ricelang is a simple programming language that supports a weird blend of c and java syntax.
 
-Ensure that the environment variable is set to the parent of the `/VC` directory 
-
-Written in Java (openjdk 17.0.14)
-
-## run code
+## running
+```sh
+# start the frontend
+cd frontend
+npm run dev
 ```
-./run.sh path/to/file.vc
+
+```sh
+# start the backend
+cd ricelang
+./gradlew bootRun
 ```

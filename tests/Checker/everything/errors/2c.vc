@@ -1,7 +1,0 @@
-int a() {
-    return 1;
-}
-
-int a = 2;
-
-int main() { return 1; }

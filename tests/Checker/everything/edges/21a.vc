@@ -1,4 +1,0 @@
-int main() {
-    for (1; false; 1) {}
-    return 0;
-}

@@ -1,5 +1,0 @@
-int main() {
-    boolean a;
-    int b = a = 3;
-    return 1;
-}

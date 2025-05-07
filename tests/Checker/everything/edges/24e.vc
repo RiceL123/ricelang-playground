@@ -1,7 +1,0 @@
-int main() {
-    while (false) {
-        while (false) {}
-        continue;
-    }
-    return 0;
-}

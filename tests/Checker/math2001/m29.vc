@@ -1,6 +1,0 @@
-int f = 23;
-int foo(int f)
-{
-    return f;
-}
-int main() { return 1; }

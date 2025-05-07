@@ -1,4 +1,0 @@
-int main() {
-    float a[] = {1, 2, 3.5, 4.7e-2, 6};
-    return 0;
-}

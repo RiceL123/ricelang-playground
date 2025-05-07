@@ -1,7 +1,0 @@
-int main() {
-    for (;;) {
-        for (;;) {}
-        continue;
-    }
-    return 0;
-}

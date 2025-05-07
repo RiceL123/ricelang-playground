@@ -1,5 +1,0 @@
-int main() {
-    continue;
-    while (false) {}
-    return 1;
-}

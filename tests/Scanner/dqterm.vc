@@ -1,7 +1,0 @@
-// see the FAQS regarding the second last line of this test; you do not have to generate both errors, simply an unterminated string error is sufficient
-"\"
-"\\"
-"\""
-""
-"\
-"
