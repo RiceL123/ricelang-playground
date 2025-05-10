@@ -1,8 +1,3 @@
-/*
- * vc.java           
- * 
- * Jingling Xue, CSE, UNSW, Sydney NSW 2052, Australia.
- */
 package ricelang.VC;
 
 import java.util.Optional;
