@@ -10,8 +10,8 @@ import ThemeToggle from './ThemeToggle';
 
 export default function Navbar() {
   return (
-    <header className="w-full h-12">
-      <div className="mx-auto py-3 flex place-content-between max-w-[1536px]">
+    <header className="w-full h-[48px]">
+      <div className="mx-auto py-3 px-4 flex place-content-between max-w-[1536px]">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
@@ -36,7 +36,7 @@ export default function Navbar() {
                   href="/language-definition"
                   className="flex gap-2 px-4 py-1 items-center rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition"
                 >
-                  language definition
+                  <p className='hidden sm:block'>language definition</p>
                   <BookOpen className='h-[1.2rem] w-[1.2rem]' />
                 </Link>
               </TooltipTrigger>
@@ -53,7 +53,7 @@ export default function Navbar() {
                   href="/about"
                   className="flex gap-2 px-4 py-1 items-center rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition"
                 >
-                  about
+                  <p className='hidden sm:block'>about</p>
                   <Info className='h-[1.2rem] w-[1.2rem]' />
                 </Link>
               </TooltipTrigger>

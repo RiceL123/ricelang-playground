@@ -38,7 +38,7 @@ export default function RootLayout({
         >
           <Background />
           <Navbar />
-          {children}
+          <div className="grow flex" style={{ height: 'calc(100dvh - 48px)' }}>{children}</div>
         </ThemeProvider>
       </body>
     </html>

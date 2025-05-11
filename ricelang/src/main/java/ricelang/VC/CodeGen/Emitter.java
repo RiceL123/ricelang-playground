@@ -985,6 +985,7 @@ public final class Emitter implements Visitor {
             }
             case "putString" -> {
                 emit(JVM.GETSTATIC, "java/lang/System/out Ljava/io/PrintStream;");
+                frame.push();
                 ast.AL.visit(this, o); // ldc the string
                 emit(JVM.INVOKEVIRTUAL, "java/io/PrintStream/print(Ljava/lang/String;)V");
                 frame.pop(2);

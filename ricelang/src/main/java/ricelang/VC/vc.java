@@ -192,6 +192,7 @@ public class vc {
                 drawer.draw(theAST); // draw the AST
             }
         } else {
+            System.out.println(reporter.getAllErrors());
             System.out.println("Compilation was unsuccessful.");
         }
     }

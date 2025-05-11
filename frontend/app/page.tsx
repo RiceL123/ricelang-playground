@@ -6,8 +6,8 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable"
 
-import Editor from "./components/Editror";
 import Output from "./components/Output";
+import CodeEditor from "./components/CodeEditor";
 
 export default function Home() {
   const [output, setOutput] = useState("");
@@ -32,18 +32,14 @@ export default function Home() {
   }
 
   return (
-    <div className="h-full">
-      <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel className="h-full">
-          <div className="h-full m-3">
-            <Editor />
-          </div>
+    <div className="grow max-h-full max-w-full">
+      <ResizablePanelGroup direction="horizontal" className="box-border flex gap-2 p-3">
+        <ResizablePanel defaultSize={50}>
+          <CodeEditor />
         </ResizablePanel>
         <ResizableHandle className="opacity-0" />
-        <ResizablePanel className="h-full">
-          <div className="h-full m-3">
-            <Output />
-          </div>
+        <ResizablePanel defaultSize={50}>
+          <Output />
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>
