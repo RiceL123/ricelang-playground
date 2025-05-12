@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { Editor, OnChange, OnMount, useMonaco } from "@monaco-editor/react";
 import { useTheme } from 'next-themes'
 
-const defaultSourceCode = `// Mendlebrot in ricelang
+export const defaultSourceCode = `// Mendlebrot in ricelang
 
 int MAX_DEPTH = 100;
 float LIMIT = 8.0;
@@ -57,9 +57,8 @@ int main() {
 }
 
 `
-export default function CodeEditor() {
+export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCode: React.Dispatch<React.SetStateAction<string>>, sourceCode: string }) {
   const { resolvedTheme } = useTheme();
-  const [sourceCode, setSourceCode] = useState(defaultSourceCode);
   const monaco = useMonaco();
 
   const handleEditorDidMount: OnMount = (_editor, monaco) => {
@@ -184,7 +183,7 @@ export default function CodeEditor() {
   }
 
   const handleEditorChange: OnChange = (value, _event) => {
-    console.log("here is the current model value:", value);
+    if (value != undefined) setSourceCode(value);
   }
 
   useEffect(() => {
@@ -216,6 +215,7 @@ export default function CodeEditor() {
           lineNumbersMinChars: 3,
         }}
         value={sourceCode}
+
       />
       <style>{`.monaco-editor { outline: 0; }`}</style>
     </div>

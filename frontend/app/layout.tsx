@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased h-dvh flex flex-col`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased h-dvh`}
       >
         <ThemeProvider
           attribute="class"
@@ -37,8 +37,7 @@ export default function RootLayout({
           enableSystem
         >
           <Background />
-          <Navbar />
-          <div className="grow flex" style={{ height: 'calc(100dvh - 48px)' }}>{children}</div>
+          {children}
         </ThemeProvider>
       </body>
     </html>

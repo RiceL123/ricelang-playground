@@ -27,7 +27,7 @@ public class CompileController {
         String outputFileBase = "temp" + UUID.randomUUID().toString().replace("-", "");
         String jasminFile = outputFileBase + ".j";
 
-        if (sourceCodebody.getSourceCode() == null) return new Compile("null mate", 1);
+        if (sourceCodebody.getSourceCode() == null) return new Compile("404 no source code", 1);
         
         // generate temp.j
         Optional<String> opt = vc.compile(outputFileBase, sourceCodebody.getSourceCode());

@@ -11,7 +11,7 @@ export default function Background() {
   //     : 'url(/background-dark.png)'
 
   const backgroundImage = 'url(/background-transparent.png)'
-  
+
   return (
     <div className="fixed inset-0 -z-10">
       <div
@@ -49,7 +49,7 @@ export default function Background() {
             opacity="0.7"
             d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"
           />
-            <path
+          <path
             style={{
               animation: 'wave 20s linear infinite',
             }}
