@@ -37,10 +37,9 @@ export default function Home() {
   }
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "s" && e.ctrlKey) {
         e.preventDefault();
-        console.log("Compiling:", sourceCodeRef.current);
         compile(sourceCodeRef.current);
       }
     };
@@ -49,25 +48,20 @@ export default function Home() {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  function handlePress() {
-    console.log(JSON.stringify({ sourceCode }))
-    compile();
-  }
-
   return (
     <div className="w-full h-full flex flex-col">
-    <Navbar setSourceCode={setSourceCode} />
-    <div className="grow max-h-full max-w-full" style={{ height: 'calc(100dvh - 48px)' }}>
-      <ResizablePanelGroup direction="horizontal" className="box-border flex gap-2 p-3">
-        <ResizablePanel defaultSize={50}>
-          <CodeEditor setSourceCode={setSourceCode} sourceCode={sourceCode} />
-        </ResizablePanel>
-        <ResizableHandle className="opacity-0" />
-        <ResizablePanel defaultSize={50}>
-          <Output output={output}/>
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    </div>
+      <Navbar setSourceCode={setSourceCode} compile={compile} />
+      <div className="grow max-h-full max-w-full" style={{ height: 'calc(100dvh - 48px)' }}>
+        <ResizablePanelGroup direction="horizontal" className="box-border flex gap-2 p-3">
+          <ResizablePanel defaultSize={50}>
+            <CodeEditor setSourceCode={setSourceCode} sourceCode={sourceCode} />
+          </ResizablePanel>
+          <ResizableHandle className="opacity-0" />
+          <ResizablePanel defaultSize={50}>
+            <Output output={output} />
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </div>
     </div>
   );
 }
