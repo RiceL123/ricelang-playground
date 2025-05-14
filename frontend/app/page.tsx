@@ -6,17 +6,17 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable"
 
-import Navbar from "./components/NavbarHome";
+import Navbar, { examples } from "./components/NavbarHome";
 import Output from "./components/Output";
 import CodeEditor from "./components/CodeEditor";
-import { defaultSourceCode } from './components/CodeEditor'
 
 export default function Home() {
+  const [loading, setLoading] = useState(false);
   const [output, setOutput] = useState({
     output: "press Ctrl+S or the Compile button to compile the code!!",
     exitCode: 0
   });
-  const [sourceCode, setSourceCode] = useState(defaultSourceCode);
+  const [sourceCode, setSourceCode] = useState(Object.values(examples)[Math.floor(Math.random() * Object.keys(examples).length)]);
   const sourceCodeRef = useRef(sourceCode);
 
   useEffect(() => {
@@ -24,16 +24,28 @@ export default function Home() {
   }, [sourceCode]);
 
   const compile = async (srcCode = sourceCode) => {
-    const res = await fetch("http://127.0.0.1:8080/compile",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sourceCode: srcCode })
+    setLoading(true);
+    try {
+      const res = await fetch("http://127.0.0.1:8080/compile",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sourceCode: srcCode })
+        }
+      )
+      if (!res.ok) {
+        throw new Error(`res status: ${res.status}`);
       }
-    )
-
-    const data = await res.json();
-    setOutput(data);
+      const data = await res.json();
+      setOutput(data);
+    } catch (e) {
+      setOutput({
+        output: "Error with fetch: \n\n" + e,
+        exitCode: 1
+      });
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -58,7 +70,7 @@ export default function Home() {
           </ResizablePanel>
           <ResizableHandle className="opacity-0" />
           <ResizablePanel defaultSize={50}>
-            <Output output={output} />
+            <Output output={output} loading={loading} />
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>

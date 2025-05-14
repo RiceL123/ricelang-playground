@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Editor, OnChange, OnMount, useMonaco } from "@monaco-editor/react";
 import { useTheme } from 'next-themes'
 
@@ -107,6 +107,8 @@ export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCod
       // The main tokenizer for our languages
       tokenizer: {
         root: [
+          [/\b(true|false)\b/, "keyword.constant"],
+
           // identifiers and keywords [A-Za-z_][A-Za-z_0-9]*[\w]
           [
             /[A-Za-z_][A-Za-z_0-9]*/,
