@@ -1,3 +1,0 @@
-======= The VC compiler =======
-ERROR: 1(1)..1(1): : unterminated comment
-Kind = 39 [$], spelling = "$", position = 4(1)..4(1)

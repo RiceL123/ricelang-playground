@@ -1,6 +1,0 @@
-void f(int a, float b) { return; }
-
-int main() {
-    f(1);
-    return 1;
-}

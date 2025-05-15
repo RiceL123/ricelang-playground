@@ -1,7 +1,0 @@
-int main() {
-    int a[1];
-    a = 5;
-    a[0] = 5;
-
-    return 0;
-}

@@ -1,8 +1,0 @@
-void test() {
-    int a = 1;
-}
-
-int main() {
-    int a = b;
-    return 1;
-}

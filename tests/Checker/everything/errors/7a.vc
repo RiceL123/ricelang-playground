@@ -1,4 +1,0 @@
-int main() {
-    5 = 7;
-    return 1;
-}

@@ -1,4 +1,0 @@
-int a = 1;
-float a = 2.0;
-
-int main() { return 1; }

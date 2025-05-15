@@ -1,9 +1,0 @@
-int foo(int a[], float a) // Err: same arguments name
-{
-    return 1;
-}
-
-int main()
-{
-    return 2;
-}

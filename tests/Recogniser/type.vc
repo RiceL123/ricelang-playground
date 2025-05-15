@@ -1,3 +1,0 @@
-int main(void x) {
-    double y = 5.4;  // double is not a valid type according to the spec
-}

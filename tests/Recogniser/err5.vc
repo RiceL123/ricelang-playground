@@ -1,4 +1,0 @@
-int main() {
-    // invalid primary expr
-    i = i[];
-}

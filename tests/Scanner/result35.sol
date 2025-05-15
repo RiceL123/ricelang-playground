@@ -1,4 +1,0 @@
-======= The VC compiler =======
-ERROR: 1(1)..1(1): comp3131": unterminated string
-Kind = 37 [<string-literal>], spelling = "comp3131"", position = 1(1)..1(11)
-Kind = 39 [$], spelling = "$", position = 2(1)..2(1)

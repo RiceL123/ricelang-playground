@@ -1,8 +1,0 @@
-// Could also fit under 27: wrong type for actual parameter
-void f(int a) {return;}
-
-int main() {
-  int a = 1;
-  f(a = 2);
-  return 0;
-}

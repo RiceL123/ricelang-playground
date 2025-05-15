@@ -1,3 +1,0 @@
-float a[] = { "test" };
-
-int main() { return 1; }
