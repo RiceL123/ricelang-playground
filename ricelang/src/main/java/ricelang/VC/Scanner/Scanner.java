@@ -348,7 +348,7 @@ public final class Scanner {
                     new Token(Token.IF, currentSpelling.toString(), new SourcePosition(line, line, column - currentSpelling.length(), column - 1));
                 case "int" ->
                     new Token(Token.INT, currentSpelling.toString(), new SourcePosition(line, line, column - currentSpelling.length(), column - 1));
-                case "return" ->
+                case "byebye" ->
                     new Token(Token.RETURN, currentSpelling.toString(), new SourcePosition(line, line, column - currentSpelling.length(), column - 1));
                 case "void" ->
                     new Token(Token.VOID, currentSpelling.toString(), new SourcePosition(line, line, column - currentSpelling.length(), column - 1));
