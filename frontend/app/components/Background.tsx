@@ -11,6 +11,7 @@ export default function Background() {
   //     : 'url(/background-dark.png)'
 
   const backgroundImage = 'url(/background-transparent.png)'
+  
   return (
     <div className="fixed inset-0 -z-10">
       <div
