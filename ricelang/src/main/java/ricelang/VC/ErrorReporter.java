@@ -1,7 +1,3 @@
-/*
- * ErrorReporter.java     
- */
-
 package ricelang.VC;
 
 import java.util.ArrayList;
