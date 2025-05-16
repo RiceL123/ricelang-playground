@@ -19,7 +19,7 @@ import jasmin.Main;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
-public class CompileController {
+public class RicelangController {
 
     @PostMapping("/compile")
     public Compile compile(@RequestBody SourceCodeBody sourceCodebody) {
@@ -71,5 +71,18 @@ public class CompileController {
             new File(outputFileBase + ".class").delete();
             return new Compile("Internal error: " + e.getMessage(), exitCode);
         }
+    }
+
+    @PostMapping("/ast")
+    public Mermaid ast(@RequestBody SourceCodeBody sourceCodebody) {
+        vc vc = new vc();
+        StringBuilder output = new StringBuilder();
+        StringBuilder verbose = new StringBuilder();
+        Optional<String> opt = vc.mermaidAST(sourceCodebody.getSourceCode(), output, verbose);
+        if (opt.isPresent()) {
+            return new Mermaid(output.toString(), verbose.toString(), opt.get());
+        }
+
+        return new Mermaid(output.toString(), verbose.toString());
     }
 }

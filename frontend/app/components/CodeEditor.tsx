@@ -2,61 +2,6 @@ import React, { useEffect } from "react";
 import { Editor, OnChange, OnMount, useMonaco } from "@monaco-editor/react";
 import { useTheme } from 'next-themes'
 
-export const defaultSourceCode = `// Mendlebrot in ricelang
-
-int MAX_DEPTH = 100;
-float LIMIT = 8.0;
-int WIDTH = 150;
-int HEIGHT = 50;
-float REAL_MIN = -2.5;
-float REAL_MAX = 1.0;
-float IMAG_MIN = -1.5;
-float IMAG_MAX = 1.5;
-int COLOUR_OFFSET = 2;
-
-int mod(int a, int b) {
-    return a - (a / b * b);
-}
-
-int mandelbrot(float real, float imag) {
-    float z_real = 0.0;
-    float z_imag = 0.0;
-    float z_real2 = 0.0;
-    float z_imag2 = 0.0;
-    int depth = 0;
-
-    while (depth < MAX_DEPTH && z_real2 + z_imag2 < LIMIT) {
-        z_imag = 2.0 * z_real * z_imag + imag;
-        z_real = z_real2 - z_imag2 + real;
-        z_real2 = z_real * z_real;
-        z_imag2 = z_imag * z_imag;
-        depth = depth + 1;
-    }
-
-    return depth;
-}
-
-int main() {
-    int x, y;
-    float real, imag;
-    int depth;
-
-    for (y = 0; y < HEIGHT; y = y + 1) {
-        for (x = 0; x < WIDTH; x = x + 1) {
-            real = REAL_MIN + (REAL_MAX - REAL_MIN) * x / WIDTH;
-            imag = IMAG_MIN + (IMAG_MAX - IMAG_MIN) * y / HEIGHT;
-            depth = mandelbrot(real, imag);
-            if (depth == MAX_DEPTH) {
-                putString("#");
-            } else {
-              putString(" ");
-            }
-        }
-        putLn();
-    }
-}
-
-`
 export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCode: React.Dispatch<React.SetStateAction<string>>, sourceCode: string }) {
   const { resolvedTheme } = useTheme();
   const monaco = useMonaco();
@@ -77,7 +22,7 @@ export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCod
         "float",
         "if",
         "int",
-        "return",
+        "byebye",
         "void",
         "while",
       ],
@@ -184,7 +129,7 @@ export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCod
     monaco.editor.setTheme("transparent-theme");
   }
 
-  const handleEditorChange: OnChange = (value, _event) => {
+  const handleEditorChange: OnChange = value => {
     if (value != undefined) setSourceCode(value);
   }
 
