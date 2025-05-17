@@ -200,16 +200,25 @@ public class vc {
     public Optional<String> compile(String outputFileBase, String sourceCode) {
         SourceFile source = new SourceFile(sourceCode, true);
         reporter = new ErrorReporter();
+
         scanner = new Scanner(source, reporter);
         parser = new Parser(scanner, reporter);
         theAST = parser.parseProgram();
+        if (reporter.getNumErrors() > 0) {
+            return Optional.of(reporter.getAllErrors() + "\n\nCompilation was unsuccessful due to: lexical / syntactic error");
+        }
+
+
         checker = new Checker(reporter);
         checker.check(theAST);
+        if (reporter.getNumErrors() > 0) {
+            return Optional.of(reporter.getAllErrors() + "\n\nCompilation was unsuccessful due to: semantic error");
+        }
+
         emitter = new Emitter(outputFileBase, reporter);
         emitter.gen(theAST);
-        
         if (reporter.getNumErrors() > 0) {
-            return Optional.of(reporter.getAllErrors());
+            return Optional.of(reporter.getAllErrors() + "\n\nCompilation was unsuccessful due to: jasmin code generation error");
         }
 
         return Optional.empty();
