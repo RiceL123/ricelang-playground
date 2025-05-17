@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button"
 import { BookOpen, Info } from 'lucide-react'
 import ThemeToggle from './ThemeToggle';
 
-const examples: { [key: string]: string } = {
+export const examples: { [key: string]: string } = {
   "hello world": `// Hello World by ricel123 in ricelang 17/05/2025
 
 int main() {
@@ -77,8 +77,7 @@ int main() {
         putLn();
     }
 }
-`
-  ,
+`,
   "boxes": `// Boxes in ricelang
 int mod(int a, int b) {
     return a - a / b * b;
@@ -108,15 +107,15 @@ int main() {
 
     return 0;
 }
-`
-  ,
+`,
   "bubble": `/* bubble.ricelang -- Read an integer array, print it, then sort it and
-  * print it. Use the bubble sort method.
+ * print it. Use the bubble sort method.
 */
 
 void printIntArray(int a[], int n)
 /* n is the number of elements in the array a.
-    * These values are printed out, five per line. */
+ * These values are printed out, five per line.
+*/
 {
     int i;
 
@@ -129,8 +128,8 @@ void printIntArray(int a[], int n)
 
 void bubbleSort(int a[], int n)
 /* It sorts in non-decreasing order the first N positions of A. It uses
-    * the bubble sort method.
-    */
+ * the bubble sort method.
+*/
 {
     int lcv;
     int limit = n-1;
@@ -141,7 +140,8 @@ void bubbleSort(int a[], int n)
         lastChange = 0;
         for (lcv=0;lcv<limit;lcv=lcv+1)
             /* Notice that the values in positions LIMIT+1 .. N are in
-                * their final position, i.e. they are sorted right */
+             * their final position, i.e. they are sorted right 
+            */
             if (a[lcv]>a[lcv+1]) {
                 temp = a[lcv];
                 a[lcv] = a[lcv+1];
@@ -154,18 +154,16 @@ void bubbleSort(int a[], int n)
 
 int main() {
     int x[10] = {3, 10, 1, 5, 8, 0, 20, 1, 4, 100};
-    int hmny = 10;
-    int who;
-    int where;
+    int n = 10;
 
     putStringLn("The array was:");
-    printIntArray(x,hmny);
+    printIntArray(x,n);
 
     putLn();
 
-    bubbleSort(x,hmny);
+    bubbleSort(x,n);
     putStringLn("The sorted array is:");
-    printIntArray(x,hmny);
+    printIntArray(x,n);
 
 }
 `,
@@ -266,6 +264,85 @@ int main() {
 
     return 0;
 }
+`,
+  "prime": `// isPrime in ricelang
+
+int mod(int a, int b) {
+    return a - (a / b * b);
+}
+
+boolean isPrime(int n) {
+    int i = 2;
+    if (n <= 1) return false;
+    while (i * i <= n) {
+        if (mod(n, i) == 0) return false;
+        i = i + 1;
+    }
+    return true;
+}
+
+int main() {
+    int num = 100000001; // funnily enough is divisble by 17
+    boolean result = isPrime(num);
+
+    putString("The number ");
+    putInt(num);
+    putString(" is prime: ");
+    putBoolLn(result);
+
+    {
+        int i;
+        // all except 333333331 are prime for it is also divisble by 17
+        int nums[8] = {31, 331, 3331, 33331, 333331, 3333331, 33333331, 333333331};
+        for (i = 0; i < 8; i = i + 1) {
+            num = nums[i];
+            result = isPrime(num);
+
+            putString("The number ");
+            putInt(num);
+            putString(" is prime: ");
+            putBoolLn(result);
+        }
+    }
+
+    return 0;
+}
+`,
+  "sine": `// sine wave in ricelang
+
+float PI = 3.1415926535;
+
+float sin(float x) {    
+    float x2 = x * x, x3 = x2 * x, x5 = x3 * x2, x7 = x5 * x2, x9 = x7 * x2, x11 = x9 * x2, x13 = x11 * x2;
+
+    return x - x3 / 6.0 + x5 / 120.0 - x7 / 5040.0 + x9 / 362880.0 - x11 / 39916800.0  + x13 / 6227020800.0;
+}
+
+int main() {
+    float amplitude = 24.0, wavelength = 30.0, x, y, offset;
+    int width = 60, i = 0, j;
+
+    while (i < width) {
+        x = i / wavelength * 2 * PI; 
+
+        while (x > PI) {
+            x = x - PI * 2;
+        }
+
+        y = sin(x);
+
+        offset = y * amplitude + amplitude;
+         
+        j = 0;
+        while (j < offset) {
+            putString(" ");
+            j = j + 1;
+        }
+
+        putStringLn("#");
+        i = i + 1;
+    }
+} 
 `
 }
 

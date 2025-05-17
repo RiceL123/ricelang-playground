@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,35 +27,42 @@ public class CompileController {
         int exitCode = 1;
         String outputFileBase = "temp" + UUID.randomUUID().toString().replace("-", "");
         String jasminFile = outputFileBase + ".j";
-
+        StringBuilder output = new StringBuilder();
+        
         if (sourceCodebody.getSourceCode() == null) return new Compile("404 no source code", 1);
         
         // generate temp.j
-        Optional<String> opt = vc.compile(outputFileBase, sourceCodebody.getSourceCode());
+        Optional<String> opt = vc.compile(outputFileBase, sourceCodebody.getSourceCode(), output);
         if (opt.isPresent()) {
             new File(jasminFile).delete();
             return new Compile(opt.get(), exitCode);
         }
+        output.append("Generated: " + jasminFile + "\n");
 
         // compile temp.j to a .class file
         Main.main(new String[] { jasminFile });
         new File(jasminFile).delete();
+        output.append("Running: " + outputFileBase + ".class\n");
 
         // run the .class file on the jvm (pipe output to string) to return to request
         try {
             ProcessBuilder builder = new ProcessBuilder("java", outputFileBase);
             builder.redirectErrorStream(true);
             Process process = builder.start();
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            StringBuilder output = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                output.append(line).append("\n");
+            
+            if (process.waitFor(2, TimeUnit.SECONDS)) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    output.append(line).append("\n");
+                }
+    
+                exitCode = process.exitValue();
+            } else {
+                output.append("\nError: Timed out after [2s] ...\n");
+                process.destroyForcibly();
+                exitCode = 1;
             }
-
-            process.waitFor();
-            exitCode = process.exitValue();
 
             new File(outputFileBase + ".class").delete();
             return new Compile(output.toString(), exitCode);
