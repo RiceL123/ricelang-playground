@@ -29,9 +29,9 @@ tasks.named('test') {
 }
 
 tasks.register('compile', JavaExec) {
-	// usage: $./gradlew jasmin --args="-d 3 file.j"
+	// usage: $./gradlew compile --args="-d 3 file.ricelang"
 	group = 'ricelang'
-	description = 'compiles a .vc file to a .j file'
+	description = 'compiles a source file to a .j file'
 	classpath = sourceSets.main.runtimeClasspath
 	mainClass.set('ricelang.VC.vc')
 	
@@ -47,7 +47,7 @@ tasks.register('jasmin', JavaExec) {
 
 tasks.register('runVC') {
 	group = 'ricelang'
-	description = 'Compiles and runs a .vc file via Jasmin and the JVM'
+	description = 'Compiles and runs a source file via Jasmin and the JVM'
 
 	doLast {
 		if (!project.hasProperty('file')) {
@@ -77,4 +77,3 @@ tasks.register('runVC') {
 		}
 	}
 }
-

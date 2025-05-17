@@ -8,6 +8,7 @@ import ricelang.VC.CodeGen.Emitter;
 import ricelang.VC.Parser.Parser;
 import ricelang.VC.Scanner.Scanner;
 import ricelang.VC.Scanner.SourceFile;
+import ricelang.VC.Transpile.Transpiler;
 import ricelang.VC.TreeDrawer.Drawer;
 import ricelang.VC.TreeMermaid.Mermaid;
 import ricelang.VC.TreePrinter.Printer;
@@ -23,6 +24,9 @@ public class vc {
     private static UnParser unparser;
     private static Checker checker;
     private static Emitter emitter;
+    private static Transpiler transpiler;
+    static boolean transpileToJS = false;
+    static boolean isVanillaJS = true;
 
     private static int drawingAST = 0;
     private static boolean printingAST = false;
@@ -44,8 +48,10 @@ public class vc {
         System.out.println("	                    4:  the AST from the checker (with SourcePosition)");
         System.out.println("	-t [file]           print the (non-annotated) AST into <file>");
         System.out.println("	                    (or filename + \"t\" if <file> is unspecified)");
-        System.out.println("	-u [file]  	    unparse the (non-annotated) AST into <file>");
+        System.out.println("	-u [file]           unparse the (non-annotated) AST into <file>");
         System.out.println("	                    (or filename + \"u\" if <file> is unspecified)");
+        System.out.println("	-js [vanilla|node]  transpile to vanillaJS or NodeJs");
+        System.out.println("	                    (or vanillaJS if unspecified)");
         System.exit(1);
     }
 
@@ -114,6 +120,14 @@ public class vc {
                     unparsingFilename = args[i++];
                 }
                 // the default is inputFilename + "u"
+            } else if (arg.equals("-js")) {
+                transpileToJS = true;
+                System.out.println("args: " + args + "; arg: " + arg + "; i: " + i + "args[i]: " + args[i]);
+                if (i < args.length && (args[i].equals("node") || args[i].equals("vanilla"))) {
+                    System.out.println("here");
+                    if (args[i].equals("node")) isVanillaJS = false;
+                    i++;
+                }
             } else {
                 System.out.println("[# vc #]: invalid option " + arg);
                 cmdLineOptions();
@@ -174,8 +188,13 @@ public class vc {
             if (reporter.getNumErrors() == 0) {
                 System.out.println("Pass 3: Code Generation");
                 System.out.println();
-                emitter = new Emitter(inputFilename, reporter);
-                emitter.gen(theAST);
+                if (transpileToJS) {
+                    transpiler = new Transpiler(isVanillaJS);
+                    transpiler.gen(theAST);
+                } else {
+                    emitter = new Emitter(inputFilename, reporter);
+                    emitter.gen(theAST);
+                }
                 if (reporter.getNumErrors() == 0) {
                     System.out.println("Compilation was successful.");
                 } else {
@@ -252,6 +271,70 @@ public class vc {
         String mermaidOutput = mermaid.toString(theAST);
         verbose.append("Pass 3: Mermaid AST generation\n");
         output.append(mermaidOutput);
+
+        return Optional.empty();
+    }
+
+    public Optional<String> jasminSrc(String sourceCode, StringBuilder output) {
+        output.append("======== The RiceLang Compiler ========\n");
+        SourceFile source = new SourceFile(sourceCode, true);
+        reporter = new ErrorReporter();
+
+        scanner = new Scanner(source, reporter);
+        parser = new Parser(scanner, reporter);
+        theAST = parser.parseProgram();
+        if (reporter.getNumErrors() > 0) {
+            return Optional.of(reporter.getAllErrors() + "\n\nCompilation was unsuccessful due to: lexical / syntactic error");
+        }
+        output.append("Pass 1: Lexical and syntactic Analysis\n");
+
+        checker = new Checker(reporter);
+        checker.check(theAST);
+        if (reporter.getNumErrors() > 0) {
+            return Optional.of(reporter.getAllErrors() + "\n\nCompilation was unsuccessful due to: semantic error");
+        }
+        output.append("Pass 2: Semantic Analysis\n");
+
+        emitter = new Emitter();
+        String jasminSrcString = emitter.genString(theAST);
+        if (reporter.getNumErrors() > 0) {
+            return Optional.of(reporter.getAllErrors() + "\n\nCompilation was unsuccessful due to: jasmin code generation error");
+        }
+        output.append("Pass 3: Code Generation\n");
+
+        output.append(jasminSrcString);
+
+        return Optional.empty();
+    }
+
+    public Optional<String> javascriptSrc(String sourceCode, StringBuilder output, Boolean vanillaJS) {
+        output.append("// ======== The RiceLang Compiler ========\n");
+        SourceFile source = new SourceFile(sourceCode, true);
+        reporter = new ErrorReporter();
+
+        scanner = new Scanner(source, reporter);
+        parser = new Parser(scanner, reporter);
+        theAST = parser.parseProgram();
+        if (reporter.getNumErrors() > 0) {
+            return Optional.of(reporter.getAllErrors() + "\n\nCompilation was unsuccessful due to: lexical / syntactic error");
+        }
+        output.append("// Pass 1: Lexical and syntactic Analysis\n");
+
+        checker = new Checker(reporter);
+        checker.check(theAST);
+        if (reporter.getNumErrors() > 0) {
+            return Optional.of(reporter.getAllErrors() + "\n\nCompilation was unsuccessful due to: semantic error");
+        }
+        output.append("// Pass 2: Semantic Analysis\n");
+
+        transpiler = new Transpiler(vanillaJS);
+        String javascriptSrcString = transpiler.genString(theAST);
+        if (reporter.getNumErrors() > 0) {
+            return Optional.of(reporter.getAllErrors() + "\n\nCompilation was unsuccessful due to: jasmin code generation error");
+        }
+        output.append("// Pass 3: Code Generation\n");
+
+        output.append(javascriptSrcString);
 
         return Optional.empty();
     }

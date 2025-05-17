@@ -2,7 +2,6 @@ package ricelang.server;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Optional;
 import java.util.UUID;
@@ -84,5 +83,31 @@ public class RicelangController {
         }
 
         return new Mermaid(output.toString(), verbose.toString());
+    }
+
+    @PostMapping("/jasmin")
+    public Compile jasmin(@RequestBody SourceCodeBody sourceCodebody) {
+        vc vc = new vc();
+        StringBuilder output = new StringBuilder();
+
+        Optional<String> opt = vc.jasminSrc(sourceCodebody.getSourceCode(), output);
+        if (opt.isPresent()) {
+            return new Compile(output.toString() + "\n" + opt.get(), 1);
+        }
+
+        return new Compile(output.toString(), 0);
+    }
+
+    @PostMapping("/javascript")
+    public Compile javascript(@RequestBody SourceCodeBody sourceCodebody) {
+        vc vc = new vc();
+        StringBuilder output = new StringBuilder();
+
+        Optional<String> opt = vc.javascriptSrc(sourceCodebody.getSourceCode(), output, false);
+        if (opt.isPresent()) {
+            return new Compile(output.toString() + "\n" + opt.get(), 1);
+        }
+
+        return new Compile(output.toString(), 0);
     }
 }

@@ -93,6 +93,77 @@ export default function Home() {
     }
   }, [sourceCode])
 
+  const jasmin = useCallback(async (srcCode = sourceCode) => {
+    setLoading(true);
+    try {
+      const res = await fetch("http://127.0.0.1:8080/jasmin",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sourceCode: srcCode })
+        }
+      )
+      if (!res.ok) {
+        throw new Error(`res status: ${res.status}`);
+      }
+      const data = await res.json();
+      setOutput(data);
+    } catch (e) {
+      setOutput({
+        output: "Error with fetch: \n\n" + e,
+        exitCode: 1,
+        isAST: false
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [sourceCode]);
+
+  const javascript = useCallback(async (srcCode = sourceCode) => {
+    setLoading(true);
+    try {
+      const res = await fetch("http://127.0.0.1:8080/javascript",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sourceCode: srcCode })
+        }
+      )
+      if (!res.ok) {
+        throw new Error(`res status: ${res.status}`);
+      }
+      const data = await res.json();
+      setOutput(data);
+    } catch (e) {
+      setOutput({
+        output: "Error with fetch: \n\n" + e,
+        exitCode: 1,
+        isAST: false
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [sourceCode]);
+
+  const actions: Record<string, { handler: (srcCode?: string) => Promise<void>, desc: string }> = {
+    "Run!": {
+      handler: compile,
+      desc: "Compile the code to Java byte code and run it on the JVM"
+    },
+    "Draw AST!": {
+      handler: ast,
+      desc: "Generate a visual representation of the abstract syntax tree"
+    },
+    "Compile!": {
+      handler: jasmin,
+      desc: "Compile to Jasmin assembler (assembly like) code"
+    },
+    "Transpile!": {
+      handler: javascript,
+      desc: "Transpile to JavaScript"
+    },
+  }
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "s" && e.ctrlKey) {
@@ -111,7 +182,7 @@ export default function Home() {
 
   return (
     <div className="w-full h-full flex flex-col">
-      <Navbar setSourceCode={setSourceCode} compile={compile} ast={ast} />
+      <Navbar setSourceCode={setSourceCode} actions={actions} />
       <div className="grow max-h-full max-w-full" style={{ height: 'calc(100dvh - 48px)' }}>
         <ResizablePanelGroup direction="horizontal" className="box-border flex gap-2 p-3">
           <ResizablePanel defaultSize={50}>

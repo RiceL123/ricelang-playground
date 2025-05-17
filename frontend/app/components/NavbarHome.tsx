@@ -349,18 +349,8 @@ int main() {
 `
 }
 
-export default function Navbar({ setSourceCode, compile, ast }: { setSourceCode: React.Dispatch<React.SetStateAction<string>>, compile: (srcCode?: string) => Promise<void>, ast: (srcCode?: string) => Promise<void> }) {
-  const actions: Record<string, { handler: (srcCode?: string) => Promise<void>, desc: string }> = {
-    "Compile!": {
-      handler: compile,
-      desc: "Compile the ricelang code to Java byte code and run it on the JVM"
-    },
-    "Draw AST!": {
-      handler: ast,
-      desc: "Generate a visual representation of the abstract syntax tree"
-    },
-  }
-  const [action, setAction] = useState<keyof typeof actions>('Compile!');
+export default function Navbar({ setSourceCode, actions }: { setSourceCode: React.Dispatch<React.SetStateAction<string>>, actions: Record<string, { handler: (srcCode?: string) => Promise<void>, desc: string }> }) {
+  const [action, setAction] = useState<keyof typeof actions>('Run!');
   const handleExampleChange = (value: string) => {
     setSourceCode(examples[value]);
   }
