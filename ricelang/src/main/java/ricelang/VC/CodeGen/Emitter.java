@@ -907,7 +907,6 @@ public final class Emitter implements Visitor {
         int after = frame.getCurStackSize();
 
         if (after > before) {
-            System.out.println("after: " + after + " > before: " + before);
             emit(JVM.POP);
             frame.pop();
         }

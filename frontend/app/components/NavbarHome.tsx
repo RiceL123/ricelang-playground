@@ -12,11 +12,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Button } from "@/components/ui/button"
 import { BookOpen, Info } from 'lucide-react'
 import ThemeToggle from './ThemeToggle';
 
 const examples: { [key: string]: string } = {
-  "hello world": `// Hello World by ricel123 in ricelang
+  "hello world": `// Hello World by ricel123 in ricelang 17/05/2025
 
 int main() {
     putStringLn("Hello World");
@@ -168,7 +169,8 @@ int main() {
 
 }
 `,
-  "spiral": `// decimal spiral
+  "spiral": `// decimal spiral in ricelang
+
 int solve(int n, int x, int y) {
     int k = (n - 1) * (n + 3) / 2;
 
@@ -231,10 +233,43 @@ int main() {
         putLn();
     }
 }
+`,
+  "fibonacci": `// memoized fibonacci in ricelang
+
+int fibonacci(int n, int memo[]) {
+  if (n <= 1) return n;
+
+  if (memo[n] != 0) return memo[n];
+
+  memo[n] = fibonacci(n - 1, memo) + fibonacci(n - 2, memo);
+
+  return memo[n];
+}
+
+int main() {
+    int n = 25;
+    int memo[26]; // make sure memo size is n + 1
+    int i;
+
+    for (i = 0; i <= n; i = i + 1) {
+        memo[i] = 0;
+    }
+
+    fibonacci(n, memo);
+
+    for (i = 0; i <= n; i = i + 1) {
+        putString("fibonacci(");
+        putInt(i);
+        putString(") = ");
+        putIntLn(memo[i]);
+    }
+
+    return 0;
+}
 `
 }
 
-export default function Navbar({ setSourceCode }: { setSourceCode: React.Dispatch<React.SetStateAction<string>> }) {
+export default function Navbar({ setSourceCode, compile }: { setSourceCode: React.Dispatch<React.SetStateAction<string>>, compile: (srcCode?: string) => Promise<void> }) {
   const handleExampleChange = (value: string) => {
     setSourceCode(examples[value]);
   }
@@ -259,16 +294,32 @@ export default function Navbar({ setSourceCode }: { setSourceCode: React.Dispatc
         </TooltipProvider>
 
         <div className="flex gap-4">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button onClick={() => compile()}>Compile!</Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Ctrl + S</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
           <Select onValueChange={handleExampleChange}>
-            <SelectTrigger className="w-[50px] sm:w-[180px] rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition">
-              <SelectValue placeholder="examples " />
+            <SelectTrigger className="w-[48px] sm:w-[180px] rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition">
+              <SelectValue placeholder="examples" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm">
               {Object.keys(examples).map((x, i) => (
-                <SelectItem key={i} value={x}>{x}</SelectItem>
+                <SelectItem key={i} value={x}>
+                  {x}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
+
+          <hr />
+
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
