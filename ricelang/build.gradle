@@ -51,7 +51,7 @@ tasks.register('runVC') {
 
 	doLast {
 		if (!project.hasProperty('file')) {
-			throw new GradleException("Missing -Pfile=... argument")
+			throw new Exception("Missing -Pfile=... argument")
 		}
 
 		def vcFile = project.property('file')

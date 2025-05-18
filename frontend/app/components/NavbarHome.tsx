@@ -14,10 +14,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { BookOpen, Info } from 'lucide-react'
+import { BookOpen, Info, Menu } from 'lucide-react'
 import ThemeToggle from './ThemeToggle';
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export const examples: { [key: string]: string } = {
   "hello world": `// Hello World by ricel123 in ricelang 17/05/2025
@@ -342,18 +352,31 @@ int main() {
             j = j + 1;
         }
 
-        putStringLn("#");
+        putIntLn(i);
         i = i + 1;
     }
 } 
 `
 }
 
-export default function Navbar({ setSourceCode, actions }: { setSourceCode: React.Dispatch<React.SetStateAction<string>>, actions: Record<string, { handler: (srcCode?: string) => Promise<void>, desc: string }> }) {
+
+export default function Navbar({ setSourceCode, actions, request }: { setSourceCode: React.Dispatch<React.SetStateAction<string>>, actions: Record<string, { route: string, desc: string }>, request: (route: string, isAST: boolean, srcCode?: string) => Promise<void> }) {
   const [action, setAction] = useState<keyof typeof actions>('Run!');
   const handleExampleChange = (value: string) => {
     setSourceCode(examples[value]);
   }
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "s" && e.ctrlKey) {
+        e.preventDefault();
+        request(actions[action].route, action == "Draw AST!");
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [actions, action, request]);
 
   return (
     <header className="w-full h-[48px]">
@@ -375,10 +398,10 @@ export default function Navbar({ setSourceCode, actions }: { setSourceCode: Reac
         </TooltipProvider>
 
         <div className="flex gap-4">
-          <div className='flex rounded overflow-hidden'>
-            <Button className="rounded-none transition ease-in" onClick={() => actions[action].handler()}>{action}</Button>
+          <div className='flex rounded overflow-hidden border border-accent'>
+            <Button className="rounded-none transition ease-in" onClick={() => request(actions[action].route, action == "Draw AST!")}>{action}</Button>
             <Select onValueChange={x => setAction(x)}>
-              <SelectTrigger className="w-[40px] rounded-none bg-primary border-primary hover:bg-primary/90" />
+              <SelectTrigger className="w-[40px] rounded-none bg-primary dark:bg-secondary border-primary" />
               <SelectContent>
                 {Object.entries(actions).map(([key, val], i) => (
                   <SelectItem value={key} key={i}>
@@ -393,7 +416,7 @@ export default function Navbar({ setSourceCode, actions }: { setSourceCode: Reac
           </div>
 
           <Select onValueChange={handleExampleChange}>
-            <SelectTrigger className="w-[48px] sm:w-[180px] rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition">
+            <SelectTrigger className="hidden sm:flex w-[48px] md:w-[180px] rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition">
               <SelectValue placeholder="examples" />
             </SelectTrigger>
             <SelectContent className="bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm">
@@ -405,16 +428,14 @@ export default function Navbar({ setSourceCode, actions }: { setSourceCode: Reac
             </SelectContent>
           </Select>
 
-          <hr />
-
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger className='hidden sm:block'>
                 <Link
                   href="/language-definition"
                   className="flex gap-2 px-4 py-1 items-center rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition"
                 >
-                  <p className='hidden sm:block'>language definition</p>
+                  <p className='hidden lg:block'>language definition</p>
                   <BookOpen className='h-[1.2rem] w-[1.2rem]' />
                 </Link>
               </TooltipTrigger>
@@ -426,12 +447,12 @@ export default function Navbar({ setSourceCode, actions }: { setSourceCode: Reac
 
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger className='hidden sm:block'>
                 <Link
                   href="/about"
                   className="flex gap-2 px-4 py-1 items-center rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition"
                 >
-                  <p className='hidden sm:block'>about</p>
+                  <p className='hidden lg:block'>about</p>
                   <Info className='h-[1.2rem] w-[1.2rem]' />
                 </Link>
               </TooltipTrigger>
@@ -441,10 +462,9 @@ export default function Navbar({ setSourceCode, actions }: { setSourceCode: Reac
             </Tooltip>
           </TooltipProvider>
 
-
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger className='hidden sm:block'>
                 <ThemeToggle
                   className="px-4 py-1.5 rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition"
                 />
@@ -455,6 +475,45 @@ export default function Navbar({ setSourceCode, actions }: { setSourceCode: Reac
             </Tooltip>
           </TooltipProvider>
 
+          <DropdownMenu>
+            <DropdownMenuTrigger className="sm:hidden px-4 py-1.5 rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition">
+              <Menu className='h-[1.2rem] w-[1.2rem]' />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem asChild>
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger><p className='py-2'>Examples</p></DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent>
+                      {Object.keys(examples).map((x, i) => (
+                        <DropdownMenuItem key={i} onClick={() => handleExampleChange(x)}>
+                          {x}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href="/about" className='flex gap-2 items-center'>
+                  <BookOpen className='h-[1.2rem] w-[1.2rem]' />
+                  <p className='py-2'>language definition</p>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href="/about" className='flex gap-2 items-center'>
+                  <Info className='h-[1.2rem] w-[1.2rem]' />
+                  <p className='py-2'>about</p>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <ThemeToggle
+                  className="mx-autp py-3.5"
+                  text='light / dark mode'
+                />
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>

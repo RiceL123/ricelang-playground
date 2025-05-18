@@ -21,28 +21,28 @@ import jasmin.Main;
 public class RicelangController {
 
     @PostMapping("/compile")
-    public Compile compile(@RequestBody SourceCodeBody sourceCodebody) {
+    public Output compile(@RequestBody SourceCodeBody sourceCodebody) {
         vc vc = new vc();
-        int exitCode = 1;
         String outputFileBase = "temp" + UUID.randomUUID().toString().replace("-", "");
         String jasminFile = outputFileBase + ".j";
-        StringBuilder output = new StringBuilder();
+        StringBuilder verbose = new StringBuilder();
         
-        if (sourceCodebody.getSourceCode() == null) return new Compile("404 no source code", 1);
+        if (sourceCodebody.getSourceCode() == null) return new Output("404 no source code", "", true);
         
         // generate temp.j
-        Optional<String> opt = vc.compile(outputFileBase, sourceCodebody.getSourceCode(), output);
+        Optional<String> opt = vc.compile(outputFileBase, sourceCodebody.getSourceCode(), verbose);
         if (opt.isPresent()) {
             new File(jasminFile).delete();
-            return new Compile(opt.get(), exitCode);
+            return new Output(verbose.toString(), opt.get(), true);
         }
-        output.append("Generated: " + jasminFile + "\n");
+        verbose.append("Generated: " + jasminFile + "\n");
 
         // compile temp.j to a .class file
         Main.main(new String[] { jasminFile });
         new File(jasminFile).delete();
-        output.append("Running: " + outputFileBase + ".class\n");
+        verbose.append("Running: " + outputFileBase + ".class\n");
 
+        StringBuilder output = new StringBuilder();
         // run the .class file on the jvm (pipe output to string) to return to request
         try {
             ProcessBuilder builder = new ProcessBuilder("java", outputFileBase);
@@ -55,59 +55,65 @@ public class RicelangController {
                 while ((line = reader.readLine()) != null) {
                     output.append(line).append("\n");
                 }
-    
-                exitCode = process.exitValue();
             } else {
                 output.append("\nError: Timed out after [2s] ...\n");
                 process.destroyForcibly();
-                exitCode = 1;
             }
 
             new File(outputFileBase + ".class").delete();
-            return new Compile(output.toString(), exitCode);
+            return new Output(output.toString(), verbose.toString(), false);
         } catch (Exception e) {
             e.printStackTrace();
             new File(outputFileBase + ".class").delete();
-            return new Compile("Internal error: " + e.getMessage(), exitCode);
+            return new Output("Internal error: " + e.getMessage(), verbose.toString(), true);
         }
     }
 
     @PostMapping("/ast")
-    public Mermaid ast(@RequestBody SourceCodeBody sourceCodebody) {
+    public Output ast(@RequestBody SourceCodeBody sourceCodebody) {
         vc vc = new vc();
         StringBuilder output = new StringBuilder();
         StringBuilder verbose = new StringBuilder();
         Optional<String> opt = vc.mermaidAST(sourceCodebody.getSourceCode(), output, verbose);
         if (opt.isPresent()) {
-            return new Mermaid(output.toString(), verbose.toString(), opt.get());
+            return new Output(output.toString(), verbose.toString() + "\n" + opt.get(), true);
         }
-
-        return new Mermaid(output.toString(), verbose.toString());
+        return new Output(output.toString(), verbose.toString(), false);
     }
 
     @PostMapping("/jasmin")
-    public Compile jasmin(@RequestBody SourceCodeBody sourceCodebody) {
+    public Output jasmin(@RequestBody SourceCodeBody sourceCodebody) {
         vc vc = new vc();
+        StringBuilder verbose = new StringBuilder();
         StringBuilder output = new StringBuilder();
-
-        Optional<String> opt = vc.jasminSrc(sourceCodebody.getSourceCode(), output);
+        Optional<String> opt = vc.jasminSrc(sourceCodebody.getSourceCode(), output, verbose);
         if (opt.isPresent()) {
-            return new Compile(output.toString() + "\n" + opt.get(), 1);
+            return new Output(output.toString(), verbose.toString() + "\n" + opt.get(), true);
         }
-
-        return new Compile(output.toString(), 0);
+        return new Output(output.toString(), verbose.toString(), false);
     }
 
     @PostMapping("/javascript")
-    public Compile javascript(@RequestBody SourceCodeBody sourceCodebody) {
+    public Output javascript(@RequestBody SourceCodeBody sourceCodebody) {
         vc vc = new vc();
         StringBuilder output = new StringBuilder();
-
-        Optional<String> opt = vc.javascriptSrc(sourceCodebody.getSourceCode(), output, false);
+        StringBuilder verbose = new StringBuilder();
+        Optional<String> opt = vc.javascriptSrc(sourceCodebody.getSourceCode(), output, verbose, true);
         if (opt.isPresent()) {
-            return new Compile(output.toString() + "\n" + opt.get(), 1);
+            return new Output(output.toString(), verbose.toString() + "\n" + opt.get(), true);
         }
+        return new Output(output.toString(), verbose.toString(), false);
+    }
 
-        return new Compile(output.toString(), 0);
+    @PostMapping("/nodejs")
+    public Output nodejs(@RequestBody SourceCodeBody sourceCodebody) {
+        vc vc = new vc();
+        StringBuilder output = new StringBuilder();
+        StringBuilder verbose = new StringBuilder();
+        Optional<String> opt = vc.javascriptSrc(sourceCodebody.getSourceCode(), output, verbose, false);
+        if (opt.isPresent()) {
+            return new Output(output.toString(), verbose.toString() + "\n" + opt.get(), true);
+        }
+        return new Output(output.toString(), verbose.toString(), false);
     }
 }

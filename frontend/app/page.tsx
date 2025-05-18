@@ -14,7 +14,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [output, setOutput] = useState({
     output: "press Ctrl+S or the Compile button to compile the code!!",
-    exitCode: 0,
+    verbose: "",
     isAST: false
   });
   const [sourceCode, setSourceCode] = useState(Object.values(examples)[Math.floor(Math.random() * Object.keys(examples).length)]);
@@ -24,10 +24,10 @@ export default function Home() {
     sourceCodeRef.current = sourceCode;
   }, [sourceCode]);
 
-  const compile = useCallback(async (srcCode = sourceCode) => {
+  const request = useCallback(async (route: string, isAST: boolean, srcCode = sourceCode) => {
     setLoading(true);
     try {
-      const res = await fetch("http://127.0.0.1:8080/compile",
+      const res = await fetch(`http://127.0.0.1:8080${route}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -37,81 +37,28 @@ export default function Home() {
       if (!res.ok) {
         throw new Error(`res status: ${res.status}`);
       }
-      const data = await res.json();
-      setOutput(data);
-    } catch (e) {
-      setOutput({
-        output: "Error with fetch: \n\n" + e,
-        exitCode: 1,
-        isAST: false
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [sourceCode]);
-
-  const ast = useCallback(async (srcCode = sourceCode) => {
-    setLoading(true);
-    try {
-      const res = await fetch("http://127.0.0.1:8080/ast",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ sourceCode: srcCode })
-        }
-      )
-      if (!res.ok) {
-        throw new Error(`res status: ${res.status}`);
-      }
-      const data : {
-        mermaidSrc: string,
+      const data: {
+        output: string,
         verbose: string,
-        errors?: string,
+        error: boolean
       } = await res.json();
 
-      if (!data.errors) {
+      if (data.error) {
         setOutput({
-          output: data.mermaidSrc,
-          exitCode: 0,
-          isAST: true
-        })
-      } else {
-        setOutput({
-          output: data.verbose + "\n" + data.errors,
-          exitCode: 1,
+          output: data.output,
+          verbose: data.verbose,
           isAST: false
         })
       }
-    } catch (e) {
       setOutput({
-        output: "Error with fetch: \n\n" + e,
-        exitCode: 1,
-        isAST: false
+        output: data.output,
+        verbose: data.verbose,
+        isAST: isAST
       });
-    } finally {
-      setLoading(false);
-    }
-  }, [sourceCode])
-
-  const jasmin = useCallback(async (srcCode = sourceCode) => {
-    setLoading(true);
-    try {
-      const res = await fetch("http://127.0.0.1:8080/jasmin",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ sourceCode: srcCode })
-        }
-      )
-      if (!res.ok) {
-        throw new Error(`res status: ${res.status}`);
-      }
-      const data = await res.json();
-      setOutput(data);
     } catch (e) {
       setOutput({
-        output: "Error with fetch: \n\n" + e,
-        exitCode: 1,
+        output: "Error with fetch: \n",
+        verbose: String(e),
         isAST: false
       });
     } finally {
@@ -119,70 +66,32 @@ export default function Home() {
     }
   }, [sourceCode]);
 
-  const javascript = useCallback(async (srcCode = sourceCode) => {
-    setLoading(true);
-    try {
-      const res = await fetch("http://127.0.0.1:8080/javascript",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ sourceCode: srcCode })
-        }
-      )
-      if (!res.ok) {
-        throw new Error(`res status: ${res.status}`);
-      }
-      const data = await res.json();
-      setOutput(data);
-    } catch (e) {
-      setOutput({
-        output: "Error with fetch: \n\n" + e,
-        exitCode: 1,
-        isAST: false
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [sourceCode]);
-
-  const actions: Record<string, { handler: (srcCode?: string) => Promise<void>, desc: string }> = {
+  const actions: Record<string, { route: string, desc: string }> = {
     "Run!": {
-      handler: compile,
-      desc: "Compile the code to Java byte code and run it on the JVM"
+      route: "/compile",
+      desc: "Compile the code to Java byte code and run it on the JVM",
     },
     "Draw AST!": {
-      handler: ast,
+      route: "/ast",
       desc: "Generate a visual representation of the abstract syntax tree"
     },
     "Compile!": {
-      handler: jasmin,
+      route: "/jasmin",
       desc: "Compile to Jasmin assembler (assembly like) code"
     },
-    "Transpile!": {
-      handler: javascript,
-      desc: "Transpile to JavaScript"
+    "Transpile JS!": {
+      route: "/javascript",
+      desc: "Transpile to vanilla JavaScript"
+    },
+    "Transpile NodeJS!": {
+      route: "/nodejs",
+      desc: "Transpile to NodeJS"
     },
   }
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "s" && e.ctrlKey) {
-        e.preventDefault();
-        if (e.altKey) {
-          ast(sourceCodeRef.current);
-        } else {
-          compile(sourceCodeRef.current);
-        }
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [ast, compile]);
-
   return (
     <div className="w-full h-full flex flex-col">
-      <Navbar setSourceCode={setSourceCode} actions={actions} />
+      <Navbar setSourceCode={setSourceCode} actions={actions} request={request} />
       <div className="grow max-h-full max-w-full" style={{ height: 'calc(100dvh - 48px)' }}>
         <ResizablePanelGroup direction="horizontal" className="box-border flex gap-2 p-3">
           <ResizablePanel defaultSize={50}>

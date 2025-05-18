@@ -1,9 +1,10 @@
 import Loading from "./Loading";
 import Mermaid from "./Mermaid";
+
 interface OutputProp {
   isAST: boolean;
   output: string;
-  exitCode: number;
+  verbose: string;
 }
 
 export default function Output({ output, loading }: { output: OutputProp, loading: boolean }) {
@@ -13,8 +14,22 @@ export default function Output({ output, loading }: { output: OutputProp, loadin
         ? <Loading message="Compiling..." />
         : output.isAST
           ? <Mermaid mermaidSrc={output.output} />
-          : <pre className="w-full h-full">{output.output}</pre>
+          : <div className="w-full h-full">
+            {output.verbose && output.verbose !== "" && (<><Separator text="Verbose" /><pre >{output.verbose}</pre></>)}
+            <Separator text="Output" />
+            <pre >{output.output}</pre>
+          </div>
       }
     </div >
+  )
+}
+
+function Separator({ text }: { text: string }) {
+  return (
+    <div className="relative flex py-3 items-center">
+      <div className="flex-grow border-t border-muted-foreground"></div>
+      <span className="flex-shrink mx-4 text-muted-foreground">{text}</span>
+      <div className="flex-grow border-t border-muted-foreground"></div>
+    </div>
   )
 }

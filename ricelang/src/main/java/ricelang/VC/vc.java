@@ -122,7 +122,6 @@ public class vc {
                 // the default is inputFilename + "u"
             } else if (arg.equals("-js")) {
                 transpileToJS = true;
-                System.out.println("args: " + args + "; arg: " + arg + "; i: " + i + "args[i]: " + args[i]);
                 if (i < args.length && (args[i].equals("node") || args[i].equals("vanilla"))) {
                     System.out.println("here");
                     if (args[i].equals("node")) isVanillaJS = false;
@@ -275,8 +274,8 @@ public class vc {
         return Optional.empty();
     }
 
-    public Optional<String> jasminSrc(String sourceCode, StringBuilder output) {
-        output.append("======== The RiceLang Compiler ========\n");
+    public Optional<String> jasminSrc(String sourceCode, StringBuilder output, StringBuilder verbose) {
+        verbose.append("======== The RiceLang Compiler ========\n");
         SourceFile source = new SourceFile(sourceCode, true);
         reporter = new ErrorReporter();
 
@@ -286,29 +285,29 @@ public class vc {
         if (reporter.getNumErrors() > 0) {
             return Optional.of(reporter.getAllErrors() + "\n\nCompilation was unsuccessful due to: lexical / syntactic error");
         }
-        output.append("Pass 1: Lexical and syntactic Analysis\n");
+        verbose.append("Pass 1: Lexical and syntactic Analysis\n");
 
         checker = new Checker(reporter);
         checker.check(theAST);
         if (reporter.getNumErrors() > 0) {
             return Optional.of(reporter.getAllErrors() + "\n\nCompilation was unsuccessful due to: semantic error");
         }
-        output.append("Pass 2: Semantic Analysis\n");
+        verbose.append("Pass 2: Semantic Analysis\n");
 
         emitter = new Emitter();
         String jasminSrcString = emitter.genString(theAST);
         if (reporter.getNumErrors() > 0) {
             return Optional.of(reporter.getAllErrors() + "\n\nCompilation was unsuccessful due to: jasmin code generation error");
         }
-        output.append("Pass 3: Code Generation\n");
+        verbose.append("Pass 3: Code Generation\n");
 
         output.append(jasminSrcString);
 
         return Optional.empty();
     }
 
-    public Optional<String> javascriptSrc(String sourceCode, StringBuilder output, Boolean vanillaJS) {
-        output.append("// ======== The RiceLang Compiler ========\n");
+    public Optional<String> javascriptSrc(String sourceCode, StringBuilder output, StringBuilder verbose, Boolean vanillaJS) {
+        verbose.append("======== The RiceLang Compiler ========\n");
         SourceFile source = new SourceFile(sourceCode, true);
         reporter = new ErrorReporter();
 
@@ -318,21 +317,21 @@ public class vc {
         if (reporter.getNumErrors() > 0) {
             return Optional.of(reporter.getAllErrors() + "\n\nCompilation was unsuccessful due to: lexical / syntactic error");
         }
-        output.append("// Pass 1: Lexical and syntactic Analysis\n");
+        verbose.append("Pass 1: Lexical and syntactic Analysis\n");
 
         checker = new Checker(reporter);
         checker.check(theAST);
         if (reporter.getNumErrors() > 0) {
             return Optional.of(reporter.getAllErrors() + "\n\nCompilation was unsuccessful due to: semantic error");
         }
-        output.append("// Pass 2: Semantic Analysis\n");
+        verbose.append("Pass 2: Semantic Analysis\n");
 
         transpiler = new Transpiler(vanillaJS);
         String javascriptSrcString = transpiler.genString(theAST);
         if (reporter.getNumErrors() > 0) {
             return Optional.of(reporter.getAllErrors() + "\n\nCompilation was unsuccessful due to: jasmin code generation error");
         }
-        output.append("// Pass 3: Code Generation\n");
+        verbose.append("Pass 3: Code Generation\n");
 
         output.append(javascriptSrcString);
 

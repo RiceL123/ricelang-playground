@@ -28,15 +28,20 @@ public class Transpiler implements Visitor {
         if (nodeJS) {
             JS.append("#!/usr/bin/env node");
             JS.append(
-                    "const prompt = () => new Promise(resolve => { process.stdin.resume(); process.stdin.once('data', data => resolve(data)); });");
+                    "const prompt=()=>new Promise(res=>{process.stdin.resume();process.stdin.once('data',x => res(x));});");
+        } else {
+            JS.append("const stdout=[];");
+            JS.append(
+                    "const print=x=>stdout.length===0?stdout.push(x):stdout[stdout.length - 1]+=x;");
+            JS.append("const println=x=>stdout.length===0?stdout.push(x) : (stdout[stdout.length - 1]+=x) && stdout.push('');");
         }
 
         ast.FL.visit(this, null);
 
         if (nodeJS) {
-            JS.append("main().finally(() => process.stdin.pause());");
+            JS.append("main().finally(()=>process.stdin.pause());");
         } else {
-            JS.append("main();");
+            JS.append("main();\nconsole.log(stdout.join('\\n'));");
         }
         return null;
     }
@@ -66,9 +71,9 @@ public class Transpiler implements Visitor {
         }
 
         if (nodeJS && name.equals("main")) {
-            JS.append("const main = async () => ");
+            JS.append("const main=async()=>");
         } else {
-            JS.append("const " + name + " = (" + String.join(",", parameters) + ") => ");
+            JS.append("const " + name + "=(" + String.join(",", parameters) + ")=>");
         }
         ast.S.visit(this, null);
 
@@ -86,17 +91,17 @@ public class Transpiler implements Visitor {
     private Object varDecl(Ident I, Type T, Expr E) {
         String name = (String) I.visit(this, null);
         if (T instanceof ArrayType arrayType) {
-            JS.append("let " + name + " = new Array(" + arrayType.E.visit(this, null) + ").fill("
+            JS.append("let " + name + "=new Array(" + arrayType.E.visit(this, null) + ").fill("
                     + identity(arrayType.T) + ");");
             if (!E.isEmptyExpr()) {
                 // $ is a valid identifier in js but not ricelang so its safe to use
-                JS.append(E.visit(this, null) + ".forEach(($, i) => " + name + "[i] = $);");
+                JS.append(E.visit(this, null) + ".forEach(($, i) => " + name + "[i]=$);");
             }
         } else {
             if (E.isEmptyExpr())
-                JS.append("let " + name + " = " + identity(T) + ";");
+                JS.append("let " + name + "=" + identity(T) + ";");
             else
-                JS.append("let " + name + " = " + E.visit(this, null) + ";");
+                JS.append("let " + name + "=" + E.visit(this, null) + ";");
         }
         return null;
     }
@@ -345,23 +350,23 @@ public class Transpiler implements Visitor {
                 if (nodeJS) {
                     return "Number(await prompt())";
                 } else {
-                    return "Number(prompt())";
+                    return "Number(prompt(stdout.join('\\n')))";
                 }
             }
             case "putLn" -> {
-                return "console.log()";
+                if (nodeJS) return "console.log()";
+                else return "println('')";
             }
             case "putInt", "putFloat", "putBool", "putString" -> {
                 if (nodeJS) {
                     return "process.stdout.write(String(" + String.join(",", exprs) + "))";
                 } else {
-                    // vanillaJS doesn't support no new line console.logs
-                    // fname = "console.write";
-                    fname = "console.log";
+                    fname = "print";
                 }
             }
             case "putIntLn", "putFloatLn", "putBoolLn", "putStringLn" -> {
-                fname = "console.log";
+                if (nodeJS) fname = "console.log";
+                else fname = "println";
             }
         }
 
