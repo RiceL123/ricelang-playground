@@ -11,7 +11,7 @@ float IMAG_MAX = 1.5;
 int COLOUR_OFFSET = 2;
 
 int mod(int a, int b) {
-    return a - (a / b * b);
+    byebye a - (a / b * b);
 }
 
 int mandelbrot(float real, float imag) {
@@ -29,7 +29,7 @@ int mandelbrot(float real, float imag) {
         depth = depth + 1;
     }
 
-    return depth;
+    byebye depth;
 }
 
 int main() {
