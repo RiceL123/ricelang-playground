@@ -1,3 +1,5 @@
+"use client"
+
 import Link from 'next/link'
 import {
   Tooltip,
@@ -15,13 +17,14 @@ import {
 import { Button } from "@/components/ui/button"
 import { BookOpen, Info } from 'lucide-react'
 import ThemeToggle from './ThemeToggle';
+import { useState } from 'react'
 
 export const examples: { [key: string]: string } = {
   "hello world": `// Hello World by ricel123 in ricelang 17/05/2025
 
 int main() {
     putStringLn("Hello World");
-    return 0;
+    byebye 0;
 }
 `,
   "mendelbrot": `// Mendlebrot in ricelang
@@ -37,7 +40,7 @@ float IMAG_MAX = 1.5;
 int COLOUR_OFFSET = 2;
 
 int mod(int a, int b) {
-    return a - (a / b * b);
+    byebye a - (a / b * b);
 }
 
 int mandelbrot(float real, float imag) {
@@ -55,7 +58,7 @@ int mandelbrot(float real, float imag) {
         depth = depth + 1;
     }
 
-    return depth;
+    byebye depth;
 }
 
 int main() {
@@ -80,7 +83,7 @@ int main() {
 `,
   "boxes": `// Boxes in ricelang
 int mod(int a, int b) {
-    return a - a / b * b;
+    byebye a - a / b * b;
 }
 
 int main() {
@@ -105,7 +108,7 @@ int main() {
         putLn();
     }
 
-    return 0;
+    byebye 0;
 }
 `,
   "bubble": `/* bubble.ricelang -- Read an integer array, print it, then sort it and
@@ -173,46 +176,46 @@ int solve(int n, int x, int y) {
     int k = (n - 1) * (n + 3) / 2;
 
     if (y == 0) {
-        return k - x;
+        byebye k - x;
     } else if (y == 1) {
         if (x == n - 1) {
-            return k - x - 1;
+            byebye k - x - 1;
         }
 
-        return -1;
+        byebye -1;
     } else if (y == n - 2) {
         if (x == 0) {
-            return k - 3 * (n - 1) - 1;
+            byebye k - 3 * (n - 1) - 1;
         } else if (x == n - 1) {
-            return k - 2 * (n - 1) + 1;
+            byebye k - 2 * (n - 1) + 1;
         }
 
-        return -1;
+        byebye -1;
     } else if (y == n - 1) {
-        return k - 3 * (n - 1) + x;
+        byebye k - 3 * (n - 1) + x;
     }
 
     if (x == 0) {
-        return k - 4 * (n - 1) + y;
+        byebye k - 4 * (n - 1) + y;
     } else if (x == 1) {
         if (y == 2) {
-            return k - 4 * (n - 1) + y - 1;
+            byebye k - 4 * (n - 1) + y - 1;
         }
 
-        return -1;
+        byebye -1;
     } else if (x == n - 1) {
-        return k - (n - 1) - y;
+        byebye k - (n - 1) - y;
     } else if (x == n - 2) {
-        return -1;
+        byebye -1;
     } else {
-        return solve(n - 4, x - 2, y - 2);
+        byebye solve(n - 4, x - 2, y - 2);
     }
 
-    return -1;
+    byebye -1;
 }
 
 int mod(int a, int b) {
-    return a - a / b * b;
+    byebye a - a / b * b;
 }
 
 int main() {
@@ -235,13 +238,13 @@ int main() {
   "fibonacci": `// memoized fibonacci in ricelang
 
 int fibonacci(int n, int memo[]) {
-  if (n <= 1) return n;
+  if (n <= 1) byebye n;
 
-  if (memo[n] != 0) return memo[n];
+  if (memo[n] != 0) byebye memo[n];
 
   memo[n] = fibonacci(n - 1, memo) + fibonacci(n - 2, memo);
 
-  return memo[n];
+  byebye memo[n];
 }
 
 int main() {
@@ -262,23 +265,23 @@ int main() {
         putIntLn(memo[i]);
     }
 
-    return 0;
+    byebye 0;
 }
 `,
   "prime": `// isPrime in ricelang
 
 int mod(int a, int b) {
-    return a - (a / b * b);
+    byebye a - (a / b * b);
 }
 
 boolean isPrime(int n) {
     int i = 2;
-    if (n <= 1) return false;
+    if (n <= 1) byebye false;
     while (i * i <= n) {
-        if (mod(n, i) == 0) return false;
+        if (mod(n, i) == 0) byebye false;
         i = i + 1;
     }
-    return true;
+    byebye true;
 }
 
 int main() {
@@ -305,7 +308,7 @@ int main() {
         }
     }
 
-    return 0;
+    byebye 0;
 }
 `,
   "sine": `// sine wave in ricelang
@@ -315,7 +318,7 @@ float PI = 3.1415926535;
 float sin(float x) {    
     float x2 = x * x, x3 = x2 * x, x5 = x3 * x2, x7 = x5 * x2, x9 = x7 * x2, x11 = x9 * x2, x13 = x11 * x2;
 
-    return x - x3 / 6.0 + x5 / 120.0 - x7 / 5040.0 + x9 / 362880.0 - x11 / 39916800.0  + x13 / 6227020800.0;
+    byebye x - x3 / 6.0 + x5 / 120.0 - x7 / 5040.0 + x9 / 362880.0 - x11 / 39916800.0  + x13 / 6227020800.0;
 }
 
 int main() {
@@ -346,7 +349,18 @@ int main() {
 `
 }
 
-export default function Navbar({ setSourceCode, compile }: { setSourceCode: React.Dispatch<React.SetStateAction<string>>, compile: (srcCode?: string) => Promise<void> }) {
+export default function Navbar({ setSourceCode, compile, ast }: { setSourceCode: React.Dispatch<React.SetStateAction<string>>, compile: (srcCode?: string) => Promise<void>, ast: (srcCode?: string) => Promise<void> }) {
+  const actions: Record<string, { handler: (srcCode?: string) => Promise<void>, desc: string }> = {
+    "Compile!": {
+      handler: compile,
+      desc: "Compile the ricelang code to Java byte code and run it on the JVM"
+    },
+    "Draw AST!": {
+      handler: ast,
+      desc: "Generate a visual representation of the abstract syntax tree"
+    },
+  }
+  const [action, setAction] = useState<keyof typeof actions>('Compile!');
   const handleExampleChange = (value: string) => {
     setSourceCode(examples[value]);
   }
@@ -371,16 +385,22 @@ export default function Navbar({ setSourceCode, compile }: { setSourceCode: Reac
         </TooltipProvider>
 
         <div className="flex gap-4">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button onClick={() => compile()}>Compile!</Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Ctrl + S</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <div className='flex rounded overflow-hidden'>
+            <Button className="rounded-none transition ease-in" onClick={() => actions[action].handler()}>{action}</Button>
+            <Select onValueChange={x => setAction(x)}>
+              <SelectTrigger className="w-[40px] rounded-none bg-primary border-primary hover:bg-primary/90" />
+              <SelectContent>
+                {Object.entries(actions).map(([key, val], i) => (
+                  <SelectItem value={key} key={i}>
+                    <div>
+                      <p className='text-lg'>{key}</p>
+                      <p className='text-sm'>{val.desc}</p>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
           <Select onValueChange={handleExampleChange}>
             <SelectTrigger className="w-[48px] sm:w-[180px] rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition">

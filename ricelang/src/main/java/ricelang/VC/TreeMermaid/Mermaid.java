@@ -41,7 +41,7 @@ public class Mermaid implements Visitor {
     public Object visitDeclList(DeclList ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[DeclList]\n");
+        output.append(parentIndex + "-->" + index + "[DeclList]\n");
         ast.D.visit(this, index);
         ast.DL.visit(this, index);
         return null;
@@ -51,7 +51,7 @@ public class Mermaid implements Visitor {
     public Object visitEmptyDeclList(EmptyDeclList ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[EmptyDeclList]\n");
+        output.append(parentIndex + "-->" + index + "[EmptyDeclList]\n");
         return null;
     }
 
@@ -59,7 +59,7 @@ public class Mermaid implements Visitor {
     public Object visitEmptyStmtList(EmptyStmtList ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[EmptyStmtList]\n");
+        output.append(parentIndex + "-->" + index + "[EmptyStmtList]\n");
         return null;
     }
 
@@ -67,7 +67,7 @@ public class Mermaid implements Visitor {
     public Object visitEmptyArrayExprList(EmptyArrayExprList ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[EmptyArrayExprList]\n");
+        output.append(parentIndex + "-->" + index + "[EmptyArrayExprList]\n");
         return null;
     }
 
@@ -75,7 +75,7 @@ public class Mermaid implements Visitor {
     public Object visitEmptyParaList(EmptyParaList ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[EmptyParaList]\n");
+        output.append(parentIndex + "-->" + index + "[EmptyParaList]\n");
         return null;
     }
 
@@ -83,7 +83,7 @@ public class Mermaid implements Visitor {
     public Object visitEmptyArgList(EmptyArgList ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[EmptyArgList]\n");
+        output.append(parentIndex + "-->" + index + "[EmptyArgList]\n");
         return null;
     }
 
@@ -91,7 +91,7 @@ public class Mermaid implements Visitor {
     public Object visitFuncDecl(FuncDecl ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[FuncDecl]\n");
+        output.append(parentIndex + "-->" + index + "[FuncDecl]\n");
         ast.T.visit(this, index);
         ast.I.visit(this, index);
         ast.PL.visit(this, index);
@@ -103,7 +103,7 @@ public class Mermaid implements Visitor {
     public Object visitGlobalVarDecl(GlobalVarDecl ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[GlobalVarDecl]\n");
+        output.append(parentIndex + "-->" + index + "[GlobalVarDecl]\n");
         ast.T.visit(this, index);
         ast.I.visit(this, index);
         ast.E.visit(this, index);
@@ -114,7 +114,7 @@ public class Mermaid implements Visitor {
     public Object visitLocalVarDecl(LocalVarDecl ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[LocalVarDecl]\n");
+        output.append(parentIndex + "-->" + index + "[LocalVarDecl]\n");
         ast.T.visit(this, index);
         ast.I.visit(this, index);
         ast.E.visit(this, index);
@@ -125,7 +125,7 @@ public class Mermaid implements Visitor {
     public Object visitStmtList(StmtList ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[StmtList]\n");
+        output.append(parentIndex + "-->" + index + "[StmtList]\n");
         ast.S.visit(this, index);
         ast.SL.visit(this, index);
         return null;
@@ -135,7 +135,7 @@ public class Mermaid implements Visitor {
     public Object visitIfStmt(IfStmt ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[IfStmt]\n");
+        output.append(parentIndex + "-->" + index + "[IfStmt]\n");
         ast.E.visit(this, index);
         ast.S1.visit(this, index);
         ast.S2.visit(this, index);
@@ -146,7 +146,7 @@ public class Mermaid implements Visitor {
     public Object visitWhileStmt(WhileStmt ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[WhileStmt]\n");
+        output.append(parentIndex + "-->" + index + "[WhileStmt]\n");
         ast.E.visit(this, index);
         ast.S.visit(this, index);
         return null;
@@ -156,7 +156,7 @@ public class Mermaid implements Visitor {
     public Object visitForStmt(ForStmt ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[ForStmt]\n");
+        output.append(parentIndex + "-->" + index + "[ForStmt]\n");
         ast.E1.visit(this, index);
         ast.E2.visit(this, index);
         ast.E3.visit(this, index);
@@ -168,7 +168,7 @@ public class Mermaid implements Visitor {
     public Object visitBreakStmt(BreakStmt ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[Break]\n");
+        output.append(parentIndex + "-->" + index + "[Break]\n");
         return null;
     }
 
@@ -176,7 +176,7 @@ public class Mermaid implements Visitor {
     public Object visitContinueStmt(ContinueStmt ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[Continue]\n");
+        output.append(parentIndex + "-->" + index + "[Continue]\n");
         return null;
     }
 
@@ -184,7 +184,7 @@ public class Mermaid implements Visitor {
     public Object visitReturnStmt(ReturnStmt ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[byebye]\n");
+        output.append(parentIndex + "-->" + index + "[byebye]\n");
         ast.E.visit(this, index);
         return null;
     }
@@ -193,7 +193,7 @@ public class Mermaid implements Visitor {
     public Object visitCompoundStmt(CompoundStmt ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[CompoundStmt]\n");
+        output.append(parentIndex + "-->" + index + "[CompoundStmt]\n");
         ast.DL.visit(this, index);
         ast.SL.visit(this, index);
         return null;
@@ -203,7 +203,7 @@ public class Mermaid implements Visitor {
     public Object visitExprStmt(ExprStmt ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[ExprStmt]\n");
+        output.append(parentIndex + "-->" + index + "[ExprStmt]\n");
         ast.E.visit(this, index);
         return null;
     }
@@ -212,7 +212,7 @@ public class Mermaid implements Visitor {
     public Object visitEmptyCompStmt(EmptyCompStmt ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[EmptyCompStmt]\n");
+        output.append(parentIndex + "-->" + index + "[EmptyCompStmt]\n");
         return null;
     }
 
@@ -220,7 +220,7 @@ public class Mermaid implements Visitor {
     public Object visitEmptyStmt(EmptyStmt ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[EmptyStmt]\n");
+        output.append(parentIndex + "-->" + index + "[EmptyStmt]\n");
         return null;
     }
 
@@ -228,7 +228,7 @@ public class Mermaid implements Visitor {
     public Object visitIntExpr(IntExpr ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[IntExpr]\n");
+        output.append(parentIndex + "-->" + index + "[IntExpr]\n");
         ast.IL.visit(this, index);
         return null;
     }
@@ -237,7 +237,7 @@ public class Mermaid implements Visitor {
     public Object visitFloatExpr(FloatExpr ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[FloatExpr]\n");
+        output.append(parentIndex + "-->" + index + "[FloatExpr]\n");
         ast.FL.visit(this, index);
         return null;
     }
@@ -246,7 +246,7 @@ public class Mermaid implements Visitor {
     public Object visitBooleanExpr(BooleanExpr ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[BooleanExpr]\n");
+        output.append(parentIndex + "-->" + index + "[BooleanExpr]\n");
         ast.BL.visit(this, index);
         return null;
     }
@@ -255,7 +255,7 @@ public class Mermaid implements Visitor {
     public Object visitStringExpr(StringExpr ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[StringExpr]\n");
+        output.append(parentIndex + "-->" + index + "[StringExpr]\n");
         ast.SL.visit(this, index);
         return null;
     }
@@ -264,7 +264,7 @@ public class Mermaid implements Visitor {
     public Object visitUnaryExpr(UnaryExpr ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[UnaryExpr]\n");
+        output.append(parentIndex + "-->" + index + "[UnaryExpr]\n");
         ast.O.visit(this, index);
         ast.E.visit(this, index);
         return null;
@@ -274,7 +274,7 @@ public class Mermaid implements Visitor {
     public Object visitBinaryExpr(BinaryExpr ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[BinaryExpr]\n");
+        output.append(parentIndex + "-->" + index + "[BinaryExpr]\n");
         ast.E1.visit(this, index);
         ast.O.visit(this, index);
         ast.E2.visit(this, index);
@@ -285,7 +285,7 @@ public class Mermaid implements Visitor {
     public Object visitArrayInitExpr(ArrayInitExpr ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[ArrayInitExpr]\n");
+        output.append(parentIndex + "-->" + index + "[ArrayInitExpr]\n");
         ast.IL.visit(this, index);
         return null;
     }
@@ -294,7 +294,7 @@ public class Mermaid implements Visitor {
     public Object visitArrayExprList(ArrayExprList ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[ArrayExprList]\n");
+        output.append(parentIndex + "-->" + index + "[ArrayExprList]\n");
         ast.E.visit(this, index);
         ast.EL.visit(this, index);
         return null;
@@ -304,7 +304,7 @@ public class Mermaid implements Visitor {
     public Object visitArrayExpr(ArrayExpr ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[ArrayExpr]\n");
+        output.append(parentIndex + "-->" + index + "[ArrayExpr]\n");
         ast.V.visit(this, index);
         ast.E.visit(this, index);
         return null;
@@ -314,7 +314,7 @@ public class Mermaid implements Visitor {
     public Object visitVarExpr(VarExpr ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[VarExpr]\n");
+        output.append(parentIndex + "-->" + index + "[VarExpr]\n");
         ast.V.visit(this, index);
         return null;
     }
@@ -323,7 +323,7 @@ public class Mermaid implements Visitor {
     public Object visitCallExpr(CallExpr ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[CallExpr]\n");
+        output.append(parentIndex + "-->" + index + "[CallExpr]\n");
         ast.I.visit(this, index);
         ast.AL.visit(this, index);
         return null;
@@ -333,7 +333,7 @@ public class Mermaid implements Visitor {
     public Object visitAssignExpr(AssignExpr ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[AssignExpr]\n");
+        output.append(parentIndex + "-->" + index + "[AssignExpr]\n");
         ast.E1.visit(this, index);
         ast.E2.visit(this, index);
         return null;
@@ -343,7 +343,7 @@ public class Mermaid implements Visitor {
     public Object visitEmptyExpr(EmptyExpr ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[EmptyExpr]\n");
+        output.append(parentIndex + "-->" + index + "[EmptyExpr]\n");
         return null;
     }
 
@@ -351,7 +351,7 @@ public class Mermaid implements Visitor {
     public Object visitIntLiteral(IntLiteral ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[" + ast.spelling + "]\n");
+        output.append(parentIndex + "-->" + index + "[" + ast.spelling + "]\n");
         return null;
     }
 
@@ -359,7 +359,7 @@ public class Mermaid implements Visitor {
     public Object visitFloatLiteral(FloatLiteral ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[" + ast.spelling + "]\n");
+        output.append(parentIndex + "-->" + index + "[" + ast.spelling + "]\n");
         return null;
     }
 
@@ -367,7 +367,7 @@ public class Mermaid implements Visitor {
     public Object visitBooleanLiteral(BooleanLiteral ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[" + ast.spelling + "]\n");
+        output.append(parentIndex + "-->" + index + "[" + ast.spelling + "]\n");
         return null;
     }
 
@@ -375,7 +375,17 @@ public class Mermaid implements Visitor {
     public Object visitStringLiteral(StringLiteral ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[\"" + ast.spelling + "\"]\n");
+        String spelling = ast.spelling;
+
+        spelling
+        .replace("#", "\\#")
+        .replace("*", "\\*")
+        .replace("-", "\\-")
+        .replace("\"", "\\\"")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;");
+        
+        output.append(parentIndex + "-->" + index + "[\"" + spelling + "\"]\n");
         return null;
     }
 
@@ -383,7 +393,7 @@ public class Mermaid implements Visitor {
     public Object visitIdent(Ident ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[" + ast.spelling + "]\n");
+        output.append(parentIndex + "-->" + index + "[" + ast.spelling + "]\n");
         return null;
     }
 
@@ -391,7 +401,7 @@ public class Mermaid implements Visitor {
     public Object visitOperator(Operator ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[\"" + ast.spelling + "\"]\n");
+        output.append(parentIndex + "-->" + index + "[\"" + ast.spelling + "\"]\n");
         return null;
     }
 
@@ -399,7 +409,7 @@ public class Mermaid implements Visitor {
     public Object visitParaList(ParaList ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[ParaList]\n");
+        output.append(parentIndex + "-->" + index + "[ParaList]\n");
         ast.P.visit(this, index);
         ast.PL.visit(this, index);
         return null;
@@ -409,7 +419,7 @@ public class Mermaid implements Visitor {
     public Object visitParaDecl(ParaDecl ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[ParaDecl]\n");
+        output.append(parentIndex + "-->" + index + "[ParaDecl]\n");
         ast.T.visit(this, index);
         ast.I.visit(this, index);
         return null;
@@ -419,7 +429,7 @@ public class Mermaid implements Visitor {
     public Object visitArgList(ArgList ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[ArgList]\n");
+        output.append(parentIndex + "-->" + index + "[ArgList]\n");
         ast.A.visit(this, index);
         ast.AL.visit(this, index);
         return null;
@@ -429,7 +439,7 @@ public class Mermaid implements Visitor {
     public Object visitArg(Arg ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[Arg]\n");
+        output.append(parentIndex + "-->" + index + "[Arg]\n");
         ast.E.visit(this, index);
         return null;
     }
@@ -438,7 +448,7 @@ public class Mermaid implements Visitor {
     public Object visitVoidType(VoidType ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[void]\n");
+        output.append(parentIndex + "-->" + index + "[void]\n");
         return null;
     }
 
@@ -446,7 +456,7 @@ public class Mermaid implements Visitor {
     public Object visitBooleanType(BooleanType ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[boolean]\n");
+        output.append(parentIndex + "-->" + index + "[boolean]\n");
         return null;
     }
 
@@ -454,7 +464,7 @@ public class Mermaid implements Visitor {
     public Object visitIntType(IntType ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[int]\n");
+        output.append(parentIndex + "-->" + index + "[int]\n");
         return null;
     }
 
@@ -462,7 +472,7 @@ public class Mermaid implements Visitor {
     public Object visitFloatType(FloatType ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[float]\n");
+        output.append(parentIndex + "-->" + index + "[float]\n");
         return null;
     }
 
@@ -470,7 +480,7 @@ public class Mermaid implements Visitor {
     public Object visitStringType(StringType ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[string]\n");
+        output.append(parentIndex + "-->" + index + "[string]\n");
         return null;
     }
 
@@ -478,7 +488,7 @@ public class Mermaid implements Visitor {
     public Object visitArrayType(ArrayType ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[ArrayType]\n");
+        output.append(parentIndex + "-->" + index + "[ArrayType]\n");
         ast.T.visit(this, index);
         ast.E.visit(this, index);
         return null;
@@ -488,7 +498,7 @@ public class Mermaid implements Visitor {
     public Object visitErrorType(ErrorType ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[ErrorType]\n");
+        output.append(parentIndex + "-->" + index + "[ErrorType]\n");
         return null;
     }
 
@@ -496,7 +506,7 @@ public class Mermaid implements Visitor {
     public Object visitSimpleVar(SimpleVar ast, Object o) {
         int parentIndex = (int) o;
         int index = getIndex();
-        output.append(parentIndex + " --> " + index + "[SimpleVar]\n");
+        output.append(parentIndex + "-->" + index + "[SimpleVar]\n");
         ast.I.visit(this, index);
         return null;
     }
