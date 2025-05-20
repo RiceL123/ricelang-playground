@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>RiceLang Compiler</title>
+  <meta charset="utf-8">
+  <script type="text/javascript" src="ricelang.wasm-runtime.js"></script>
+  <script>
+    let teavm;
+
+    // Load the WASM module on page load
+    window.addEventListener('DOMContentLoaded', async () => {
+      teavm = await TeaVM.wasmGC.load("ricelang.wasm");
+    });
+
+    async function handleClick() {
+      if (!teavm) {
+        alert("WASM is still loading. Please wait a moment.");
+        return;
+      }
+
+      const source = document.getElementById("srcCode").value;
+
+      try {
+        const mermaid = teavm.exports.getMermaid(source);
+        const jasmin = teavm.exports.getJasmin(source);
+        const vanilla = teavm.exports.getVanillaJS(source);
+        const nodejs = teavm.exports.getNodeJS(source);
+
+        document.getElementById("MermaidOutput").textContent = mermaid.output;
+        document.getElementById("MermaidVerbose").textContent = mermaid.verbose;
+        document.getElementById("MermaidError").textContent = mermaid.error;
+        document.getElementById("JasminOutput").textContent = jasmin.output;
+        document.getElementById("JasminVerbose").textContent = jasmin.verbose;
+        document.getElementById("JasminError").textContent = jasmin.error;
+        document.getElementById("VanillaJSOutput").textContent = vanilla.output;
+        document.getElementById("VanillaJSVerbose").textContent = vanilla.verbose;
+        document.getElementById("VanillaJSError").textContent = vanilla.error;
+        document.getElementById("NodeJSOutput").textContent = nodejs.output;
+        document.getElementById("NodeJSVerbose").textContent = nodejs.verbose;
+        document.getElementById("NodeJSError").textContent = nodejs.error;
+      } catch (err) {
+        console.error("Error during compilation:", err);
+        alert("Compilation error. Check console for details.");
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <h1>RiceLang WASM Compiler</h1>
+  <textarea id="srcCode" rows="10" cols="60">int main() { return 42; }</textarea><br>
+  <button onclick="handleClick()">Compile!</button>
+
+  <div>
+    <p>Mermaid output:</p>
+    <pre id="MermaidError"></pre>
+    <hr>
+    <pre id="MermaidVerbose"></pre>
+    <hr>
+    <pre id="MermaidOutput"></pre>
+  </div>
+  <div>
+    <p>Jasmin output:</p>
+    <pre id="JasminError"></pre>
+    <hr>
+    <pre id="JasminVerbose"></pre>
+    <hr>
+    <pre id="JasminOutput"></pre>
+  </div>
+  <div>
+    <p>VanillaJS output:</p>
+    <pre id="VanillaJSError"></pre>
+    <hr>
+    <pre id="VanillaJSVerbose"></pre>
+    <hr>
+    <pre id="VanillaJSOutput"></pre>
+  </div>
+  <div>
+    <p>NodeJS output:</p>
+    <pre id="NodeJSError"></pre>
+    <hr>
+    <pre id="NodeJSVerbose"></pre>
+    <hr>
+    <pre id="NodeJSOutput"></pre>
+  </div>
+</body>
+
+</html>

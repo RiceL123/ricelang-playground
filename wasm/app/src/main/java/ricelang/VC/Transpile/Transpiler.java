@@ -11,12 +11,6 @@ public class Transpiler implements Visitor {
         nodeJS = !vanillaJS;
     }
 
-    public final void gen(AST ast) {
-        JS.clearInstructions();
-        ast.visit(this, null);
-        JS.dump("temp.js");
-    }
-
     public final String genString(AST ast) {
         JS.clearInstructions();
         ast.visit(this, null);

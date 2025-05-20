@@ -3,13 +3,20 @@ ricelang is a simple programming language that supports a weird blend of c and j
 
 ## running
 ```sh
+# compile wasm and copy to the frontend
+cd wasm/
+./gradlew buildWasm --no-configuration-cache
+cp app/build/generated/teavm/wasm-gc/* ../frontend/public
+```
+
+```sh
 # start the frontend
-cd frontend
+cd frontend/
 npm run dev
 ```
 
 ```sh
 # start the backend
-cd ricelang
+cd ricelang/
 ./gradlew bootRun
 ```
