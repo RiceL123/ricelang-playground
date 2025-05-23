@@ -108,7 +108,7 @@ public final class Token {
     "for",
     "if",
     "int",
-    "return",
+    "byebye",
     "void",
     "while",
     "+",

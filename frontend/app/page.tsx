@@ -1,6 +1,5 @@
 "use client"
 import { useRef, useState, useEffect, useCallback } from "react";
-import Script from 'next/script'
 import { useTeaVM } from './components/TeaVMProvider';
 import {
   ResizableHandle,
@@ -13,23 +12,27 @@ import Output from "./components/Output";
 import CodeEditor from "./components/CodeEditor";
 
 const actions: Record<string, { route: string, desc: string }> = {
-  "Run!": {
-    route: "/compile",
+  "Run": {
+    route: "/run",
+    desc: "Transpile to vanilla JavaScript and run it in the browser",
+  },
+  "Run (Legacy)": {
+    route: "/run/legacy",
     desc: "Compile the code to Java byte code and run it on the JVM",
   },
-  "Draw AST!": {
+  "Draw AST": {
     route: "/ast",
     desc: "Generate a visual representation of the abstract syntax tree"
   },
-  "Compile!": {
+  "Compile": {
     route: "/jasmin",
     desc: "Compile to Jasmin assembler (assembly like) code"
   },
-  "Transpile JS!": {
+  "Transpile JS": {
     route: "/javascript",
     desc: "Transpile to vanilla JavaScript"
   },
-  "Transpile NodeJS!": {
+  "Transpile NodeJS": {
     route: "/nodejs",
     desc: "Transpile to NodeJS"
   },
@@ -51,13 +54,15 @@ export default function Home() {
   }, [sourceCode]);
 
   const request = useCallback(
-    async (route: string, isAST: boolean, srcCode = sourceCode) => {
+    async (route: string, srcCode = sourceCode) => {
       const start = performance.now();
 
       setLoading(true);
 
       const { exports } = await teavm;
-      
+
+      let isAST = false;
+
       try {
         let result;
         switch (route) {
@@ -72,9 +77,12 @@ export default function Home() {
             break;
           case "/ast":
             result = exports.getMermaid(srcCode);
+            if (result.error) break;
+            isAST = true;
             break;
-          case "/compile":
+          case "/run":
             result = exports.getVanillaJS(srcCode);
+            if (result.error) break;
 
             // result.verbose += result.output
 
@@ -86,12 +94,30 @@ export default function Home() {
             // result.output = Function(result.output.replace("console.log(stdout.join('\\n'));", "\nreturn stdout.join('\\n');"))();
 
             break;
+          case "/run/legacy":
+            const res = await fetch("http://127.0.0.1:8080/run",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ sourceCode: srcCode })
+              }
+            )
+            if (!res.ok) {
+              result = {
+                output: "Error with fetch to http://127.0.0.1:8080/run",
+                verbose: "Network error" + String(res),
+                isAST: false
+              }
+            }
+            result = await res.json();
+            break;
           default:
             result = { output: "Unknown action", verbose: "", error: true };
         }
-        const end = performance.now(); // End time
-        const timeTaken = (end - start).toFixed(2); // In milliseconds
+        const end = performance.now();
+        const timeTaken = (end - start).toFixed(2);
 
+        console.log(result);
         setOutput({
           output: result.output || "",
           verbose: (result.verbose || "") + `\nCompleted in ${timeTaken} ms`,

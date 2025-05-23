@@ -20,8 +20,8 @@ import jasmin.Main;
 @CrossOrigin(origins = "http://localhost:3000")
 public class RicelangController {
 
-    @PostMapping("/compile")
-    public Output compile(@RequestBody SourceCodeBody sourceCodebody) {
+    @PostMapping("/run")
+    public Output run(@RequestBody SourceCodeBody sourceCodebody) {
         vc vc = new vc();
         String outputFileBase = "temp" + UUID.randomUUID().toString().replace("-", "");
         String jasminFile = outputFileBase + ".j";
@@ -33,7 +33,7 @@ public class RicelangController {
         Optional<String> opt = vc.compile(outputFileBase, sourceCodebody.getSourceCode(), verbose);
         if (opt.isPresent()) {
             new File(jasminFile).delete();
-            return new Output(verbose.toString(), opt.get(), true);
+            return new Output(opt.get(), verbose.toString(), true);
         }
         verbose.append("Generated: " + jasminFile + "\n");
 
@@ -67,53 +67,5 @@ public class RicelangController {
             new File(outputFileBase + ".class").delete();
             return new Output("Internal error: " + e.getMessage(), verbose.toString(), true);
         }
-    }
-
-    @PostMapping("/ast")
-    public Output ast(@RequestBody SourceCodeBody sourceCodebody) {
-        vc vc = new vc();
-        StringBuilder output = new StringBuilder();
-        StringBuilder verbose = new StringBuilder();
-        Optional<String> opt = vc.mermaidAST(sourceCodebody.getSourceCode(), output, verbose);
-        if (opt.isPresent()) {
-            return new Output(output.toString(), verbose.toString() + "\n" + opt.get(), true);
-        }
-        return new Output(output.toString(), verbose.toString(), false);
-    }
-
-    @PostMapping("/jasmin")
-    public Output jasmin(@RequestBody SourceCodeBody sourceCodebody) {
-        vc vc = new vc();
-        StringBuilder verbose = new StringBuilder();
-        StringBuilder output = new StringBuilder();
-        Optional<String> opt = vc.jasminSrc(sourceCodebody.getSourceCode(), output, verbose);
-        if (opt.isPresent()) {
-            return new Output(output.toString(), verbose.toString() + "\n" + opt.get(), true);
-        }
-        return new Output(output.toString(), verbose.toString(), false);
-    }
-
-    @PostMapping("/javascript")
-    public Output javascript(@RequestBody SourceCodeBody sourceCodebody) {
-        vc vc = new vc();
-        StringBuilder output = new StringBuilder();
-        StringBuilder verbose = new StringBuilder();
-        Optional<String> opt = vc.javascriptSrc(sourceCodebody.getSourceCode(), output, verbose, true);
-        if (opt.isPresent()) {
-            return new Output(output.toString(), verbose.toString() + "\n" + opt.get(), true);
-        }
-        return new Output(output.toString(), verbose.toString(), false);
-    }
-
-    @PostMapping("/nodejs")
-    public Output nodejs(@RequestBody SourceCodeBody sourceCodebody) {
-        vc vc = new vc();
-        StringBuilder output = new StringBuilder();
-        StringBuilder verbose = new StringBuilder();
-        Optional<String> opt = vc.javascriptSrc(sourceCodebody.getSourceCode(), output, verbose, false);
-        if (opt.isPresent()) {
-            return new Output(output.toString(), verbose.toString() + "\n" + opt.get(), true);
-        }
-        return new Output(output.toString(), verbose.toString(), false);
     }
 }

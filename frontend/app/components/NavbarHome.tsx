@@ -360,8 +360,8 @@ int main() {
 }
 
 
-export default function Navbar({ setSourceCode, actions, request }: { setSourceCode: React.Dispatch<React.SetStateAction<string>>, actions: Record<string, { route: string, desc: string }>, request: (route: string, isAST: boolean, srcCode?: string) => Promise<void> }) {
-  const [action, setAction] = useState<keyof typeof actions>('Run!');
+export default function Navbar({ setSourceCode, actions, request }: { setSourceCode: React.Dispatch<React.SetStateAction<string>>, actions: Record<string, { route: string, desc: string }>, request: (route: string, srcCode?: string) => Promise<void> }) {
+  const [action, setAction] = useState<keyof typeof actions>(Object.keys(actions)[0]);
   const handleExampleChange = (value: string) => {
     setSourceCode(examples[value]);
   }
@@ -370,7 +370,7 @@ export default function Navbar({ setSourceCode, actions, request }: { setSourceC
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "s" && e.ctrlKey) {
         e.preventDefault();
-        request(actions[action].route, action == "Draw AST!");
+        request(actions[action].route);
       }
     };
 
@@ -399,8 +399,8 @@ export default function Navbar({ setSourceCode, actions, request }: { setSourceC
 
         <div className="flex gap-4">
           <div className='flex rounded overflow-hidden border border-accent'>
-            <Button className="rounded-none transition ease-in" onClick={() => request(actions[action].route, action == "Draw AST!")}>{action}</Button>
-            <Select onValueChange={(x: keyof typeof actions) => { setAction(x); request(actions[x].route, x == "Draw AST!"); }}>
+            <Button className="rounded-none transition ease-in" onClick={() => request(actions[action].route)}>{action}</Button>
+            <Select onValueChange={(x: keyof typeof actions) => { setAction(x); request(actions[x].route); }}>
               <SelectTrigger className="w-[40px] rounded-none bg-primary dark:bg-secondary border-primary" />
               <SelectContent>
                 {Object.entries(actions).map(([key, val], i) => (

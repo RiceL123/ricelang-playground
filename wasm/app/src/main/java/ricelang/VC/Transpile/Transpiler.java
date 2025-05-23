@@ -24,7 +24,7 @@ public class Transpiler implements Visitor {
             JS.append("const prompt=()=>new Promise(res=>{process.stdin.resume();process.stdin.once('data',x => res(x));});");
         } else {
             JS.append("const stdout=[];");
-            JS.append("const print=x=>stdout.length===0?stdout.push(x):stdout[stdout.length-1]+=x;");
+            JS.append("const print=x=>stdout.length===0?stdout.push(String(x)):stdout[stdout.length-1]+=String(x);");
             JS.append("const println=x=>{print(x); stdout.push('');}");
         }
 
