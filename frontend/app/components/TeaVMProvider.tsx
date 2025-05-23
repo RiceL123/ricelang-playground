@@ -1,0 +1,68 @@
+"use client";
+
+import Script from "next/script";
+import { createContext, useContext, useRef, useEffect } from "react";
+
+export interface WasmOutput {
+  output: string;
+  verbose: string;
+  error: boolean;
+}
+
+export interface WasmInstance {
+  exports: {
+    getJasmin(input: string): WasmOutput;
+    getMermaid(input: string): WasmOutput;
+    getNodeJS(input: string): WasmOutput;
+    getVanillaJS(input: string): WasmOutput;
+  };
+  instance: WebAssembly.Instance;
+  module: WebAssembly.Module;
+}
+
+const TeaVMContext = createContext<{ teavm: Promise<WasmInstance> } | null>(null);
+
+export function TeaVMProvider({ children }: { children: React.ReactNode }) {
+  const teavmPromiseRef = useRef<{
+    resolve: (val: WasmInstance) => void;
+    reject: (err: any) => void;
+    promise: Promise<WasmInstance>;
+  }>();
+
+  if (!teavmPromiseRef.current) {
+    let resolve: (val: WasmInstance) => void;
+    let reject: (err: any) => void;
+    const promise = new Promise<WasmInstance>((res, rej) => {
+      resolve = res;
+      reject = rej;
+    });
+    teavmPromiseRef.current = { resolve: resolve!, reject: reject!, promise };
+  }
+
+  useEffect(() => {
+    TeaVM.wasmGC
+      .load("/ricelang.wasm")
+      .then((instance: WasmInstance) => teavmPromiseRef.current!.resolve(instance))
+      .catch(teavmPromiseRef.current!.reject);
+  }, []);
+
+  return (
+    <>
+      <Script
+        src="/ricelang.wasm-runtime.js"
+        strategy="beforeInteractive"
+      />
+      <TeaVMContext.Provider value={{ teavm: teavmPromiseRef.current.promise }}>
+        {children}
+      </TeaVMContext.Provider>
+    </>
+  );
+}
+
+export function useTeaVM() {
+  const context = useContext(TeaVMContext);
+  if (!context) {
+    throw new Error("useTeaVM must be used within a TeaVMProvider");
+  }
+  return context;
+}

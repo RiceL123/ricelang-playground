@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 import { ThemeProvider } from "./components/ThemeProvider";
+import { TeaVMProvider } from "./components/TeaVMProvider";
 import Background from "./components/Background";
 
 const geistSans = Geist({
@@ -33,14 +34,16 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-dvh`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-        >
-          <Background />
-          {children}
-        </ThemeProvider>
+        <TeaVMProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+          >
+            <Background />
+            {children}
+          </ThemeProvider>
+        </TeaVMProvider>
       </body>
     </html>
   );
