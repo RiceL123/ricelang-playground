@@ -8,6 +8,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +18,7 @@ import ricelang.VC.vc;
 import jasmin.Main;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = { "http://localhost:3000", "https://ricelang-playground.vercel.app/" })
 public class RicelangController {
 
     @PostMapping("/run")
@@ -26,9 +27,10 @@ public class RicelangController {
         String outputFileBase = "temp" + UUID.randomUUID().toString().replace("-", "");
         String jasminFile = outputFileBase + ".j";
         StringBuilder verbose = new StringBuilder();
-        
-        if (sourceCodebody.getSourceCode() == null) return new Output("404 no source code", "", true);
-        
+
+        if (sourceCodebody.getSourceCode() == null)
+            return new Output("404 no source code", "", true);
+
         // generate temp.j
         Optional<String> opt = vc.compile(outputFileBase, sourceCodebody.getSourceCode(), verbose);
         if (opt.isPresent()) {
@@ -48,7 +50,7 @@ public class RicelangController {
             ProcessBuilder builder = new ProcessBuilder("java", outputFileBase);
             builder.redirectErrorStream(true);
             Process process = builder.start();
-            
+
             if (process.waitFor(2, TimeUnit.SECONDS)) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                 String line;
@@ -67,5 +69,10 @@ public class RicelangController {
             new File(outputFileBase + ".class").delete();
             return new Output("Internal error: " + e.getMessage(), verbose.toString(), true);
         }
+    }
+
+    @GetMapping("/healthcheck")
+    public String healthcheck() {
+        return "OK";
     }
 }

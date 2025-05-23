@@ -24,10 +24,11 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button"
 import { BookOpen, Info, Menu } from 'lucide-react'
 import ThemeToggle from './ThemeToggle';
 import { useEffect, useState } from 'react'
+import FunnyButton from './FunnyButton'
+import React from 'react'
 
 export const examples: { [key: string]: string } = {
   "hello world": `// Hello World by ricel123 in ricelang 17/05/2025
@@ -360,7 +361,7 @@ int main() {
 }
 
 
-export default function Navbar({ setSourceCode, actions, request }: { setSourceCode: React.Dispatch<React.SetStateAction<string>>, actions: Record<string, { route: string, desc: string }>, request: (route: string, srcCode?: string) => Promise<void> }) {
+const Navbar = ({ setSourceCode, actions, request }: { setSourceCode: (newSourceCode: string) => void, actions: Record<string, { route: string, desc: string }>, request: (route: string) => Promise<void> }) => {
   const [action, setAction] = useState<keyof typeof actions>(Object.keys(actions)[0]);
   const handleExampleChange = (value: string) => {
     setSourceCode(examples[value]);
@@ -374,8 +375,8 @@ export default function Navbar({ setSourceCode, actions, request }: { setSourceC
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown, { capture: true });
+    return () => document.removeEventListener("keydown", handleKeyDown, { capture: true });
   }, [actions, action, request]);
 
   return (
@@ -398,8 +399,8 @@ export default function Navbar({ setSourceCode, actions, request }: { setSourceC
         </TooltipProvider>
 
         <div className="flex gap-4">
-          <div className='flex rounded overflow-hidden border border-accent'>
-            <Button className="rounded-none transition ease-in" onClick={() => request(actions[action].route)}>{action}</Button>
+          <div className='flex rounded-lg overflow-hidden border border-accent'>
+            <FunnyButton onClick={() => request(actions[action].route)}>{action}</FunnyButton>
             <Select onValueChange={(x: keyof typeof actions) => { setAction(x); request(actions[x].route); }}>
               <SelectTrigger className="w-[40px] rounded-none bg-primary dark:bg-secondary border-primary" />
               <SelectContent>
@@ -519,3 +520,5 @@ export default function Navbar({ setSourceCode, actions, request }: { setSourceC
     </header>
   )
 }
+
+export default React.memo(Navbar);

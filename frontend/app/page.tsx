@@ -1,5 +1,5 @@
 "use client"
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useCallback, useMemo } from "react";
 import { useTeaVM } from './components/TeaVMProvider';
 import {
   ResizableHandle,
@@ -10,6 +10,9 @@ import {
 import Navbar, { examples } from "./components/NavbarHome";
 import Output from "./components/Output";
 import CodeEditor from "./components/CodeEditor";
+
+const backendUrl = "https://ricelang-playground.onrender.com";
+// const backendUrl = "http://127.0.0.1:8080"
 
 const actions: Record<string, { route: string, desc: string }> = {
   "Run": {
@@ -46,18 +49,23 @@ export default function Home() {
     verbose: "",
     isAST: false
   });
-  const [sourceCode, setSourceCode] = useState(Object.values(examples)[Math.floor(Math.random() * Object.keys(examples).length)]);
+
+  const memoizedOutput = useMemo(() => output, [output]);
+
+  const [sourceCode, _setSourceCode] = useState(Object.values(examples)[Math.floor(Math.random() * Object.keys(examples).length)]);
   const sourceCodeRef = useRef(sourceCode);
 
-  useEffect(() => {
-    sourceCodeRef.current = sourceCode;
-  }, [sourceCode]);
+  const setSourceCode = useCallback((newSourceCode: string) => {
+    sourceCodeRef.current = newSourceCode;
+    _setSourceCode(newSourceCode);
+  }, []);
 
   const request = useCallback(
-    async (route: string, srcCode = sourceCode) => {
+    async (route: string) => {
       const start = performance.now();
-
       setLoading(true);
+
+      const code = sourceCodeRef.current;
 
       const { exports } = await teavm;
 
@@ -67,21 +75,22 @@ export default function Home() {
         let result;
         switch (route) {
           case "/jasmin":
-            result = exports.getJasmin(srcCode);
+            result = exports.getJasmin(code);
             break;
           case "/javascript":
-            result = exports.getVanillaJS(srcCode);
+            result = exports.getVanillaJS(code);
             break;
           case "/nodejs":
-            result = exports.getNodeJS(srcCode);
+            result = exports.getNodeJS(code);
             break;
           case "/ast":
-            result = exports.getMermaid(srcCode);
+            result = exports.getMermaid(code);
             if (result.error) break;
+            console.log(result.output);
             isAST = true;
             break;
           case "/run":
-            result = exports.getVanillaJS(srcCode);
+            result = exports.getVanillaJS(code);
             if (result.error) break;
 
             // result.verbose += result.output
@@ -95,16 +104,16 @@ export default function Home() {
 
             break;
           case "/run/legacy":
-            const res = await fetch("http://127.0.0.1:8080/run",
+            const res = await fetch(`${backendUrl}/run`,
               {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ sourceCode: srcCode })
+                body: JSON.stringify({ sourceCode: code })
               }
             )
             if (!res.ok) {
               result = {
-                output: "Error with fetch to http://127.0.0.1:8080/run",
+                output: `Error with fetch to ${backendUrl}/run`,
                 verbose: "Network error" + String(res),
                 isAST: false
               }
@@ -114,18 +123,15 @@ export default function Home() {
           default:
             result = { output: "Unknown action", verbose: "", error: true };
         }
-        const end = performance.now();
-        const timeTaken = (end - start).toFixed(2);
 
-        console.log(result);
         setOutput({
           output: result.output || "",
-          verbose: (result.verbose || "") + `\nCompleted in ${timeTaken} ms`,
+          verbose: (result.verbose || "") + `\nCompleted in ${(performance.now() - start).toFixed(2)} ms`,
           isAST: isAST,
         });
       } catch (e) {
         setOutput({
-          output: "Error during call:\n",
+          output: `Error during call:\nCompleted in ${(performance.now() - start).toFixed(2)} ms`,
           verbose: String(e),
           isAST: false,
         });
@@ -133,7 +139,7 @@ export default function Home() {
         setLoading(false);
       }
     },
-    [sourceCode, teavm]
+    [teavm]
   );
 
   return (
@@ -141,12 +147,12 @@ export default function Home() {
       <Navbar setSourceCode={setSourceCode} actions={actions} request={request} />
       <div className="grow max-h-full max-w-full" style={{ height: 'calc(100dvh - 48px)' }}>
         <ResizablePanelGroup direction="horizontal" className="box-border flex gap-2 p-3">
-          <ResizablePanel defaultSize={50}>
+          <ResizablePanel defaultSize={50} key="editor-panel">
             <CodeEditor setSourceCode={setSourceCode} sourceCode={sourceCode} />
           </ResizablePanel>
           <ResizableHandle className="opacity-0" />
-          <ResizablePanel defaultSize={50}>
-            <Output output={output} loading={loading} />
+          <ResizablePanel defaultSize={50} key="output-panel">
+            <Output output={memoizedOutput} loading={loading} />
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Editor, OnChange, OnMount, useMonaco } from "@monaco-editor/react";
 import { useTheme } from 'next-themes'
 
-export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCode: React.Dispatch<React.SetStateAction<string>>, sourceCode: string }) {
+export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCode: (newSourceCode: string) => void, sourceCode: string }) {
   const { resolvedTheme } = useTheme();
   const monaco = useMonaco();
 
