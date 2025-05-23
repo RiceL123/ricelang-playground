@@ -52,10 +52,12 @@ export default function Home() {
 
   const request = useCallback(
     async (route: string, isAST: boolean, srcCode = sourceCode) => {
+      const start = performance.now();
+
       setLoading(true);
 
       const { exports } = await teavm;
-
+      
       try {
         let result;
         switch (route) {
@@ -75,7 +77,7 @@ export default function Home() {
             result = exports.getVanillaJS(srcCode);
 
             // result.verbose += result.output
-            
+
             // result.output will always have a `console.log(stdout.join('\n'));`
 
             const n = result.output.length - ("console.log(stdout.join('\\n'));").length
@@ -87,15 +89,17 @@ export default function Home() {
           default:
             result = { output: "Unknown action", verbose: "", error: true };
         }
+        const end = performance.now(); // End time
+        const timeTaken = (end - start).toFixed(2); // In milliseconds
 
         setOutput({
           output: result.output || "",
-          verbose: result.verbose || "",
+          verbose: (result.verbose || "") + `\nCompleted in ${timeTaken} ms`,
           isAST: isAST,
         });
       } catch (e) {
         setOutput({
-          output: "Error during WASM call:\n",
+          output: "Error during call:\n",
           verbose: String(e),
           isAST: false,
         });
@@ -107,22 +111,19 @@ export default function Home() {
   );
 
   return (
-    <>
-      <Script src="/ricelang.wasm-runtime.js" strategy="beforeInteractive" />
-      <div className="w-full h-full flex flex-col">
-        <Navbar setSourceCode={setSourceCode} actions={actions} request={request} />
-        <div className="grow max-h-full max-w-full" style={{ height: 'calc(100dvh - 48px)' }}>
-          <ResizablePanelGroup direction="horizontal" className="box-border flex gap-2 p-3">
-            <ResizablePanel defaultSize={50}>
-              <CodeEditor setSourceCode={setSourceCode} sourceCode={sourceCode} />
-            </ResizablePanel>
-            <ResizableHandle className="opacity-0" />
-            <ResizablePanel defaultSize={50}>
-              <Output output={output} loading={loading} />
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        </div>
+    <div className="w-full h-full flex flex-col">
+      <Navbar setSourceCode={setSourceCode} actions={actions} request={request} />
+      <div className="grow max-h-full max-w-full" style={{ height: 'calc(100dvh - 48px)' }}>
+        <ResizablePanelGroup direction="horizontal" className="box-border flex gap-2 p-3">
+          <ResizablePanel defaultSize={50}>
+            <CodeEditor setSourceCode={setSourceCode} sourceCode={sourceCode} />
+          </ResizablePanel>
+          <ResizableHandle className="opacity-0" />
+          <ResizablePanel defaultSize={50}>
+            <Output output={output} loading={loading} />
+          </ResizablePanel>
+        </ResizablePanelGroup>
       </div>
-    </>
+    </div>
   );
 }
