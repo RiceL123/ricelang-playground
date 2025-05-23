@@ -400,7 +400,7 @@ export default function Navbar({ setSourceCode, actions, request }: { setSourceC
         <div className="flex gap-4">
           <div className='flex rounded overflow-hidden border border-accent'>
             <Button className="rounded-none transition ease-in" onClick={() => request(actions[action].route, action == "Draw AST!")}>{action}</Button>
-            <Select onValueChange={(x: keyof typeof actions) => setAction(x)}>
+            <Select onValueChange={(x: keyof typeof actions) => { setAction(x); request(actions[x].route, x == "Draw AST!"); }}>
               <SelectTrigger className="w-[40px] rounded-none bg-primary dark:bg-secondary border-primary" />
               <SelectContent>
                 {Object.entries(actions).map(([key, val], i) => (

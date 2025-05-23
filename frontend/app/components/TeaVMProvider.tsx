@@ -20,18 +20,24 @@ export interface WasmInstance {
   module: WebAssembly.Module;
 }
 
+declare const TeaVM: {
+  wasmGC: {
+    load: (path: string) => Promise<WasmInstance>;
+  };
+};
+
 const TeaVMContext = createContext<{ teavm: Promise<WasmInstance> } | null>(null);
 
 export function TeaVMProvider({ children }: { children: React.ReactNode }) {
   const teavmPromiseRef = useRef<{
     resolve: (val: WasmInstance) => void;
-    reject: (err: any) => void;
+    reject: (err: unknown) => void;
     promise: Promise<WasmInstance>;
-  }>();
+  }>(null);
 
   if (!teavmPromiseRef.current) {
     let resolve: (val: WasmInstance) => void;
-    let reject: (err: any) => void;
+    let reject: (err: unknown) => void;
     const promise = new Promise<WasmInstance>((res, rej) => {
       resolve = res;
       reject = rej;
