@@ -402,7 +402,7 @@ const Navbar = ({ setSourceCode, actions, request }: { setSourceCode: (newSource
           <div className='flex rounded-lg overflow-hidden border border-accent'>
             <FunnyButton onClick={() => request(actions[action].route)}>{action}</FunnyButton>
             <Select onValueChange={(x: keyof typeof actions) => { setAction(x); request(actions[x].route); }}>
-              <SelectTrigger className="w-[40px] rounded-none bg-primary dark:bg-secondary border-primary" />
+              <SelectTrigger className="w-[40px] rounded-none bg-primary dark:bg-secondary border-primary" aria-label="Select action" />
               <SelectContent>
                 {Object.entries(actions).map(([key, val], i) => (
                   <SelectItem value={key} key={i}>
@@ -417,7 +417,7 @@ const Navbar = ({ setSourceCode, actions, request }: { setSourceCode: (newSource
           </div>
 
           <Select onValueChange={handleExampleChange}>
-            <SelectTrigger className="hidden sm:flex w-[48px] md:w-[180px] rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition">
+            <SelectTrigger className="hidden sm:flex w-[48px] md:w-[180px] rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition" aria-label="Select example">
               <SelectValue placeholder="examples" />
             </SelectTrigger>
             <SelectContent className="bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm">

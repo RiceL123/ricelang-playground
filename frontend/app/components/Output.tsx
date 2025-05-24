@@ -28,7 +28,7 @@ const Output = ({ output, loading }: { output: OutputProp, loading: boolean }) =
           : <div className="w-full h-full">
             {output.verbose && output.verbose !== "" && (<><Separator text="Verbose" /><pre >{output.verbose}</pre></>)}
             <Separator text="Output" />
-            <pre >{output.output}</pre>
+            <pre>{output.output}</pre>
           </div>
       }
     </div >

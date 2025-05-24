@@ -1,5 +1,5 @@
 "use client"
-import { useRef, useState, useCallback, useMemo } from "react";
+import { useRef, useState, useCallback, useMemo, useEffect } from "react";
 import { useTeaVM } from './components/TeaVMProvider';
 import {
   ResizableHandle,
@@ -49,6 +49,18 @@ export default function Home() {
     verbose: "",
     isAST: false
   });
+    const [direction, setDirection] = useState<'horizontal' | 'vertical'>('horizontal');
+
+  useEffect(() => {
+    const updateDirection = () => {
+      setDirection(window.innerWidth < 640 ? 'vertical' : 'horizontal'); // Tailwind's `sm` breakpoint
+    };
+
+    updateDirection(); // run initially
+    window.addEventListener('resize', updateDirection);
+    return () => window.removeEventListener('resize', updateDirection);
+  }, []);
+
 
   const memoizedOutput = useMemo(() => output, [output]);
 
@@ -64,15 +76,54 @@ export default function Home() {
     async (route: string) => {
       const start = performance.now();
       setLoading(true);
-
       const code = sourceCodeRef.current;
 
-      const { exports } = await teavm;
+      let result;
+      let output: { output: string; verbose: string; isAST: boolean; } = { output: "", verbose: "", isAST: false };
+      if (route == "/run/legacy") {
+        try {
+          const res = await fetch(`${backendUrl}/run`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ sourceCode: code })
+            }
+          )
+          if (!res.ok) {
+            result = {
+              output: `Error with fetch to ${backendUrl}/run`,
+              verbose: "Network error" + String(res),
+            }
+          } else {
+            result = await res.json();
+          }
+          output = { output: result.output, verbose: result.verbose + `\nCompleted in ${(performance.now() - start).toFixed(2)} ms`, isAST: false };
+        } catch (e) {
+          output = {
+            output: `Error with fetch to ${backendUrl}/run`,
+            verbose: "Network error" + String(e),
+            isAST: false
+          }
+        } finally {
+          setOutput(output);
+          setLoading(false);
+          return;
+        }
+      }
+
+      let exports;
+
+      try {
+        const teavmModule = await teavm;
+        exports = teavmModule.exports;
+      } catch (e) {
+        setOutput({ output: "failed to load TeaVM wasm module: " + String(e), verbose: `Completed in ${(performance.now() - start).toFixed(2)} ms`, isAST: false });
+        return;
+      }
 
       let isAST = false;
 
       try {
-        let result;
         switch (route) {
           case "/jasmin":
             result = exports.getJasmin(code);
@@ -86,7 +137,6 @@ export default function Home() {
           case "/ast":
             result = exports.getMermaid(code);
             if (result.error) break;
-            console.log(result.output);
             isAST = true;
             break;
           case "/run":
@@ -103,39 +153,18 @@ export default function Home() {
             // result.output = Function(result.output.replace("console.log(stdout.join('\\n'));", "\nreturn stdout.join('\\n');"))();
 
             break;
-          case "/run/legacy":
-            const res = await fetch(`${backendUrl}/run`,
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ sourceCode: code })
-              }
-            )
-            if (!res.ok) {
-              result = {
-                output: `Error with fetch to ${backendUrl}/run`,
-                verbose: "Network error" + String(res),
-                isAST: false
-              }
-            }
-            result = await res.json();
-            break;
           default:
             result = { output: "Unknown action", verbose: "", error: true };
         }
-
-        setOutput({
-          output: result.output || "",
-          verbose: (result.verbose || "") + `\nCompleted in ${(performance.now() - start).toFixed(2)} ms`,
-          isAST: isAST,
-        });
+        output = { output: result.output, verbose: result.verbose + `\nCompleted in ${(performance.now() - start).toFixed(2)} ms`, isAST };
       } catch (e) {
-        setOutput({
+        output = {
           output: `Error during call:\nCompleted in ${(performance.now() - start).toFixed(2)} ms`,
           verbose: String(e),
           isAST: false,
-        });
+        };
       } finally {
+        setOutput(output);
         setLoading(false);
       }
     },
@@ -146,7 +175,7 @@ export default function Home() {
     <div className="w-full h-full flex flex-col">
       <Navbar setSourceCode={setSourceCode} actions={actions} request={request} />
       <div className="grow max-h-full max-w-full" style={{ height: 'calc(100dvh - 48px)' }}>
-        <ResizablePanelGroup direction="horizontal" className="box-border flex gap-2 p-3">
+        <ResizablePanelGroup direction={direction} className="box-border flex gap-2 p-3">
           <ResizablePanel defaultSize={50} key="editor-panel">
             <CodeEditor setSourceCode={setSourceCode} sourceCode={sourceCode} />
           </ResizablePanel>

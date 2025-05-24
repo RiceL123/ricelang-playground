@@ -1,10 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Editor, OnChange, OnMount, useMonaco } from "@monaco-editor/react";
 import { useTheme } from 'next-themes'
 
 export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCode: (newSourceCode: string) => void, sourceCode: string }) {
   const { resolvedTheme } = useTheme();
   const monaco = useMonaco();
+    const [fontSize, setFontSize] = useState(14);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setFontSize(window.innerWidth < 640 ? 11 : 16);
+    }
+  }, []);
+
 
   const handleEditorDidMount: OnMount = (_editor, monaco) => {
 
@@ -158,6 +166,7 @@ export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCod
         onMount={handleEditorDidMount}
         onChange={handleEditorChange}
         options={{
+          fontSize: fontSize,
           padding: { top: 16 },
           lineNumbersMinChars: 3,
         }}

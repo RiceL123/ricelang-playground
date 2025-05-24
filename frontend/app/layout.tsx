@@ -32,7 +32,7 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased h-dvh`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased h-dvh text-xs sm:text-base`}
       >
         <TeaVMProvider>
           <ThemeProvider
