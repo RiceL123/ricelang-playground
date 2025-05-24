@@ -43,7 +43,6 @@ teavm {
         mainClass = 'ricelang.wasm.bindings'
     }
     wasmGC {
-        addedToWebApp = true
         targetFileName = "ricelang.wasm"
     }
 }

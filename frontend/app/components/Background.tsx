@@ -1,16 +1,24 @@
 'use client'
+import { getImageProps } from 'next/image'
 
-// import { useTheme } from 'next-themes'
+const imgPath = "/background-transparent.webp";
 
 export default function Background() {
-  // const { resolvedTheme } = useTheme()
+  
+  function getBackgroundImage(srcSet = '') {
+    const imageSet = srcSet
+      .split(', ')
+      .map((str) => {
+        const [url, dpi] = str.split(' ')
+        return `url("${url}") ${dpi}`
+      })
+      .join(', ')
+    return `image-set(${imageSet})`
+  }
 
-  // const backgroundImage =
-  //   resolvedTheme === 'light'
-  //     ? 'url(/background.png)'
-  //     : 'url(/background-dark.png)'
+  const { props: { srcSet }} = getImageProps({ alt: '', width: 1920, height: 2600, src: imgPath })
 
-  const backgroundImage = 'url(/background-transparent.png)'
+  const backgroundImage = getBackgroundImage(srcSet)
 
   return (
     <div className="fixed inset-0 -z-10">
@@ -61,8 +69,8 @@ export default function Background() {
       </div>
 
       <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage }}
+        className="absolute -inset-px bg-cover bg-center opacity-80 dark:invert dark:grayscale"
+        style={{ height: '100vh', width: '100vw', backgroundImage }}
       />
     </div>
   )

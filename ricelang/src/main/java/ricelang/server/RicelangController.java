@@ -18,7 +18,7 @@ import ricelang.VC.vc;
 import jasmin.Main;
 
 @RestController
-@CrossOrigin(origins = { "http://localhost:3000", "https://ricelang-playground.vercel.app/" })
+@CrossOrigin(origins = { "http://localhost:3000", "https://ricelang-playground.vercel.app" })
 public class RicelangController {
 
     @PostMapping("/run")

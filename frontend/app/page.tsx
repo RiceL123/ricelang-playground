@@ -41,6 +41,36 @@ const actions: Record<string, { route: string, desc: string }> = {
   },
 }
 
+async function getRunLegacyOutput(code: string, start: number) {
+  let result;
+  let output;
+  try {
+    const res = await fetch(`${backendUrl}/run`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sourceCode: code })
+      }
+    )
+    if (!res.ok) {
+      result = {
+        output: `Error with fetch to ${backendUrl}/run`,
+        verbose: "Network error" + String(res),
+      }
+    } else {
+      result = await res.json();
+    }
+    output = { output: result.output, verbose: result.verbose + `\nCompleted in ${(performance.now() - start).toFixed(2)} ms`, isAST: false };
+  } catch (e) {
+    output = {
+      output: `Error with fetch to ${backendUrl}/run`,
+      verbose: "Network error" + String(e),
+      isAST: false
+    }
+  }
+  return output;
+}
+
 export default function Home() {
   const { teavm } = useTeaVM();
   const [loading, setLoading] = useState(false);
@@ -49,7 +79,7 @@ export default function Home() {
     verbose: "",
     isAST: false
   });
-    const [direction, setDirection] = useState<'horizontal' | 'vertical'>('horizontal');
+  const [direction, setDirection] = useState<'horizontal' | 'vertical'>('horizontal');
 
   useEffect(() => {
     const updateDirection = () => {
@@ -81,34 +111,9 @@ export default function Home() {
       let result;
       let output: { output: string; verbose: string; isAST: boolean; } = { output: "", verbose: "", isAST: false };
       if (route == "/run/legacy") {
-        try {
-          const res = await fetch(`${backendUrl}/run`,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ sourceCode: code })
-            }
-          )
-          if (!res.ok) {
-            result = {
-              output: `Error with fetch to ${backendUrl}/run`,
-              verbose: "Network error" + String(res),
-            }
-          } else {
-            result = await res.json();
-          }
-          output = { output: result.output, verbose: result.verbose + `\nCompleted in ${(performance.now() - start).toFixed(2)} ms`, isAST: false };
-        } catch (e) {
-          output = {
-            output: `Error with fetch to ${backendUrl}/run`,
-            verbose: "Network error" + String(e),
-            isAST: false
-          }
-        } finally {
-          setOutput(output);
-          setLoading(false);
-          return;
-        }
+        setOutput(await getRunLegacyOutput(code, start));
+        setLoading(false);
+        return;
       }
 
       let exports;
@@ -158,11 +163,7 @@ export default function Home() {
         }
         output = { output: result.output, verbose: result.verbose + `\nCompleted in ${(performance.now() - start).toFixed(2)} ms`, isAST };
       } catch (e) {
-        output = {
-          output: `Error during call:\nCompleted in ${(performance.now() - start).toFixed(2)} ms`,
-          verbose: String(e),
-          isAST: false,
-        };
+        output = { output: `Error during call:\nCompleted in ${(performance.now() - start).toFixed(2)} ms`, verbose: String(e), isAST: false };
       } finally {
         setOutput(output);
         setLoading(false);
