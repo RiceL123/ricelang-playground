@@ -51,7 +51,6 @@ export function TeaVMProvider({ children }: { children: React.ReactNode }) {
         const instance = await TeaVM.wasmGC.load("/ricelang.wasm");
         teavmPromiseRef.current!.resolve(instance);
       } catch (err) {
-        console.error("WASM load failed:", err);
         teavmPromiseRef.current!.reject(err);
       }
     };

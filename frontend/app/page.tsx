@@ -11,6 +11,9 @@ import { toast } from "sonner"
 import Navbar, { examples } from "./components/NavbarHome";
 import Output from "./components/Output";
 import CodeEditor from "./components/CodeEditor";
+import { BookOpen } from 'lucide-react'
+import { buttonVariants } from "@/components/ui/button";
+import Link from "next/link";
 
 const backendUrl = "https://ricelang-playground.onrender.com";
 // const backendUrl = "http://127.0.0.1:8080"
@@ -87,7 +90,7 @@ export default function Home() {
       setDirection(window.innerWidth < 640 ? 'vertical' : 'horizontal'); // Tailwind's `sm` breakpoint
     };
 
-    updateDirection(); // run initially
+    updateDirection();
     window.addEventListener('resize', updateDirection);
     return () => window.removeEventListener('resize', updateDirection);
   }, []);
@@ -109,8 +112,6 @@ export default function Home() {
       setLoading(true);
       const code = sourceCodeRef.current;
 
-      let result;
-      let output: { output: string; verbose: string; isAST: boolean; } = { output: "", verbose: "", isAST: false };
       if (route == "/run/legacy") {
         setOutput(await getLegacyOutput("/run", code, start));
         setLoading(false);
@@ -124,8 +125,8 @@ export default function Home() {
         exports = teavmModule.exports;
       } catch (e) {
         toast.error(`WebAssembly failed: ${e}`, {
-          description: `Falling back to legacy Spring Boot route for ${route}`,
-          duration: 4000,
+          description: <div><span>Falling back to legacy backend route for {route}. Check out the Wasm docs for your browser's compatibility.</span></div>,
+          action: <Link href="https://developer.mozilla.org/en-US/docs/WebAssembly#browser_compatibility" target="_blank" className={buttonVariants({ variant: 'default' })}><BookOpen />Docs</Link>,
           closeButton: true
         })
         setOutput(await getLegacyOutput(route, code, start, route == "/ast"));
@@ -133,6 +134,8 @@ export default function Home() {
         return;
       }
 
+      let result;
+      let output: { output: string; verbose: string; isAST: boolean; } = { output: "", verbose: "", isAST: false };
       let isAST = false;
 
       try {
