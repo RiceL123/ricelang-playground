@@ -6,7 +6,8 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable"
-
+import { Toaster } from "@/components/ui/sonner"
+import { toast } from "sonner"
 import Navbar, { examples } from "./components/NavbarHome";
 import Output from "./components/Output";
 import CodeEditor from "./components/CodeEditor";
@@ -41,11 +42,11 @@ const actions: Record<string, { route: string, desc: string }> = {
   },
 }
 
-async function getRunLegacyOutput(code: string, start: number) {
+async function getLegacyOutput(route: string, code: string, start: number, isAST = false) {
   let result;
   let output;
   try {
-    const res = await fetch(`${backendUrl}/run`,
+    const res = await fetch(`${backendUrl}${route}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -54,16 +55,16 @@ async function getRunLegacyOutput(code: string, start: number) {
     )
     if (!res.ok) {
       result = {
-        output: `Error with fetch to ${backendUrl}/run`,
+        output: `Error with fetch to ${backendUrl}${route}`,
         verbose: "Network error" + String(res),
       }
     } else {
       result = await res.json();
     }
-    output = { output: result.output, verbose: result.verbose + `\nCompleted in ${(performance.now() - start).toFixed(2)} ms`, isAST: false };
+    output = { output: result.output, verbose: result.verbose + `\nCompleted in ${(performance.now() - start).toFixed(2)} ms`, isAST };
   } catch (e) {
     output = {
-      output: `Error with fetch to ${backendUrl}/run`,
+      output: `Error with fetch to ${backendUrl}${route}`,
       verbose: "Network error" + String(e),
       isAST: false
     }
@@ -111,7 +112,7 @@ export default function Home() {
       let result;
       let output: { output: string; verbose: string; isAST: boolean; } = { output: "", verbose: "", isAST: false };
       if (route == "/run/legacy") {
-        setOutput(await getRunLegacyOutput(code, start));
+        setOutput(await getLegacyOutput("/run", code, start));
         setLoading(false);
         return;
       }
@@ -122,7 +123,13 @@ export default function Home() {
         const teavmModule = await teavm;
         exports = teavmModule.exports;
       } catch (e) {
-        setOutput({ output: "failed to load TeaVM wasm module: " + String(e), verbose: `Completed in ${(performance.now() - start).toFixed(2)} ms`, isAST: false });
+        toast.error(`WebAssembly failed: ${e}`, {
+          description: `Falling back to legacy Spring Boot route for ${route}`,
+          duration: 4000,
+          closeButton: true
+        })
+        setOutput(await getLegacyOutput(route, code, start, route == "/ast"));
+        setLoading(false);
         return;
       }
 
@@ -174,6 +181,7 @@ export default function Home() {
 
   return (
     <div className="w-full h-full flex flex-col">
+      <Toaster />
       <Navbar setSourceCode={setSourceCode} actions={actions} request={request} />
       <div className="grow max-h-full max-w-full" style={{ height: 'calc(100dvh - 48px)' }}>
         <ResizablePanelGroup direction={direction} className="box-border flex gap-2 p-3">

@@ -46,10 +46,16 @@ export function TeaVMProvider({ children }: { children: React.ReactNode }) {
   }
 
   useEffect(() => {
-    TeaVM.wasmGC
-      .load("/ricelang.wasm")
-      .then((instance: WasmInstance) => teavmPromiseRef.current!.resolve(instance))
-      .catch(teavmPromiseRef.current!.reject);
+    const loadWasm = async () => {
+      try {
+        const instance = await TeaVM.wasmGC.load("/ricelang.wasm");
+        teavmPromiseRef.current!.resolve(instance);
+      } catch (err) {
+        console.error("WASM load failed:", err);
+        teavmPromiseRef.current!.reject(err);
+      }
+    };
+    loadWasm();
   }, []);
 
   return (

@@ -40,8 +40,8 @@ public final class Emitter implements Visitor {
         }
     }
 
-    public Emitter() {
-        classname = "temp";
+    public Emitter(String fileName) {
+        classname = fileName;
     }
 
     // ast must be a Program node

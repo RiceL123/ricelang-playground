@@ -70,6 +70,42 @@ public class RicelangController {
             return new Output("Internal error: " + e.getMessage(), verbose.toString(), true);
         }
     }
+    
+    @FunctionalInterface
+    private interface TriFunction<A, B, C, R> {
+        R apply(A a, B b, C c);
+    }
+
+    private static Output runCompiler(String sourceCode, TriFunction<vc, StringBuilder, StringBuilder, Optional<String>> action) {
+        StringBuilder output = new StringBuilder();
+        StringBuilder verbose = new StringBuilder();
+        vc compiler = new vc();
+        Optional<String> error = action.apply(compiler, output, verbose);
+
+        boolean isError = error.isPresent();
+        String result = isError ? error.get() : output.toString();
+        return new Output(result, verbose.toString(), isError);
+    }
+
+    @PostMapping("/ast")
+    public static Output mermaid(@RequestBody SourceCodeBody sourceCodebody) {
+        return runCompiler(sourceCodebody.toString(), (v, out, verbose) -> v.mermaidAST(sourceCodebody.toString(), out, verbose));
+    }
+
+    @PostMapping("/jasmin")
+    public static Output jasmin(@RequestBody SourceCodeBody sourceCodebody) {
+        return runCompiler(sourceCodebody.toString(), (v, out, verbose) -> v.jasminSrc(sourceCodebody.toString(), out, verbose));
+    }
+
+    @PostMapping("/javascript")
+    public static Output vanillaJS(@RequestBody SourceCodeBody sourceCodebody) {
+        return runCompiler(sourceCodebody.toString(), (v, out, verbose) -> v.javascriptSrc(sourceCodebody.toString(), out, verbose, true));
+    }
+
+    @PostMapping("/nodejs")
+    public static Output nodeJS(@RequestBody SourceCodeBody sourceCodebody) {
+        return runCompiler(sourceCodebody.toString(), (v, out, verbose) -> v.javascriptSrc(sourceCodebody.toString(), out, verbose, false));
+    }
 
     @GetMapping("/healthcheck")
     public String healthcheck() {
