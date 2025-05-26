@@ -1,6 +1,6 @@
 "use client"
 import { useRef, useState, useCallback, useMemo, useEffect } from "react";
-import { useTeaVM } from './components/TeaVMProvider';
+import { useTeaVM, WasmInstance } from './components/TeaVMProvider';
 import {
   ResizableHandle,
   ResizablePanel,
@@ -77,6 +77,8 @@ async function getLegacyOutput(route: string, code: string, start: number, isAST
 
 export default function Home() {
   const { teavm } = useTeaVM();
+  const exportsRef = useRef<WasmInstance["exports"]>(null);
+
   const [loading, setLoading] = useState(false);
   const [output, setOutput] = useState({
     output: "press Ctrl+S or the Compile button to compile the code!!",
@@ -86,14 +88,29 @@ export default function Home() {
   const [direction, setDirection] = useState<'horizontal' | 'vertical'>('horizontal');
 
   useEffect(() => {
+    const loadWasmExports = async () => {
+      try {
+        const teavmModule = await teavm;
+        exportsRef.current = teavmModule.exports;
+      } catch (e) {
+        toast.error(`WebAssembly failed: ${e}`, {
+          description: `Falling back to legacy backend route for all subsequent requests. Check out the Wasm docs for your browser's compatibility.`,
+          action: <Link href="https://developer.mozilla.org/en-US/docs/WebAssembly#browser_compatibility" target="_blank" className={buttonVariants({ variant: 'default' })}><BookOpen />Docs</Link>,
+          duration: 20000,
+          closeButton: true
+        })
+        return;
+      }
+    }
+    loadWasmExports();
+
     const updateDirection = () => {
       setDirection(window.innerWidth < 640 ? 'vertical' : 'horizontal'); // Tailwind's `sm` breakpoint
     };
-
     updateDirection();
     window.addEventListener('resize', updateDirection);
     return () => window.removeEventListener('resize', updateDirection);
-  }, []);
+  }, [teavm]);
 
 
   const memoizedOutput = useMemo(() => output, [output]);
@@ -112,74 +129,70 @@ export default function Home() {
       setLoading(true);
       const code = sourceCodeRef.current;
 
-      if (route == "/run/legacy") {
-        setOutput(await getLegacyOutput("/run", code, start));
-        setLoading(false);
-        return;
-      }
-
-      let exports;
-
-      try {
-        const teavmModule = await teavm;
-        exports = teavmModule.exports;
-      } catch (e) {
-        toast.error(`WebAssembly failed: ${e}`, {
-          description: <div><span>Falling back to legacy backend route for {route}. Check out the Wasm docs for your browser's compatibility.</span></div>,
-          action: <Link href="https://developer.mozilla.org/en-US/docs/WebAssembly#browser_compatibility" target="_blank" className={buttonVariants({ variant: 'default' })}><BookOpen />Docs</Link>,
-          closeButton: true
-        })
-        setOutput(await getLegacyOutput(route, code, start, route == "/ast"));
-        setLoading(false);
-        return;
-      }
-
-      let result;
-      let output: { output: string; verbose: string; isAST: boolean; } = { output: "", verbose: "", isAST: false };
-      let isAST = false;
-
-      try {
-        switch (route) {
-          case "/jasmin":
-            result = exports.getJasmin(code);
-            break;
-          case "/javascript":
-            result = exports.getVanillaJS(code);
-            break;
-          case "/nodejs":
-            result = exports.getNodeJS(code);
-            break;
-          case "/ast":
-            result = exports.getMermaid(code);
-            if (result.error) break;
-            isAST = true;
-            break;
-          case "/run":
-            result = exports.getVanillaJS(code);
-            if (result.error) break;
-
-            // result.verbose += result.output
-
-            // result.output will always have a `console.log(stdout.join('\n'));`
-
-            const n = result.output.length - ("console.log(stdout.join('\\n'));").length
-            result.output = Function(result.output.slice(0, n) + "\n return stdout.join('\\n');")();
-
-            // result.output = Function(result.output.replace("console.log(stdout.join('\\n'));", "\nreturn stdout.join('\\n');"))();
-
-            break;
-          default:
-            result = { output: "Unknown action", verbose: "", error: true };
+      await toast.promise((async () => {
+        if (route == "/run/legacy") {
+          setOutput(await getLegacyOutput("/run", code, start));
+          setLoading(false);
+          return;
         }
-        output = { output: result.output, verbose: result.verbose + `\nCompleted in ${(performance.now() - start).toFixed(2)} ms`, isAST };
-      } catch (e) {
-        output = { output: `Error during call:\nCompleted in ${(performance.now() - start).toFixed(2)} ms`, verbose: String(e), isAST: false };
-      } finally {
-        setOutput(output);
-        setLoading(false);
-      }
+
+        if (!exportsRef.current) {
+          setOutput(await getLegacyOutput(route, code, start, route == "/ast"));
+          setLoading(false);
+          return;
+        }
+
+        let result;
+        let output: { output: string; verbose: string; isAST: boolean; } = { output: "", verbose: "", isAST: false };
+        let isAST = false;
+
+        try {
+          switch (route) {
+            case "/jasmin":
+              result = exportsRef.current.getJasmin(code);
+              break;
+            case "/javascript":
+              result = exportsRef.current.getVanillaJS(code);
+              break;
+            case "/nodejs":
+              result = exportsRef.current.getNodeJS(code);
+              break;
+            case "/ast":
+              result = exportsRef.current.getMermaid(code);
+              if (result.error) break;
+              isAST = true;
+              break;
+            case "/run":
+              result = exportsRef.current.getVanillaJS(code);
+              if (result.error) break;
+
+              // result.verbose += result.output
+
+              // result.output will always have a `console.log(stdout.join('\n'));`
+
+              const n = result.output.length - ("console.log(stdout.join('\\n'));").length
+              result.output = Function(result.output.slice(0, n) + "\n return stdout.join('\\n');")();
+
+              // result.output = Function(result.output.replace("console.log(stdout.join('\\n'));", "\nreturn stdout.join('\\n');"))();
+
+              break;
+            default:
+              result = { output: "Unknown action", verbose: "", error: true };
+          }
+          output = { output: result.output, verbose: result.verbose + `\nCompleted in ${(performance.now() - start).toFixed(2)} ms`, isAST };
+        } catch (e) {
+          output = { output: `Error during call:\nCompleted in ${(performance.now() - start).toFixed(2)} ms`, verbose: String(e), isAST: false };
+        } finally {
+          setOutput(output);
+          setLoading(false);
+        }
+      })(), {
+        loading: `Compiling ${(route == "/run/legacy" || !exportsRef.current) ? 'Spring Boot' : 'Wasm'}: ${route}...`,
+        success: `Completed ${route}`,
+        error: `Error: ${route}`
+      });
     },
-    [teavm]
+    []
   );
 
   return (

@@ -5,6 +5,7 @@ import { useTheme } from "next-themes";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 import Loading from "./Loading";
+import { toast } from "sonner";
 
 export default function Mermaid({ mermaidSrc }: { mermaidSrc: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -14,33 +15,40 @@ export default function Mermaid({ mermaidSrc }: { mermaidSrc: string }) {
 
   useEffect(() => {
     setLoading(true);
-    mermaid.initialize({
-      startOnLoad: false,
-      maxEdges: 1000,
-      theme: "base",
-      themeVariables: {
-        background: "transparent",
-        primaryColor: "transparent",
-        primaryTextColor: "#000",
-        primaryBorderColor: "#000",
-        lineColor: "#000",
-        textColor: "#000",
-      },
-    });
-
     let isMounted = true;
 
-    if (ref.current) {
-      mermaid
-        .render("generated-mermaid", mermaidSrc)
-        .then(({ svg }) => {
-          if (isMounted && ref.current) {
-            ref.current.innerHTML = svg;
-          }
-        })
-        .catch((err) => SetError(String(err)))
-        .finally(() => setLoading(false));
-    }
+    toast.promise((async () => {
+      mermaid.initialize({
+        startOnLoad: false,
+        maxEdges: 1000,
+        theme: "base",
+        themeVariables: {
+          background: "transparent",
+          primaryColor: "transparent",
+          primaryTextColor: "#000",
+          primaryBorderColor: "#000",
+          lineColor: "#000",
+          textColor: "#000",
+        },
+      });
+
+      if (ref.current) {
+        mermaid
+          .render("generated-mermaid", mermaidSrc)
+          .then(({ svg }) => {
+            if (isMounted && ref.current) {
+              ref.current.innerHTML = svg;
+            }
+          })
+          .catch((err) => SetError(String(err)))
+          .finally(() => setLoading(false));
+      }
+
+    }), {
+      loading: 'rendering mermaid chart',
+      success: 'rendered mermaid chart',
+      error: 'failed to render mermaid chart'
+    });
 
     return () => {
       isMounted = false;
