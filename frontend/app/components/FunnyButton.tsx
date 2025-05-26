@@ -1,12 +1,6 @@
 import React, { useState } from "react";
 
-export default function FunnyButton({
-  onClick,
-  children,
-}: {
-  onClick?: () => void;
-  children: React.ReactNode;
-}) {
+export default function FunnyButton({ onClick, children }: { onClick?: () => void, children: React.ReactNode }) {
   const [clicked, setClicked] = useState(false);
 
   const handleClick = () => {

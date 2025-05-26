@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Editor, OnChange, OnMount, useMonaco } from "@monaco-editor/react";
 import { useTheme } from 'next-themes'
 
+const ricelang = "ricelang"
+
 export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCode: (newSourceCode: string) => void, sourceCode: string }) {
   const { resolvedTheme } = useTheme();
   const monaco = useMonaco();
-    const [fontSize, setFontSize] = useState(14);
+  const [fontSize, setFontSize] = useState(14);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -17,10 +19,10 @@ export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCod
   const handleEditorDidMount: OnMount = (_editor, monaco) => {
 
     // Define the language
-    monaco.languages.register({ id: "ricelang" });
+    monaco.languages.register({ id: ricelang });
 
     // Define syntax highlighting rules
-    monaco.languages.setMonarchTokensProvider("ricelang", {
+    monaco.languages.setMonarchTokensProvider(ricelang, {
       keywords: [
         "boolean",
         "break",
@@ -34,6 +36,8 @@ export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCod
         "void",
         "while",
       ],
+
+      brackets: [{ open: '[', close: ']', token: '@brackets' }, { open: '{', close: '}', token: '@brackets' }, { open: '(', close: ')', token: '@brackets' }],
 
       typeKeywords: ["boolean", "float", "int", "void"],
 
@@ -77,9 +81,9 @@ export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCod
           // whitespace
           { include: "@whitespace" },
 
-          // delimiters and operators
+          // brackets
           [/[{}()\[\]]/, "@brackets"],
-          [/[<>](?!@symbols)/, "@brackets"],
+
           [
             /@symbols/,
             {
@@ -123,6 +127,80 @@ export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCod
       },
     });
 
+    monaco.languages.setLanguageConfiguration(ricelang, {
+      comments: {
+        lineComment: '//',
+        blockComment: ['/*', '*/'],
+      },
+      autoClosingPairs: [
+        { open: '{', close: '}' },
+        { open: '[', close: ']' },
+        { open: '(', close: ')' },
+        { open: '"', close: '"', notIn: ['string'] },
+        { open: "'", close: "'", notIn: ['string', 'comment'] },
+      ],
+    });
+
+    monaco.languages.registerCompletionItemProvider(ricelang, {
+      provideCompletionItems: (model, position) => {
+        const word = model.getWordUntilPosition(position);
+        const range = {
+          startLineNumber: position.lineNumber,
+          endLineNumber: position.lineNumber,
+          startColumn: word.startColumn,
+          endColumn: word.endColumn,
+        };
+        const suggestions = [
+          {
+            label: 'putStringLn("")',
+            insertText: 'putStringLn("$0");',
+            detail: 'Put a String + \\n to stdout',
+          },
+          {
+            label: 'putString("")',
+            insertText: 'putString("$0");',
+            detail: 'Put a String to stdout',
+          },
+          {
+            label: 'putInt()',
+            insertText: 'putInt($0);',
+            detail: 'Put an Int to stdout',
+          },
+          {
+            label: 'putIntLn()',
+            insertText: 'putIntLn($0);',
+            detail: 'Put an Int + \\n to stdout',
+          },
+          {
+            label: 'putFloat()',
+            insertText: 'putFloat($0);',
+            detail: 'Put a Float to stdout',
+          },
+          {
+            label: 'putFloatLn()',
+            insertText: 'putFloatLn($0);',
+            detail: 'Put a Float + \\n to stdout',
+          },
+          {
+            label: 'putBool()',
+            insertText: 'putBool($0);',
+            detail: 'Put a Bool to stdout',
+          },
+          {
+            label: 'putBoolLn()',
+            insertText: 'putBoolLn($0);',
+            detail: 'Put a Bool + \\n to stdout',
+          }
+        ].map(item => ({
+          ...item,
+          kind: monaco.languages.CompletionItemKind.Function,
+          insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+          range
+        }));
+        return { suggestions };
+      }
+    })
+
     monaco.editor.defineTheme("transparent-theme", {
       base: resolvedTheme === "light" ? "vs" : "vs-dark",
       inherit: true,
@@ -146,7 +224,9 @@ export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCod
       monaco.editor.defineTheme("transparent-theme", {
         base: resolvedTheme === "light" ? "vs" : "vs-dark",
         inherit: true,
-        rules: [],
+        rules: [
+          { token: "brackets", foreground: "A0A0A0" },  // Choose a color you like
+        ],
         colors: {
           "editor.background": "#00000000",
           "minimap.background": "#00000000",
@@ -161,11 +241,12 @@ export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCod
   return (
     <div className="h-full w-full flex overflow-hidden bg-primary-foreground/20 backdrop-blur-sm border border-2 border-accent-foreground rounded-xl shadow-sm hover:bg-primary-foreground/30 transition" >
       <Editor
-        defaultLanguage="ricelang"
+        defaultLanguage={ricelang}
         defaultValue="// some comment"
         onMount={handleEditorDidMount}
         onChange={handleEditorChange}
         options={{
+          autoClosingBrackets: 'always',
           fontSize: fontSize,
           padding: { top: 16 },
           lineNumbersMinChars: 3,

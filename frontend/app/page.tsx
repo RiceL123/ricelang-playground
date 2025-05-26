@@ -45,9 +45,10 @@ const actions: Record<string, { route: string, desc: string }> = {
   },
 }
 
-async function getLegacyOutput(route: string, code: string, start: number, isAST = false) {
+async function getLegacyOutput(route: string, code: string, start: number, isAST = false): Promise<[{ output: string, verbose: string, isAST: boolean }, boolean]> {
   let result;
   let output;
+  let error;
   try {
     const res = await fetch(`${backendUrl}${route}`,
       {
@@ -56,23 +57,21 @@ async function getLegacyOutput(route: string, code: string, start: number, isAST
         body: JSON.stringify({ sourceCode: code })
       }
     )
-    if (!res.ok) {
-      result = {
-        output: `Error with fetch to ${backendUrl}${route}`,
-        verbose: "Network error" + String(res),
-      }
-    } else {
-      result = await res.json();
-    }
+
+    if (!res.ok) throw new Error(String(res));
+
+    result = await res.json();
     output = { output: result.output, verbose: result.verbose + `\nCompleted in ${(performance.now() - start).toFixed(2)} ms`, isAST };
+    error = result.error;
   } catch (e) {
     output = {
       output: `Error with fetch to ${backendUrl}${route}`,
       verbose: "Network error" + String(e),
       isAST: false
     }
+    error = true;
   }
-  return output;
+  return [output, error];
 }
 
 export default function Home() {
@@ -96,9 +95,22 @@ export default function Home() {
         toast.error(`WebAssembly failed: ${e}`, {
           description: `Falling back to legacy backend route for all subsequent requests. Check out the Wasm docs for your browser's compatibility.`,
           action: <Link href="https://developer.mozilla.org/en-US/docs/WebAssembly#browser_compatibility" target="_blank" className={buttonVariants({ variant: 'default' })}><BookOpen />Docs</Link>,
-          duration: 20000,
-          closeButton: true
-        })
+          duration: Infinity,
+          closeButton: true,
+        });
+
+        toast.promise(
+          fetch(`${backendUrl}/healthcheck`).then(res => {
+            if (!res.ok) throw new Error('Backend responded with an error');
+            return res;
+          }),
+          {
+            loading: 'Checking Spring Boot backend status',
+            success: 'Spring Boot backend Online',
+            error: 'Spring Boot backend cannot be reached'
+          }
+        );
+
         return;
       }
     }
@@ -123,77 +135,69 @@ export default function Home() {
     _setSourceCode(newSourceCode);
   }, []);
 
-  const request = useCallback(
-    async (route: string) => {
-      const start = performance.now();
-      setLoading(true);
-      const code = sourceCodeRef.current;
+  const request = useCallback(async (route: string) => {
+    const start = performance.now();
+    setLoading(true);
+    const code = sourceCodeRef.current;
 
-      await toast.promise((async () => {
-        if (route == "/run/legacy") {
-          setOutput(await getLegacyOutput("/run", code, start));
-          setLoading(false);
-          return;
-        }
+    toast.promise((async () => {
+      if (route == "/run/legacy") {
+        const [output, error] = await getLegacyOutput("/run", code, start);
+        setOutput(output);
+        if (error) throw new Error();
+        return;
+      }
 
-        if (!exportsRef.current) {
-          setOutput(await getLegacyOutput(route, code, start, route == "/ast"));
-          setLoading(false);
-          return;
-        }
+      if (!exportsRef.current) {
+        const [output, error] = await getLegacyOutput(route, code, start, route == "/ast");
+        setOutput(output);
+        if (error) throw new Error();
+        return;
+      }
 
-        let result;
-        let output: { output: string; verbose: string; isAST: boolean; } = { output: "", verbose: "", isAST: false };
-        let isAST = false;
+      let result;
+      let isAST = false;
 
-        try {
-          switch (route) {
-            case "/jasmin":
-              result = exportsRef.current.getJasmin(code);
-              break;
-            case "/javascript":
-              result = exportsRef.current.getVanillaJS(code);
-              break;
-            case "/nodejs":
-              result = exportsRef.current.getNodeJS(code);
-              break;
-            case "/ast":
-              result = exportsRef.current.getMermaid(code);
-              if (result.error) break;
-              isAST = true;
-              break;
-            case "/run":
-              result = exportsRef.current.getVanillaJS(code);
-              if (result.error) break;
+      switch (route) {
+        case "/jasmin":
+          result = exportsRef.current.getJasmin(code);
+          break;
+        case "/javascript":
+          result = exportsRef.current.getVanillaJS(code);
+          break;
+        case "/nodejs":
+          result = exportsRef.current.getNodeJS(code);
+          break;
+        case "/ast":
+          result = exportsRef.current.getMermaid(code);
+          if (result.error) break;
+          isAST = true;
+          break;
+        case "/run":
+          result = exportsRef.current.getVanillaJS(code);
+          if (result.error) break;
 
-              // result.verbose += result.output
+          // result.verbose += result.output
 
-              // result.output will always have a `console.log(stdout.join('\n'));`
+          // result.output will always have a `console.log(stdout.join('\n'));`
 
-              const n = result.output.length - ("console.log(stdout.join('\\n'));").length
-              result.output = Function(result.output.slice(0, n) + "\n return stdout.join('\\n');")();
+          const n = result.output.length - ("console.log(stdout.join('\\n'));").length
+          result.output = Function(result.output.slice(0, n) + "\n return stdout.join('\\n');")();
 
-              // result.output = Function(result.output.replace("console.log(stdout.join('\\n'));", "\nreturn stdout.join('\\n');"))();
+          // result.output = Function(result.output.replace("console.log(stdout.join('\\n'));", "\nreturn stdout.join('\\n');"))();
 
-              break;
-            default:
-              result = { output: "Unknown action", verbose: "", error: true };
-          }
-          output = { output: result.output, verbose: result.verbose + `\nCompleted in ${(performance.now() - start).toFixed(2)} ms`, isAST };
-        } catch (e) {
-          output = { output: `Error during call:\nCompleted in ${(performance.now() - start).toFixed(2)} ms`, verbose: String(e), isAST: false };
-        } finally {
-          setOutput(output);
-          setLoading(false);
-        }
-      })(), {
-        loading: `Compiling ${(route == "/run/legacy" || !exportsRef.current) ? 'Spring Boot' : 'Wasm'}: ${route}...`,
-        success: `Completed ${route}`,
-        error: `Error: ${route}`
-      });
-    },
-    []
-  );
+          break;
+        default:
+          result = { output: "Unknown action", verbose: "", error: true };
+      }
+      setOutput({ output: result.output, verbose: result.verbose + `\nCompleted in ${(performance.now() - start).toFixed(2)} ms`, isAST });
+      if (result.error) throw new Error();
+    })().finally(() => setLoading(false)), {
+      loading: `Compiling ${(route == "/run/legacy" || !exportsRef.current) ? 'Spring Boot' : 'Wasm'}: ${route}...`,
+      success: `Completed ${route}`,
+      error: `Error: ${route}`
+    });
+  }, []);
 
   return (
     <div className="w-full h-full flex flex-col">
