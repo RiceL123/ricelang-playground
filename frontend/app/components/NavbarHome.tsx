@@ -496,7 +496,7 @@ const Navbar = ({ setSourceCode, actions, request }: { setSourceCode: (newSource
                 </DropdownMenuSub>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link href="/about" className='flex gap-2 items-center'>
+                <Link href="/language-definition" className='flex gap-2 items-center'>
                   <BookOpen className='h-[1.2rem] w-[1.2rem]' />
                   <p className='py-2'>language definition</p>
                 </Link>
