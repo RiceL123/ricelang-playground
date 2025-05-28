@@ -66,7 +66,7 @@ export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCod
         root: [
           [/\b(true|false)\b/, "keyword.constant"],
 
-          // identifiers and keywords [A-Za-z_][A-Za-z_0-9]*[\w]
+          // identifiers and keywords
           [
             /[A-Za-z_][A-Za-z_0-9]*/,
             {
@@ -98,8 +98,8 @@ export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCod
           [/\d*\.\d+([eE][\-+]?\d+)?/, "number.float"],
           [/\d+/, "number"],
 
-          // delimiter: after number because of .\d floats
-          [/[;,.]/, "delimiter"],
+          // delimiter
+          [/[;,]/, "delimiter"],
 
           // strings
           [/"([^"\\]|\\.)*$/, "string.invalid"], // non-terminated string

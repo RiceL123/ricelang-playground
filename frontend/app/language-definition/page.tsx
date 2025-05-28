@@ -1,21 +1,65 @@
 import Navbar from '../components/Navbar';
 
-export default function LangDef() {
+import rehypeHighlight from 'rehype-highlight'
+import rehypeKatex from 'rehype-katex'
+import rehypeStringify from 'rehype-stringify'
+import remarkMath from 'remark-math'
+import remarkParse from 'remark-parse'
+import remarkRehype from 'remark-rehype'
+import { unified } from 'unified'
+
+import java from 'highlight.js/lib/languages/java'
+import hljs from 'highlight.js/lib/core';
+
+import fs from 'fs/promises';
+import path from 'path';
+import { HLJSApi, LanguageDetail } from 'highlight.js';
+
+import './codeHighlight.css';
+
+const inputFile = './def.md'
+
+function ricelang(hljs: HLJSApi) {
+  const base = Object(java(hljs) as LanguageDetail);
+
+  const mergedKeywords = {
+    ...base.keywords,
+    keyword: base.keywords.keyword.concat("byebye")
+  }
+
+  return {
+    ...base,
+    name: 'ricelang',
+    keywords: mergedKeywords,
+  }
+}
+
+export default async function LangDef() {
+  const filePath = path.join(process.cwd(), 'app', 'language-definition', inputFile);
+  const fileContents = await fs.readFile(filePath, 'utf8');
+
+  hljs.registerLanguage('ricelang', ricelang);
+
+  const file = await unified()
+    .use(remarkParse)
+    .use(remarkMath)
+    .use(remarkRehype)
+    .use(rehypeKatex, { output: 'html' })
+    .use(rehypeHighlight, { languages: { 'ricelang': ricelang } })
+    .use(rehypeStringify)
+    .process(fileContents);
+
   return (
     <div className="h-full w-full">
       <Navbar />
-      <main className='mx-auto my-6 max-w-[960px] backdrop-blur-xs border border-accent p-4'>
-        <h2 className="underline text-2xl text-center">The RiceLang Definition</h2>
-        <h3 className='underline text-xl'>Introduction</h3>
-        <p>RiceLang is a simple programming language that is kinda a subset mix of C and Java with some oddities (like the fact that there is no return keyword; the keyword <code>byebye</code> is used which does the exact same thing)</p>
-        <p>It has support for:</p>
-        <ul className='ml-2'>
-          <li>- primitive data types like <code>int</code>, <code>float</code>, <code>boolean</code> and string literals</li>
-          <li>- one dimensional arrays (seebs more dimensions)</li>
-          <li>- compound statements and control structures: <code>if</code>, <code>while</code>, <code>for</code>, <code>continue</code>, <code>break</code>, and <code>byebye</code></li>
-          <li>- expressions: assignments, logical, relational and arithmetic</li>
-        </ul>
-      </main>
+      <main
+        className='mx-auto my-6 max-w-[960px] backdrop-blur-xs border border-accent p-4'
+        dangerouslySetInnerHTML={{ __html: String(file) }} />
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
+        integrity="sha384-5TcZemv2l/9On385z///+d7MSYlvIEw9FuZTIdZ14vJLqWphw7e7ZPuOiCHJcFCP"
+        crossOrigin="anonymous" />
     </div>
   );
 }
