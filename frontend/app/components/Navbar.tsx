@@ -10,11 +10,11 @@ import ThemeToggle from './ThemeToggle';
 
 export default function Navbar() {
   return (
-    <header className="w-full h-[48px]">
+    <header className="sticky top-0 w-full h-[48px] pointer-events-none z-10">
       <div className="mx-auto py-3 px-4 flex place-content-between max-w-[1536px]">
         <TooltipProvider>
           <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger className='pointer-events-auto'>
               <Link
                 href="/"
                 className="text-xl px-4 py-1 rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition"
@@ -31,7 +31,7 @@ export default function Navbar() {
         <div className="flex gap-4">
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger className='pointer-events-auto'>
                 <Link
                   href="/language-definition"
                   className="flex gap-2 px-4 py-1 items-center rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition"
@@ -48,7 +48,7 @@ export default function Navbar() {
 
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger className='pointer-events-auto'>
                 <Link
                   href="/about"
                   className="flex gap-2 px-4 py-1 items-center rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition"
@@ -66,7 +66,7 @@ export default function Navbar() {
 
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger className='pointer-events-auto'>
                 <ThemeToggle
                   className="px-4 py-1.5 rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition"
                 />

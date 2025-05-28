@@ -1,8 +1,10 @@
 # The RiceLang Language Definition
 
+## Contents
+
 ## Introduction
 
-RiceLang is a simple C/Java like programming language create by yours truly: RiceL123. From source code to an [AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree), RiceLang programs can compile to Java byte code or transpile to JavaScript.
+RiceLang is a simple C/Java like programming language create by yours truly: RiceL123. From source code to an [AST](https://wikipedia.org/wiki/Abstract_syntax_tree), RiceLang programs can compile to Java byte code or transpile to JavaScript.
 
 An example of a simple RiceLang program is shown below.
 ```ricelang
@@ -25,34 +27,34 @@ The following conventions are adopted for defining grammar rules for syntax.
 $$
 \begin{aligned}
 \textit{program}\rightarrow&~(~\textit{func-decl}~|~\textit{var-decl}~)*\\
-\textit{func-decl}\rightarrow&~\textit{type}~\textit{identifier}~\textit{para-list}~\textit{compound-stmt}\\
+\href{#functions}{\textit{func-decl}}\rightarrow&~\textit{type}~\textit{identifier}~\textit{para-list}~\textit{compound-stmt}\\
 \textit{para-list}\rightarrow&~\textbf{(}~\textit{proper-para-list}?~\textbf{)}\\
 \textit{proper-para-list}\rightarrow&~\textit{para-decl}~(~\textbf{,}~\textit{para-decl}~)*\\
 \textit{para-decl}\rightarrow&~\textit{type}~\textit{declarator}\\
-\textit{var-decl}\rightarrow&~\textit{type}~\textit{init-declarator-list}~\textbf{;}\\
+\href{#variables}{\textit{var-decl}}\rightarrow&~\textit{type}~\textit{init-declarator-list}~\textbf{;}\\
 \textit{init-declarator-list}\rightarrow&~ \textit{init-declarator}~(~\textbf{,}~\textit{init-declarator}~)*\\
 \textit{init-declarator}\rightarrow&~\textit{declarator}~(~\textbf{=}~\textit{initialiser}~)?\\
 \textit{declarator}\rightarrow&~\textit{identifier}\\
 |&~\textit{identifier}~\textbf{[}~\textbf{INTLITERAL}?~\textbf{]}\\
 \textit{initialiser}\rightarrow&~ \textit{expr}\\
 |&~\textbf{\{}~\textit{expr}~(~\textbf{,}~\textit{expr}~)*~\textbf{\}}\\
-\textit{type}\rightarrow&~ \textbf{void}~|~\textbf{boolean}~|~\textbf{int}~|~\textbf{float}\\
-\textit{identifier}\rightarrow&~\textbf{ID}\\
+\href{#basic-types}{\textit{type}}\rightarrow&~ \textbf{void}~|~\href{#boolean}{\textbf{boolean}}~|~\href{#int}{\textbf{int}}~|~\href{#float}{\textbf{float}}\\
+\href{#identifiers}{\textit{identifier}}\rightarrow&~\textbf{ID}\\
 \textit{compound-stmt}\rightarrow&~\textbf{\{}~\textit{var-decl}*~\textit{stmt}*~\textbf{\}}\\
-\textit{stmt}\rightarrow&~\textit{compound-stmt}\\
+\href{#statments}{\textit{stmt}}\rightarrow&~\textit{compound-stmt}\\
 |&~\textit{if-stmt}\\
 |&~\textit{for-stmt}\\
 |&~\textit{while-stmt}\\
 |&~\textit{break-stmt}\\
 |&~\textit{continue-stmt}\\
 |&~\textit{return-stmt}\\
-\textit{if-stmt}\rightarrow&~\textbf{if}~\textbf{(}~\textit{expr}~\textbf{)}~\textit{stmt}~(~\textbf{else}~\textit{stmt}~)?\\
-\textit{for-stmt}\rightarrow&~\textbf{for}~\textbf{(}~\textit{expr}?~\textbf{;}~\textit{expr}?~\textbf{;}~\textit{expr}?~\textbf{)}~\textit{stmt}\\
-\textit{while-stmt}\rightarrow&~\textbf{while}~\textbf{(}~\textit{expr}~\textbf{)}~\textit{stmt}\\
-\textit{break-stmt}\rightarrow&~\textbf{break}~\textbf{;}\\
-\textit{continue-stmt}\rightarrow&~\textbf{continue}~\textbf{;}\\
-\textit{return-stmt}\rightarrow&~\textbf{byebye}~\textit{expr}?~\textbf{;}\\
-\textit{expr-stmt}\rightarrow&~\textbf{expr}?~\textbf{;}\\
+\href{#if}{\textit{if-stmt}}\rightarrow&~\textbf{if}~\textbf{(}~\textit{expr}~\textbf{)}~\textit{stmt}~(~\textbf{else}~\textit{stmt}~)?\\
+\href{#for}{\textit{for-stmt}}\rightarrow&~\textbf{for}~\textbf{(}~\textit{expr}?~\textbf{;}~\textit{expr}?~\textbf{;}~\textit{expr}?~\textbf{)}~\textit{stmt}\\
+\href{#while}{\textit{while-stmt}}\rightarrow&~\textbf{while}~\textbf{(}~\textit{expr}~\textbf{)}~\textit{stmt}\\
+\href{#break}{\textit{break-stmt}}\rightarrow&~\textbf{break}~\textbf{;}\\
+\href{#continue}{\textit{continue-stmt}}\rightarrow&~\textbf{continue}~\textbf{;}\\
+\href{#byebye}{\textit{return-stmt}}\rightarrow&~\textbf{byebye}~\textit{expr}?~\textbf{;}\\
+\href{#expression-statements}{\textit{expr-stmt}}\rightarrow&~\textbf{expr}?~\textbf{;}\\
 \textit{expr}\rightarrow&~\textit{assignment-expr}\\
 \textit{assignment-expr}\rightarrow&~(~\textit{cond-or-expr}~\textbf{=}~)*\textit{cond-or-expr}\\
 \textit{cond-or-expr}\rightarrow&~\textit{cond-or-expr}\\
@@ -104,7 +106,7 @@ this is a multi line comment
 */
 ```
 All comments are ignored by the compiler
-## Separators
+### Separators
 White space like as well as the following can be used as separators
 - `{`, `}`, `(`, `)`, `[`, `]`, `;`, `,`
 When the AST is generated, all separater tokens and white space is omitted.
@@ -119,9 +121,7 @@ $$
 \end{aligned}
 $$
 
-## Basic Types
-RiceLang programs operate on 3 primitive data types with operators to form expressions.
-### Operators
+## Operators
 There are 14 operators. Ordered from highest to lowest precedence with their associativity they are:
 1. `+`, `-`, `!` (right-associative) // `+` and `-` as unary operators
 2.  `*`, `/` (left-associative)
@@ -131,6 +131,10 @@ There are 14 operators. Ordered from highest to lowest precedence with their ass
 6. `&&` (left-associative)
 7. `||` (left-associative)
 8. `=` (right-associative)
+
+## Basic Types
+RiceLang programs operate on 3 primitive data types with operators to form expressions.
+
 ### int
 An $\textbf{INTLITERAL}$ is a decimal number of at least 1 digit. They are of type `int`.
 
@@ -206,7 +210,7 @@ $$
 
 $\textit{character}$ refers to [ASCII](https://wikipedia.org/wiki/ASCII) characters (if non-ASCII / [UTF-8](https://wikipedia.org/wiki/UTF-8) characters are used, they maybe read as single bytes). Escape sequences like `\n` and `\"` are also supported. RiceLang has no `String` type; string literals can only be used in built in the functions `putString` and `putStringLn`. Strings cannot span more than 1 line.
 
-```
+```ricelang
 putString("Hewwo world\n");
 putStringLn("Byebye world");
 ```
@@ -256,7 +260,7 @@ Local variable declarations in compound statements must come before any statemen
 
 Function parameters act like local variable declarations at the beginning of a function's compound statement.
 
-```
+```ricelang
 int a = 1;       // global variable
 int fun(int b) { // function parameter - same scope as c
 	int c;       // local variable
@@ -265,6 +269,7 @@ int fun(int b) { // function parameter - same scope as c
 ```
 
 Similar to arrays, variables are also initialised to default values if unspecified; `int` and `float` default to `0` and `booleans` default to `false`.
+
 ## Statements
 Statements can either be just a single statement or a compound statement that contains zero or more variable declarations and followed by zero or more statements.
 
@@ -292,12 +297,12 @@ int main() {
 }
 ```
 
-### Scope rules
-
 ### If
 If statements control the flow of a program based on the evaluation of its expression.
 
-$$\textit{if-stmt}\rightarrow\textbf{if}~\textbf{(}~\textit{expr}~\textbf{)}~\textit{stmt}~(~\textbf{else}~\textit{stmt}~)?$$
+$$
+\textit{if-stmt}\rightarrow\textbf{if}~\textbf{(}~\textit{expr}~\textbf{)}~\textit{stmt}~(~\textbf{else}~\textit{stmt}~)?
+$$
 
 When multiple if statements have a single `else` statement, the `else` is attached to the innermost if.
 ```ricelang
@@ -312,7 +317,9 @@ if (1 > 2) {
 ### While
 If a while statement's $\textit{expr}$ is $\textbf{true}$, it will continuously execute its $\textit{stmt}$ and re-evaluate its $\textit{expr}$ until it is $\textbf{false}$.
 
-$$\textit{while-stmt}\rightarrow\textbf{while}~\textbf{(}~\textit{expr}~\textbf{)}~\textit{stmt}$$
+$$
+\textit{while-stmt}\rightarrow\textbf{while}~\textbf{(}~\textit{expr}~\textbf{)}~\textit{stmt}
+$$
 
 ```ricelang
 while (i < 5) {
@@ -324,7 +331,9 @@ while (i < 5) {
 ### For
 For statements are equivalent to while statements with $\textit{expr1}$ executing before the while statement and $\textit{expr3}$ executing after $\textit{stmt}$ except for the behaviour of $\textbf{continue}$; control passes to $\textit{expr3}$ instead of straight to the conditional.
 
-$$\textit{for-stmt}\rightarrow\textbf{for}~\textbf{(}~\textit{expr1}?~\textbf{;}~\textit{expr2}?~\textbf{;}~\textit{expr3}?~\textbf{)}~\textit{stmt}$$
+$$
+\textit{for-stmt}\rightarrow\textbf{for}~\textbf{(}~\textit{expr1}?~\textbf{;}~\textit{expr2}?~\textbf{;}~\textit{expr3}?~\textbf{)}~\textit{stmt}
+$$
 
 If $\textit{expr2}$ is omitted, it is decorated with $\textbf{true}$ resulting in an infinite loop.
 ```ricelang
@@ -338,7 +347,9 @@ for (;;) {} // infinite loop
 ### Break
 $\textbf{break}$ statements exit the control of the current loop.
 
-$$\textit{break-stmt}\rightarrow\textbf{break}~\textbf{;}$$
+$$
+\textit{break-stmt}\rightarrow\textbf{break}~\textbf{;}
+$$
 
 ```ricelang
 while (true) {
@@ -349,7 +360,9 @@ while (true) {
 ### Continue
 $\textbf{continue}$ statements pass the control back to the start of the loop or to $\textit{expr3}$ in the case of for loops.
 
-$$\textit{continue-stmt}\rightarrow\textbf{continue}~\textbf{;}$$
+$$
+\textit{continue-stmt}\rightarrow\textbf{continue}~\textbf{;}
+$$
 
 ```ricelang
 while (true) {
@@ -360,7 +373,9 @@ while (true) {
 ### Byebye
 $\textbf{byebye}$ acts as a return statement which transfers control back to the caller of the function that contains it.
 
-$$\textit{return-stmt}\rightarrow\textbf{byebye}~\textit{expr}?~\textbf{;}$$
+$$
+\textit{return-stmt}\rightarrow\textbf{byebye}~\textit{expr}?~\textbf{;}
+$$
 
 $\textbf{byebye}$ without an $\textit{expr}$ must be in a void function. 
 $\textbf{byebye}$ with an $\textit{expr}$ must have the $\textit{expr}$ assignable to the function type.
@@ -379,11 +394,32 @@ int fun(boolean b) {
 ### Expression Statements
 An expression statement is just expression followed by a semi colon. This will most typically be used for expressions that are assignments or function calls.
 
-$$\textit{expr-stmt}\rightarrow\textbf{expr}?~\textbf{;}$$
+$$
+\textit{expr-stmt}\rightarrow\textbf{expr}?~\textbf{;}
+$$
 
 ```ricelang
 myfunc();
 i = 0;
+```
+
+## Scope rules
+Scope rules govern declarations and their uses.
+- No identifier can defined more than once in the same block
+- For everyone occurence of an identifier there most be some declaration in the same or an outer scope (this means function paramters must not collide with the declarations in a function's body)
+- An occurence of an identifier will use the deckaration that is the inner most scope that is equal to greater than its own scope (this produces scope holes)
+- Every compound statement (and thus every function) forms a nested scope
+- Functions (including the [built-ins](#built-in)) and global variables are all defined in the outermost scope
+
+```ricelang
+int main() {
+	int main = 1;
+	{
+		int main = 2;
+		putIntLn(main); // prints 2
+	}
+	putIntLn(main); // prints 1
+}
 ```
 
 ## Functions

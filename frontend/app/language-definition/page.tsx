@@ -1,21 +1,28 @@
 import Navbar from '../components/Navbar';
 
 import rehypeHighlight from 'rehype-highlight'
-import rehypeKatex from 'rehype-katex'
 import rehypeStringify from 'rehype-stringify'
+import rehypeKatex from 'rehype-katex'
+import rehypeSlug from 'rehype-slug'
+
+import remarkToc from 'remark-toc'
 import remarkMath from 'remark-math'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
+
 import { unified } from 'unified'
 
 import java from 'highlight.js/lib/languages/java'
 import hljs from 'highlight.js/lib/core';
+import { HLJSApi, LanguageDetail } from 'highlight.js';
 
 import fs from 'fs/promises';
 import path from 'path';
-import { HLJSApi, LanguageDetail } from 'highlight.js';
 
 import './codeHighlight.css';
+import './markdown.css';
+
+import ScrollToTopButton from '../components/ScrollToTop';
 
 const inputFile = './def.md'
 
@@ -43,23 +50,28 @@ export default async function LangDef() {
   const file = await unified()
     .use(remarkParse)
     .use(remarkMath)
+    .use(remarkToc)
     .use(remarkRehype)
-    .use(rehypeKatex, { output: 'html' })
+    .use(rehypeSlug)
+    .use(rehypeKatex, { output: 'html', trust: true })
     .use(rehypeHighlight, { languages: { 'ricelang': ricelang } })
     .use(rehypeStringify)
     .process(fileContents);
 
-  return (
-    <div className="h-full w-full">
+  return (<>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
+      integrity="sha384-5TcZemv2l/9On385z///+d7MSYlvIEw9FuZTIdZ14vJLqWphw7e7ZPuOiCHJcFCP"
+      crossOrigin="anonymous" />
+    <div className="pb-6">
       <Navbar />
       <main
-        className='mx-auto my-6 max-w-[960px] backdrop-blur-xs border border-accent p-4'
+        id="definition"
+        className='mx-auto max-w-[960px] my-8 p-4 backdrop-blur-xs border rounded-xl border-muted-foreground overflow-hidden'
         dangerouslySetInnerHTML={{ __html: String(file) }} />
-      <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
-        integrity="sha384-5TcZemv2l/9On385z///+d7MSYlvIEw9FuZTIdZ14vJLqWphw7e7ZPuOiCHJcFCP"
-        crossOrigin="anonymous" />
+      <p className='w-full text-center'>by Eric L May 2025</p>
+      <ScrollToTopButton />
     </div>
-  );
+  </>);
 }
