@@ -23,6 +23,7 @@ import './codeHighlight.css';
 import './markdown.css';
 
 import ScrollToTopButton from '../components/ScrollToTop';
+import Toc from '../components/Toc';
 
 const inputFile = './def.md'
 
@@ -66,6 +67,7 @@ export default async function LangDef() {
       crossOrigin="anonymous" />
     <div className="pb-6">
       <Navbar />
+      <Toc />
       <main
         id="definition"
         className='mx-auto max-w-[960px] my-8 p-4 backdrop-blur-xs border rounded-xl border-muted-foreground overflow-hidden'

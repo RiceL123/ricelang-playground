@@ -41,7 +41,7 @@ $$
 \href{#basic-types}{\textit{type}}\rightarrow&~ \textbf{void}~|~\href{#boolean}{\textbf{boolean}}~|~\href{#int}{\textbf{int}}~|~\href{#float}{\textbf{float}}\\
 \href{#identifiers}{\textit{identifier}}\rightarrow&~\textbf{ID}\\
 \textit{compound-stmt}\rightarrow&~\textbf{\{}~\textit{var-decl}*~\textit{stmt}*~\textbf{\}}\\
-\href{#statments}{\textit{stmt}}\rightarrow&~\textit{compound-stmt}\\
+\href{#statements}{\textit{stmt}}\rightarrow&~\textit{compound-stmt}\\
 |&~\textit{if-stmt}\\
 |&~\textit{for-stmt}\\
 |&~\textit{while-stmt}\\
@@ -307,8 +307,8 @@ $$
 When multiple if statements have a single `else` statement, the `else` is attached to the innermost if.
 ```ricelang
 // the following are equivalent
-if (1 > 2) if (3 == 5) putString("nani"); else putString("hello");
-if (1 > 2) {
+if (1 < 2) if (3 == 5) putString("nani"); else putString("hello");
+if (1 < 2) {
 	if (3 == 5) putString("nani");
 	else putString("hello");
 }
