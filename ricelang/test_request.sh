@@ -9,6 +9,6 @@
 #     127.0.0.1:8080/run
 
 curl -H 'Content-Type: application/json' \
-    -d '{ "sourceCode":"int main() { putStringLn(\"hello from curl request\");\n return 0; }"}' \
+    -d '{ "sourceCode":"int main() {int i = 0; while (i < 5) {putIntLn(i);i = i + 1;}byebye 0;}"}' \
     -X POST \
-    https://ricelang-playground.onrender.com/run
+    https://ricelang-playground.onrender.com/ast

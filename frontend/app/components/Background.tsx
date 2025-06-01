@@ -1,10 +1,9 @@
 'use client'
+
 import Image from 'next/image'
 
 import book from '../images/book.webp'
 import mouse from '../images/mouse.webp'
-
-const imgPath = "/background-transparent.webp";
 
 export default function Background() {
   return (
@@ -55,8 +54,8 @@ export default function Background() {
         </svg>
 
         <div className='fixed top-0 w-full h-full'>
-          <Image className="fixed bottom-5 right-[10%] animate-hover" src={book} width={352} height={268} alt='background book prop' />
-          <Image className="fixed animate-hover" src={mouse} width={315} height={534} alt='background computer mouse prop' />
+          <Image className="dark:invert dark:grayscale fixed bottom-5 right-[10%] animate-hover" src={book} width={352} height={268} alt='background book prop' />
+          <Image className="dark:invert dark:grayscale fixed animate-hover" src={mouse} width={315} height={534} alt='background computer mouse prop' />
         </div>
 
       </div>

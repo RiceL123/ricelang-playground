@@ -1,7 +1,6 @@
 import Navbar from '../components/Navbar';
 import rehypeHighlight from 'rehype-highlight'
 import rehypeStringify from 'rehype-stringify'
-import rehypeMermaid from 'rehype-mermaid'
 import rehypeKatex from 'rehype-katex'
 import rehypeSlug from 'rehype-slug'
 
