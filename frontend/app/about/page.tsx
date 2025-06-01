@@ -1,4 +1,7 @@
 import Navbar from '../components/Navbar';
+import MermaidHydrate from './MermaidHydrate';
+import Toc from '../components/Toc';
+
 import rehypeHighlight from 'rehype-highlight'
 import rehypeStringify from 'rehype-stringify'
 import rehypeSlug from 'rehype-slug'
@@ -90,6 +93,8 @@ export default async function About() {
         id="about"
         className='mx-auto max-w-[960px] my-8 p-4 backdrop-blur-xs border rounded-xl border-muted-foreground overflow-hidden'
         dangerouslySetInnerHTML={{ __html: String(file) }} />
+        <MermaidHydrate />
+        <Toc />
       <p className='w-full text-center'>by Eric L May 2025</p>
     </div>
   );

@@ -22,7 +22,7 @@ import path from 'path';
 import './markdown.css';
 
 import ScrollToTopButton from '../components/ScrollToTop';
-import Toc from './Toc';
+import Toc from '../components/Toc';
 
 const inputFile = './def.md'
 

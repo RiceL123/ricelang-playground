@@ -42,7 +42,8 @@
     pointer-events: none;
 }
 
-pre code.hljs {
+pre code.hljs,
+.mermaid-container {
     margin-block: 0.5em;
     border-radius: var(--radius-md);
     background-color: #ffffff07;
@@ -60,11 +61,15 @@ pre code.hljs {
 }
 
 pre code.hljs:hover,
-span.katex-display:hover {
+.mermaid-container:hover {
     border-radius: var(--radius-2xl);
     border-color: var(--secondary-foreground);
 }
 
 #about p {
     margin-bottom: 1em;
+}
+
+.mermaid-container {
+    padding-block: 0.5em;
 }
