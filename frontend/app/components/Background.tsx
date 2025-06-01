@@ -1,25 +1,12 @@
 'use client'
-import { getImageProps } from 'next/image'
+import Image from 'next/image'
+
+import book from '../images/book.webp'
+import mouse from '../images/mouse.webp'
 
 const imgPath = "/background-transparent.webp";
 
 export default function Background() {
-  
-  function getBackgroundImage(srcSet = '') {
-    const imageSet = srcSet
-      .split(', ')
-      .map((str) => {
-        const [url, dpi] = str.split(' ')
-        return `url("${url}") ${dpi}`
-      })
-      .join(', ')
-    return `image-set(${imageSet})`
-  }
-
-  const { props: { srcSet }} = getImageProps({ alt: '', width: 1920, height: 2600, src: imgPath })
-
-  const backgroundImage = getBackgroundImage(srcSet)
-
   return (
     <div className="fixed inset-0 -z-10">
       <div
@@ -66,12 +53,13 @@ export default function Background() {
             d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"
           />
         </svg>
-      </div>
 
-      <div
-        className="absolute -inset-px bg-cover bg-center opacity-80 dark:invert dark:grayscale"
-        style={{ height: '100vh', width: '100vw', backgroundImage }}
-      />
+        <div className='fixed top-0 w-full h-full'>
+          <Image className="fixed bottom-5 right-[10%] animate-hover" src={book} width={352} height={268} alt='background book prop' />
+          <Image className="fixed animate-hover" src={mouse} width={315} height={534} alt='background computer mouse prop' />
+        </div>
+
+      </div>
     </div>
   )
 }

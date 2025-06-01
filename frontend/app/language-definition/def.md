@@ -20,7 +20,7 @@ The following conventions are adopted for defining grammar rules for syntax.
 - Nonterminal symbols: $\textit{italics}$
 - symbols can be grouped with brackets `(` `)` (e.g. $(~A~B~)$)
 - $A*$ is a sequence of 0 or more iterations of $A$
-- $A?$ is a optional occurrence of $A$
+- $A?$ is an optional occurrence of $A$
 - $A|B$ represents two possible productions being $A$ or $B$
 - Productions are written $A\rightarrow B_1~|~\text{...}~|~B_n$
 
@@ -105,13 +105,13 @@ RiceLang supports single line comments and multi-line comments. It does not supp
 this is a multi line comment
 */
 ```
-All comments are ignored by the compiler
+All comments are ignored by the compiler.
 ### Separators
-White space like as well as the following can be used as separators
+White space (like new lines, tabs or spaces) as well as the following can be used as separators
 - `{`, `}`, `(`, `)`, `[`, `]`, `;`, `,`
 When the AST is generated, all separater tokens and white space is omitted.
 ### Identifiers
-Identifiers are used to define both variables and function names that are 1 or more characters long. They start with a letter or underscore and end with a letter, number or underscore.
+Identifiers are used to define both variables and function names and must be 1 or more characters long. They start with a letter or underscore and end with a letter, number or underscore.
 
 $$
 \begin{aligned}
@@ -151,7 +151,7 @@ The value of an `int` type is a 32-bit signed integer. They can be operated on b
 ```ricelang
 int i = 3;
 int j = -2;
-int k = i / j; // -2
+int k = i / j; // integer division: -2
 boolean b = i > j; // true
 ```
 
@@ -169,11 +169,11 @@ $$
 \end{aligned}
 $$
 
-The value of a `float` type is a single-precision 32-bit IEEE 754 floating point. They can be operated on by
+The value of a `float` type is a single-precision 32-bit [IEEE 754](https://wikipedia.org/wiki/IEEE_754) floating point. They can be operated on by
 - `+`, `-`, `*`, `/` to produce  `float` values
 - `<`, `>`, `<=`, `>=`, `==`, `!=` to produce `boolean` values
 
-Coercion on an `int` to a `float` will automatically occur.
+Coercion on an `int` to a `float` will automatically occur for in expressions including for `byebye` statements, declarations and functions arguments.
 
 ```ricelang
 float i = 3.;
@@ -188,7 +188,7 @@ $$
 \textbf{BOOLEANLITERAL}\rightarrow \textbf{true} ~|~ \textbf{false}
 $$
 
-Although technically `boolean` only needs 1 bit, they will typically type up 1 byte. They can be operated on by
+Although technically `boolean` only needs 1 bit, they will typically use a whole byte. They can be operated on by
 - `!`, `!=`, `==`, `&&`, `||` to produce `boolean` values
 
 When `&&` or `||` are used, they are evaluated left to right and will try to [short-circuit](https://wikipedia.org/wiki/Short-circuit_evaluation).
@@ -208,14 +208,14 @@ $$
 \end{aligned}
 $$
 
-$\textit{character}$ refers to [ASCII](https://wikipedia.org/wiki/ASCII) characters (if non-ASCII / [UTF-8](https://wikipedia.org/wiki/UTF-8) characters are used, they maybe read as single bytes). Escape sequences like `\n` and `\"` are also supported. RiceLang has no `String` type; string literals can only be used in built in the functions `putString` and `putStringLn`. Strings cannot span more than 1 line.
+$\textit{character}$ refers to [ASCII](https://wikipedia.org/wiki/ASCII) characters. If non-ASCII / [UTF-8](https://wikipedia.org/wiki/UTF-8) characters are used, they maybe read as single bytes. Escape sequences like `\n` and `\"` are also supported. RiceLang has no `String` type to use; string literals can only be used in the built-in functions `putString` and `putStringLn`. Strings cannot span more than 1 line.
 
 ```ricelang
 putString("Hewwo world\n");
 putStringLn("Byebye world");
 ```
 ## Arrays
-Ricelang only supports 1-dimensional arrays of type `int`, `float` and `boolean`. Arrays have a fixed size determined by a non-negative $\textbf{INTLITERAL}$ in the subscript or by an array initialiser ($\textbf{\{}~\textit{expr}~(~\textbf{,}~\textit{expr}~)*~\textbf{\}}$). Arrays are filled with default values meaning `int` and `float` arrays will be filled with zeros and `boolean` arrays filled with `false`.
+Ricelang only supports 1-dimensional arrays of type `int`, `float` and `boolean`. Arrays have a fixed size determined by an $\textbf{INTLITERAL}$ in the subscript or by the length of an array initialiser ($\textbf{\{}~\textit{expr}~(~\textbf{,}~\textit{expr}~)*~\textbf{\}}$). Arrays are filled with default values meaning `int` and `float` arrays will be filled with zeros and `boolean` arrays filled with `false`.
 
 ```ricelang
 int a[2];                   // default array: [ 0, 0 ]
@@ -228,7 +228,7 @@ int d[1] = { 1, 2 };        // Error: initialiser > size
 float e[] = { 1, 2, 3.14 }; // coercion to declared type: [ 1.0, 2.0, 3.14 ]
 ```
 
-Arrays themselves can be passed as an argument to a function call (one will typically also pass in the array size). Arrays are passed to functions as pointers so modifications on them are seen by callee can be observed by caller. Only element access with a subscript allows for valid operation.
+Arrays themselves can be passed as an argument to a function call (one will typically also pass in the array size). Arrays are passed to functions as pointers so modifications on them by callee can be observed by caller. Only element access with a subscript allows for valid manipulation.
 
 ```ricelang
 int increment_all(int x[], int size) {
@@ -271,7 +271,7 @@ int fun(int b) { // function parameter - same scope as c
 Similar to arrays, variables are also initialised to default values if unspecified; `int` and `float` default to `0` and `booleans` default to `false`.
 
 ## Statements
-Statements can either be just a single statement or a compound statement that contains zero or more variable declarations and followed by zero or more statements.
+Statements can either be just a single statement or a compound statement that contains zero or more variable declarations followed by zero or more statements.
 
 $$
 \begin{aligned}\textit{stmt}\rightarrow&~\textit{compound-stmt}\\
@@ -279,7 +279,7 @@ $$
 \end{aligned}
 $$
 
-Because there is there is no hoisting one may be inclined to add compound statements to have increased locality of variable declaration and use. (Or you could just deal with it)
+Because there is no hoisting one may be inclined to add compound statements to have increased locality of variable declaration and use. (Or you could just make a deal with it)
 
 ```ricelang
 int main() {
@@ -288,7 +288,7 @@ int main() {
 	for (;a < 10; a = a + 1)
 		putIntLn(a);
 
-	{
+	{ // introduce a new compound statement
 		// b decl is closer
 		int b = 2; 
 		for (; b < 10; b = b + 1)
@@ -306,7 +306,7 @@ $$
 
 When multiple if statements have a single `else` statement, the `else` is attached to the innermost if.
 ```ricelang
-// the following are equivalent
+// the following nested if statements with a single else are equivalent
 if (1 < 2) if (3 == 5) putString("nani"); else putString("hello");
 if (1 < 2) {
 	if (3 == 5) putString("nani");
@@ -329,7 +329,7 @@ while (i < 5) {
 ```
 
 ### For
-For statements are equivalent to while statements with $\textit{expr1}$ executing before the while statement and $\textit{expr3}$ executing after $\textit{stmt}$ except for the behaviour of $\textbf{continue}$; control passes to $\textit{expr3}$ instead of straight to the conditional.
+For statements are equivalent to while statements with $\textit{expr1}$ executing once before entering and $\textit{expr3}$ executing every loop after the $\textit{stmt}$. There is an exception for the behaviour of $\textbf{continue}$; control passes to $\textit{expr3}$ instead of straight to the conditional.
 
 $$
 \textit{for-stmt}\rightarrow\textbf{for}~\textbf{(}~\textit{expr1}?~\textbf{;}~\textit{expr2}?~\textbf{;}~\textit{expr3}?~\textbf{)}~\textit{stmt}
@@ -366,7 +366,7 @@ $$
 
 ```ricelang
 while (true) {
-	continue; // pass control back to start
+	continue; // pass control back to evaluate condition
 	putStringLn("hello"); // will not execute
 }
 ```
@@ -392,7 +392,7 @@ int fun(boolean b) {
 }
 ```
 ### Expression Statements
-An expression statement is just expression followed by a semi colon. This will most typically be used for expressions that are assignments or function calls.
+An expression statement is just an expression followed by a semicolon. This will most typically be used for expressions that are assignments or function calls.
 
 $$
 \textit{expr-stmt}\rightarrow\textbf{expr}?~\textbf{;}
@@ -405,9 +405,9 @@ i = 0;
 
 ## Scope rules
 Scope rules govern declarations and their uses.
-- No identifier can defined more than once in the same block
-- For everyone occurence of an identifier there most be some declaration in the same or an outer scope (this means function paramters must not collide with the declarations in a function's body)
-- An occurence of an identifier will use the deckaration that is the inner most scope that is equal to greater than its own scope (this produces scope holes)
+- No identifier can defined more than once in the same block (this means function parameters must not collide with the local variable declarations in a function's body)
+- For every occurence of an identifier, there most be some declaration in the same or an outer scope
+- An occurence of an identifier will use the declaration that is the inner most scope that is equal to greater than its own scope (this produces the possibility of scope holes)
 - Every compound statement (and thus every function) forms a nested scope
 - Functions (including the [built-ins](#built-in)) and global variables are all defined in the outermost scope
 
@@ -452,12 +452,12 @@ Functions must return one of `int`, `float`, `boolean`, `void` and have a corres
 ### Built-in
 RiceLang consists of 11 built-in functions for I/O.
 
-**Input functions** will block and read a line from stdin and return a value. In the case of the RiceLang playground, any program that calls the built-in input functions that
-- uses the legacy run command will timeout as stdin access hasn't been granted
+**Input functions** will block and parse a line from stdin and its value if valid. In the case of the RiceLang playground, any program that calls the built-in input functions that
+- uses the legacy run command will timeout as stdin isn't available
 - uses vanilla JavaScript transpilation will use the browser's `prompt()` function
 ```ricelang
-int i = getInt(); // read and a parse a line of stdin to an Int
-float f = getFloat(); //
+int i = getInt(); // read and a parse a line of stdin to an int
+float f = getFloat(); // as above but for float
 ```
 
 **Output functions** will print a particular data type to stdout. These functions all return `void`.

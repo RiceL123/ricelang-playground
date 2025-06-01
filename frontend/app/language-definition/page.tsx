@@ -23,7 +23,7 @@ import './codeHighlight.css';
 import './markdown.css';
 
 import ScrollToTopButton from '../components/ScrollToTop';
-import Toc from '../components/Toc';
+import Toc from './Toc';
 
 const inputFile = './def.md'
 
