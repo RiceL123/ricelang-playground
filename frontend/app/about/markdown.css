@@ -1,0 +1,70 @@
+#about ul {
+    list-style-type: disc;
+    padding-left: 2em;
+}
+
+#about ol {
+    list-style-type: decimal;
+    padding-left: 2em;
+}
+
+#about li::marker {
+    color: var(--muted-foreground);
+}
+
+#about a {
+    text-decoration: underline;
+    text-underline-offset: 1px;
+}
+
+#about a:hover {
+    text-underline-offset: 4px;
+}
+
+#about code:not(pre code) {
+    padding-inline: 0.2em;
+    padding-block: 0.1em;
+    background: #91919144;
+    border-radius: var(--radius-sm);
+}
+
+#about pre {
+    position: relative;
+    backdrop-filter: blur(var(--blur-sm)) grayscale(100%);
+}
+
+#about pre[data-language]::before {
+    content: attr(data-language);
+    position: absolute;
+    top: 0.8em;
+    right: 1.2em;
+    font-size: 0.6rem;
+    pointer-events: none;
+}
+
+pre code.hljs {
+    margin-block: 0.5em;
+    border-radius: var(--radius-md);
+    background-color: #ffffff07;
+    border: var(--muted-foreground) 1px solid;
+    transition: all 0.2s ease;
+}
+
+@media (max-width: 500px) {
+
+    .pre code.hljs,
+    .katex * {
+        font-size: var(--text-xs) !important;
+        line-height: var(--text-xs--line-height) !important;
+    }
+}
+
+pre code.hljs:hover,
+span.katex-display:hover {
+    border-radius: var(--radius-2xl);
+    border-color: var(--secondary-foreground);
+}
+
+#about p {
+    margin-bottom: 1em;
+}

@@ -19,7 +19,6 @@ import { HLJSApi, LanguageDetail } from 'highlight.js';
 import fs from 'fs/promises';
 import path from 'path';
 
-import './codeHighlight.css';
 import './markdown.css';
 
 import ScrollToTopButton from '../components/ScrollToTop';
