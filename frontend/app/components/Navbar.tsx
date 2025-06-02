@@ -10,7 +10,7 @@ import ThemeToggle from './ThemeToggle';
 
 export default function Navbar() {
   return (
-    <header className="sticky top-0 w-full h-[48px] pointer-events-none z-10">
+    <header className="fixed top-0 w-full h-[48px] pointer-events-none z-100">
       <div className="mx-auto py-3 px-4 flex place-content-between max-w-[1536px]">
         <TooltipProvider>
           <Tooltip>
