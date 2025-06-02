@@ -16,6 +16,7 @@ import { visit } from 'unist-util-visit';
 import { Root, Element, Properties } from 'hast';
 
 import java from 'highlight.js/lib/languages/java'
+import x86asm from 'highlight.js/lib/languages/x86asm'
 import hljs from 'highlight.js/lib/core';
 import { HLJSApi, LanguageDetail } from 'highlight.js';
 
@@ -81,7 +82,7 @@ export default async function About() {
     .use(remarkToc)
     .use(remarkRehype)
     .use(rehypeSlug)
-    .use(rehypeHighlight, { languages: { java, 'ricelang': ricelang } })
+    .use(rehypeHighlight, { languages: { java, 'ricelang': ricelang, 'jasmin': x86asm } })
     .use(addLanguageDataAttribute)
     .use(rehypeStringify)
     .process(fileContents);
@@ -93,8 +94,8 @@ export default async function About() {
         id="about"
         className='mx-auto max-w-[960px] my-8 p-4 backdrop-blur-xs border rounded-xl border-muted-foreground overflow-hidden'
         dangerouslySetInnerHTML={{ __html: String(file) }} />
-        <MermaidHydrate />
-        <Toc />
+      <MermaidHydrate />
+      <Toc />
       <p className='w-full text-center'>by Eric L May 2025</p>
     </div>
   );
