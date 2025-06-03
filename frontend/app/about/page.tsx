@@ -17,6 +17,8 @@ import { Root, Element, Properties } from 'hast';
 
 import java from 'highlight.js/lib/languages/java'
 import x86asm from 'highlight.js/lib/languages/x86asm'
+import javascript from 'highlight.js/lib/languages/javascript'
+
 import hljs from 'highlight.js/lib/core';
 import { HLJSApi, LanguageDetail } from 'highlight.js';
 
@@ -70,6 +72,16 @@ function addLanguageDataAttribute() {
   };
 }
 
+function openExternalLinksInNewTabs() {
+  return (tree: Root) => {
+    visit(tree, 'element', (node: Element) => {
+      if (node.tagName === 'a' && node.properties.href?.toString().startsWith("https://")) {
+        node.properties['target'] = '_blank'
+      }
+    });
+  };
+}
+
 export default async function About() {
   const filePath = path.join(process.cwd(), 'app', 'about', inputFile);
   const fileContents = await fs.readFile(filePath, 'utf8');
@@ -82,8 +94,9 @@ export default async function About() {
     .use(remarkToc)
     .use(remarkRehype)
     .use(rehypeSlug)
-    .use(rehypeHighlight, { languages: { java, 'ricelang': ricelang, 'jasmin': x86asm } })
+    .use(rehypeHighlight, { languages: { java, ricelang, 'jasmin': x86asm, javascript } })
     .use(addLanguageDataAttribute)
+    .use(openExternalLinksInNewTabs)
     .use(rehypeStringify)
     .process(fileContents);
 

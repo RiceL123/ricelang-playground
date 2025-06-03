@@ -239,7 +239,6 @@ code.hljs {
   color: #4a67b1
 }
 
-.hljs-attr,
 .hljs-property {
   color: #871094
 }
@@ -330,7 +329,6 @@ code.hljs {
   color: #6b92b3;
 }
 
-.dark .hljs-attr,
 .dark .hljs-property {
   color: #c586c0;
 }
