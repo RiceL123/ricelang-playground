@@ -1,3 +1,5 @@
+export const dynamic = 'force-static';
+
 import Navbar from '../components/Navbar';
 
 import rehypeHighlight from 'rehype-highlight'

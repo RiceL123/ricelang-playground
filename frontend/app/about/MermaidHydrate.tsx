@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import mermaid from 'mermaid';
 
-export default function MermaidHydration() {
+export default function MermaidHydrate() {
   useEffect(() => {
     const renderMermaid = async () => {
       const targets = document.querySelectorAll('pre[data-language="mermaid"]');
@@ -44,7 +44,11 @@ export default function MermaidHydration() {
       });
     }
 
-    renderMermaid();
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(renderMermaid);
+    } else {
+      renderMermaid();
+    }
   }, []);
 
   return null;

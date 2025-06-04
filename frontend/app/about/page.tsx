@@ -1,3 +1,5 @@
+export const dynamic = 'force-static';
+
 import Navbar from '../components/Navbar';
 import MermaidHydrate from './MermaidHydrate';
 import Toc from '../components/Toc';
