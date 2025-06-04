@@ -18,6 +18,7 @@ import { Root, Element, Properties } from 'hast';
 import java from 'highlight.js/lib/languages/java'
 import x86asm from 'highlight.js/lib/languages/x86asm'
 import javascript from 'highlight.js/lib/languages/javascript'
+import bash from 'highlight.js/lib/languages/bash'
 
 import hljs from 'highlight.js/lib/core';
 import { HLJSApi, LanguageDetail } from 'highlight.js';
@@ -26,6 +27,7 @@ import fs from 'fs/promises';
 import path from 'path';
 
 import './markdown.css'
+import ScrollToTopButton from '../components/ScrollToTop';
 
 const inputFile = './about.md'
 
@@ -94,7 +96,7 @@ export default async function About() {
     .use(remarkToc)
     .use(remarkRehype)
     .use(rehypeSlug)
-    .use(rehypeHighlight, { languages: { java, ricelang, 'jasmin': x86asm, javascript } })
+    .use(rehypeHighlight, { languages: { ricelang, javascript, bash, 'jasmin': x86asm } })
     .use(addLanguageDataAttribute)
     .use(openExternalLinksInNewTabs)
     .use(rehypeStringify)
@@ -103,13 +105,14 @@ export default async function About() {
   return (
     <div className="h-full w-full">
       <Navbar />
+      <ScrollToTopButton />
+      <Toc />
       <main
         id="about"
-        className='mx-auto max-w-[960px] my-8 p-4 backdrop-blur-xs border rounded-xl border-muted-foreground overflow-hidden'
+        className='mx-auto max-w-[960px] my-16 p-4 backdrop-blur-xs border rounded-xl border-muted-foreground overflow-hidden'
         dangerouslySetInnerHTML={{ __html: String(file) }} />
       <MermaidHydrate />
-      <Toc />
-      <p className='w-full text-center'>by Eric L May 2025</p>
+      <p className='w-full text-center pb-4'>by Eric L May 2025</p>
     </div>
   );
 }

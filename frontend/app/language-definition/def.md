@@ -4,7 +4,7 @@
 
 ## Introduction
 
-RiceLang is a simple C/Java like programming language create by yours truly: RiceL123. From source code to an [AST](https://wikipedia.org/wiki/Abstract_syntax_tree), RiceLang programs can compile to Java byte code or transpile to JavaScript.
+RiceLang is a simple C/Java like programming language created by yours truly: RiceL123. From source code to an [AST](https://wikipedia.org/wiki/Abstract_syntax_tree), RiceLang programs can compile to Java byte code or transpile to JavaScript.
 
 An example of a simple RiceLang program is shown below.
 ```ricelang
@@ -109,7 +109,7 @@ All comments are ignored by the compiler.
 ### Separators
 White space (like new lines, tabs or spaces) as well as the following can be used as separators
 - `{`, `}`, `(`, `)`, `[`, `]`, `;`, `,`
-When the AST is generated, all separater tokens and white space is omitted.
+When the AST is generated, all separator tokens and white space is omitted.
 ### Identifiers
 Identifiers are used to define both variables and function names and must be 1 or more characters long. They start with a letter or underscore and end with a letter, number or underscore.
 
@@ -179,7 +179,7 @@ Coercion on an `int` to a `float` will automatically occur for in expressions in
 float i = 3.;
 int j = -2;
 float k = i / j; // -1.5 (j converted to -2.0)
-boolean b = i > j; // true (j is coverted to -2.0)
+boolean b = i > j; // true (j is converted to -2.0)
 ```
 ### boolean
 A $\textbf{BOOLEANLITERAL}$ is either true or false and is of type `boolean`.
@@ -208,7 +208,7 @@ $$
 \end{aligned}
 $$
 
-$\textit{character}$ refers to [ASCII](https://wikipedia.org/wiki/ASCII) characters. If non-ASCII / [UTF-8](https://wikipedia.org/wiki/UTF-8) characters are used, they maybe read as single bytes. Escape sequences like `\n` and `\"` are also supported. RiceLang has no `String` type to use; string literals can only be used in the built-in functions `putString` and `putStringLn`. Strings cannot span more than 1 line.
+$\textit{character}$ refers to [ASCII](https://wikipedia.org/wiki/ASCII) characters. If non-ASCII / [UTF-8](https://wikipedia.org/wiki/UTF-8) characters are used, they may be read as single bytes. Escape sequences like `\n` and `\"` are also supported. RiceLang has no `String` type to use; string literals can only be used in the built-in functions `putString` and `putStringLn`. Strings cannot span more than 1 line.
 
 ```ricelang
 putString("Hewwo world\n");
@@ -228,7 +228,7 @@ int d[1] = { 1, 2 };        // Error: initialiser > size
 float e[] = { 1, 2, 3.14 }; // coercion to declared type: [ 1.0, 2.0, 3.14 ]
 ```
 
-Arrays themselves can be passed as an argument to a function call (one will typically also pass in the array size). Arrays are passed to functions as pointers so modifications on them by callee can be observed by caller. Only element access with a subscript allows for valid manipulation.
+Arrays themselves can be passed as an argument to a function call (one will typically also pass in the array size). Arrays are passed to functions as pointers so modifications on them by the callee can be observed by the caller. Only element access with a subscript allows for valid manipulation of the array.
 
 ```ricelang
 int increment_all(int x[], int size) {
@@ -406,8 +406,8 @@ i = 0;
 ## Scope rules
 Scope rules govern declarations and their uses.
 - No identifier can defined more than once in the same block (this means function parameters must not collide with the local variable declarations in a function's body)
-- For every occurence of an identifier, there most be some declaration in the same or an outer scope
-- An occurence of an identifier will use the declaration that is the inner most scope that is equal to greater than its own scope (this produces the possibility of scope holes)
+- For every occurrence of an identifier, there must be some declaration in the same or an outer scope
+- An occurrence of an identifier will use the declaration that is the inner most scope that is equal to greater than its own scope (this produces the possibility of scope holes)
 - Every compound statement (and thus every function) forms a nested scope
 - Functions (including the [built-ins](#built-in)) and global variables are all defined in the outermost scope
 

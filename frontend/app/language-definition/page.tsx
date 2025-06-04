@@ -66,13 +66,13 @@ export default async function LangDef() {
       crossOrigin="anonymous" />
     <div className="pb-6">
       <Navbar />
+      <ScrollToTopButton />
       <Toc />
       <main
         id="definition"
-        className='mx-auto max-w-[960px] my-8 p-4 backdrop-blur-xs border rounded-xl border-muted-foreground overflow-hidden'
+        className='mx-auto max-w-[960px] my-16 p-4 backdrop-blur-xs border rounded-xl border-muted-foreground overflow-hidden'
         dangerouslySetInnerHTML={{ __html: String(file) }} />
-      <p className='w-full text-center'>by Eric L May 2025</p>
-      <ScrollToTopButton />
+      <p className='w-full text-center pb-4'>by Eric L May 2025</p>
     </div>
   </>);
 }
