@@ -54,8 +54,20 @@ export default function Background() {
         </svg>
 
         <div className='fixed top-0 w-full h-full'>
-          <Image className="dark:invert dark:grayscale fixed w-auto bottom-5 left-1/2 md:translate-x-72 animate-hover transition-transform" src={book} width={352} height={268} alt='background book prop' priority />
-          <Image className="dark:invert dark:grayscale fixed w-auto animate-[hover_15s_ease-in-out_infinite]" src={mouse} width={315} height={534} alt='background computer mouse prop' />
+          <Image
+            className="dark:invert dark:grayscale fixed w-auto bottom-5 left-1/2 md:translate-x-72 animate-hover transition-transform"
+            src={book}
+            width={352}
+            height={268}
+            alt='background book prop' priority
+          />
+          <Image
+            className="dark:invert dark:grayscale fixed w-auto top-0 left-0 animate-hover-15 transition-transform"
+            src={mouse}
+            width={315}
+            height={534}
+            alt='background computer mouse prop'
+          />
         </div>
 
       </div>

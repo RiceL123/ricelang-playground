@@ -7,6 +7,7 @@
   --breakpoint-3xl: 1660px;
 
   --animate-hover: hover 10s ease-in-out infinite;
+  --animate-hover-15: hover 15s ease-in-out infinite;
 
   @keyframes hover {
   50% {
