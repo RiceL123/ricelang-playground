@@ -291,7 +291,7 @@ sequenceDiagram
 
 Because the [Wasm](https://webassembly.org/) runtime doesn't have access to I/O, it meant that the main `/run` route couldn't be compiled with [TeaVM](https://teavm.org/) directly. So, I wrote a JavaScript transpiler by implementing the `Visitor` class yet again to produce vanilla JS so that it could run in the browser. I used the `prompt` function for stdin and just saved stdout to an array to later be used to `console.log`.  [TeaVM](https://teavm.org/) made this quite lovely as all I had to do was change some logic to only use compatible Java libraries and then simply add some decorators to some exported binding functions. Then I would just copy the binaries over to the frontend and have them loaded once in a [context](https://react.dev/reference/react/createContext) to be used throughout the [React](https://react.dev/) app.
 
-This worked beautifully with both [SpiderMonkey](https://spidermonkey.dev/) for Firefox and [V8](https://v8.dev/) for Chromium while having a minimal affect on TTI (Time to Interactive) as the binary was only `800kb`. This gave an average `50x` improvement in performance from `1500ms` to `30ms` for a typical `/run`. If the backend had spun down, performance increases upwards of `3000x` could be achieved (`100000ms` to `30ms`). With such an improvement, I made Wasm the default with an optional legacy route if true JVM compilation was desired.
+This worked beautifully with both [SpiderMonkey](https://spidermonkey.dev/) for Firefox and [V8](https://v8.dev/) for Chromium while having a minimal affect on TTI (Time to Interactive) as the binary was only `800kb`. This gave an average `200x` improvement in performance from `1000ms` to `5ms` for a typical `/run`. If the backend had spun down, performance increases upwards of `20000x` could be achieved (`100000ms` to `5ms`). With such an improvement, I made Wasm the default with an optional legacy route if true JVM compilation was desired.
 
 However, [WebKit](https://webkit.org/) (for Safari and all browsers in iOS) was not able to properly load the WasmGC module (A [TeaVM issue](https://github.com/konsoletyper/teavm/issues/1028) seems to blame it on Apple). Because of this, I made a simple fallback to the [Spring Boot](https://spring.io/projects/spring-boot) backend if any errors were found in the [Wasm](https://webassembly.org/) initialisation.
 
@@ -331,6 +331,9 @@ The project took around 14 weeks to complete and was very rewarding. I learnt a 
 - [Mermaid](https://mermaid.js.org/)
 - [Markdown](https://markdownguide.org/) + [remark](https://remark.js.org/)
 - [TeaVM](https://teavm.org/)
+- [Vercel](https://vercel.com)
+- [Render](https://render.com)
+- [Docker](https://docker.com)
 
 All the code is available on my github at [https://github.com/RiceL123/ricelang-playground](https://github.com/RiceL123/ricelang-playground).
 
