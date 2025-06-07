@@ -59,17 +59,18 @@ export default function Background() {
             src={book}
             width={352}
             height={268}
-            alt='background book prop' priority
+            alt='background book prop'
+            priority
           />
           <Image
-            className="dark:invert dark:grayscale fixed w-auto top-0 left-0 animate-hover-15 transition-transform"
+            className="dark:invert dark:grayscale fixed w-auto top-0 left-0 animate-hover-15 transition-transform will-change-transform"
             src={mouse}
             width={315}
             height={534}
             alt='background computer mouse prop'
+            priority
           />
         </div>
-
       </div>
     </div>
   )

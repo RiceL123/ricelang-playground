@@ -92,63 +92,61 @@ will generate the following AST
   "width": "100%"
 } }%%
 flowchart TD
-    classDef small font-size:10px,padding:0px;
-
-    1[Program]:::small
-    1-->2[DeclList]:::small
-    2-->3[FuncDecl]:::small
-    3-->4[int]:::small
-    3-->5[main]:::small
-    3-->6[EmptyParaList]:::small
-    3-->7[CompoundStmt]:::small
-    7-->8[DeclList]:::small
-    8-->9[LocalVarDecl]:::small
-    9-->10[int]:::small
-    9-->11[i]:::small
-    9-->12[IntExpr]:::small
-    12-->13[0]:::small
-    8-->14[EmptyDeclList]:::small
-    7-->15[StmtList]:::small
-    15-->16[WhileStmt]:::small
-    16-->17[BinaryExpr]:::small
-    17-->18[VarExpr]:::small
-    18-->19[SimpleVar]:::small
-    19-->20[i]:::small
-    17-->21["<"]:::small
-    17-->22[IntExpr]:::small
-    22-->23[5]:::small
-    16-->24[CompoundStmt]:::small
-    24-->25[EmptyDeclList]:::small
-    24-->26[StmtList]:::small
-    26-->27[ExprStmt]:::small
-    27-->28[CallExpr]:::small
-    28-->29[putIntLn]:::small
-    28-->30[ArgList]:::small
-    30-->31[Arg]:::small
-    31-->32[VarExpr]:::small
-    32-->33[SimpleVar]:::small
-    33-->34[i]:::small
-    30-->35[EmptyArgList]:::small
-    26-->36[StmtList]:::small
-    36-->37[ExprStmt]:::small
-    37-->38[AssignExpr]:::small
-    38-->39[VarExpr]:::small
-    39-->40[SimpleVar]:::small
-    40-->41[i]:::small
-    38-->42[BinaryExpr]:::small
-    42-->43[VarExpr]:::small
-    43-->44[SimpleVar]:::small
-    44-->45[i]:::small
-    42-->46["\+"]:::small
-    42-->47[IntExpr]:::small
-    47-->48[1]:::small
-    36-->49[EmptyStmtList]:::small
-    15-->50[StmtList]:::small
-    50-->51[byebye]:::small
-    51-->52[IntExpr]:::small
-    52-->53[0]:::small
-    50-->54[EmptyStmtList]:::small
-    2-->55[EmptyDeclList]:::small
+    1[Program]
+    1-->2[DeclList]
+    2-->3[FuncDecl]
+    3-->4[int]
+    3-->5[main]
+    3-->6[EmptyParaList]
+    3-->7[CompoundStmt]
+    7-->8[DeclList]
+    8-->9[LocalVarDecl]
+    9-->10[int]
+    9-->11[i]
+    9-->12[IntExpr]
+    12-->13[0]
+    8-->14[EmptyDeclList]
+    7-->15[StmtList]
+    15-->16[WhileStmt]
+    16-->17[BinaryExpr]
+    17-->18[VarExpr]
+    18-->19[SimpleVar]
+    19-->20[i]
+    17-->21["<"]
+    17-->22[IntExpr]
+    22-->23[5]
+    16-->24[CompoundStmt]
+    24-->25[EmptyDeclList]
+    24-->26[StmtList]
+    26-->27[ExprStmt]
+    27-->28[CallExpr]
+    28-->29[putIntLn]
+    28-->30[ArgList]
+    30-->31[Arg]
+    31-->32[VarExpr]
+    32-->33[SimpleVar]
+    33-->34[i]
+    30-->35[EmptyArgList]
+    26-->36[StmtList]
+    36-->37[ExprStmt]
+    37-->38[AssignExpr]
+    38-->39[VarExpr]
+    39-->40[SimpleVar]
+    40-->41[i]
+    38-->42[BinaryExpr]
+    42-->43[VarExpr]
+    43-->44[SimpleVar]
+    44-->45[i]
+    42-->46["\+"]
+    42-->47[IntExpr]
+    47-->48[1]
+    36-->49[EmptyStmtList]
+    15-->50[StmtList]
+    50-->51[byebye]
+    51-->52[IntExpr]
+    52-->53[0]
+    50-->54[EmptyStmtList]
+    2-->55[EmptyDeclList]
 ```
 
 As the AST is generated with all its nodes, a `Visitor` interface is produced to allow further modification and reading of this intermediate state.
@@ -272,7 +270,7 @@ The window with the editor would use [Monaco](https://microsoft.github.io/monaco
 
 The output window was quite simple for text output; wait for the parent to make a fetch to the backend, and then render the output in monospaced font. As for the rendering of the [MermaidJS](https://mermaid.js.org) source code to an AST visualisation, just using the `render` function as provided by the [npm package](https://npmjs.com/package/mermaid) was all that was needed.
 
-After a little tinkering to prevent unnecessary re-renders with [react's memoization](https://react.dev/reference/react/useMemo) the basic functionality was complete.
+After a little tinkering to prevent unnecessary re-renders with [react's memoization](https://react.dev/reference/react/useMemo), the basic functionality was complete.
 ### Wasm
 While the [Spring Boot](https://spring.io/projects/spring-boot) backend worked correctly, the idea of removing packet delay / latency altogether seemed extremely desirable especially with [render](https://render.com) services spinning down after periods of inactivity. So, I decided to turn my compiler into [Web Assembly](https://webassembly.org/) with the help of [TeaVM](https://teavm.org/) which is an ahead-of-time compiler that converts Java into Wasm (specifically Wasm Garbage Collection (WasmGC)).
 
