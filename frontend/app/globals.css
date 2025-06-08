@@ -10,10 +10,10 @@
   --animate-hover-15: hover 8s ease-in-out infinite;
 
   @keyframes hover {
-  50% {
-    transform: translateY(-10%);
+    50% {
+      transform: translateY(-10%);
+    }
   }
-}
 }
 
 @theme inline {
@@ -141,13 +141,12 @@ h3,
 h4,
 h5,
 h6 {
-    padding-bottom: .3em;
-    border-bottom: 1px solid var(--muted-foreground);
-    margin-top: 0.3em;
-    margin-bottom: 0.5em;
-    font-weight: 700;
-    color: var(--muted-foreground);
-    transition: all 0.2s ease;
+  padding-bottom: .3em;
+  border-bottom: 1px solid var(--muted-foreground);
+  margin-bottom: 0.5em;
+  font-weight: 700;
+  color: var(--muted-foreground);
+  transition: all 0.2s ease;
 }
 
 h1:hover,
@@ -156,40 +155,42 @@ h3:hover,
 h4:hover,
 h5:hover,
 h6:hover {
-    transform: translateX(0.5em);
-    border-bottom: 1px solid var(--primary);
-    color: var(--secondary-foreground);
+  transform: translateX(0.5em);
+  border-bottom: 1px solid var(--primary);
+  color: var(--secondary-foreground);
 }
 
 h1 {
-    color: var(--secondary-foreground);
-    font-size: var(--text-4xl);
-    line-height: var(--text-4xl--line-height);
+  color: var(--secondary-foreground);
+  font-size: var(--text-4xl);
+  line-height: var(--text-4xl--line-height);
 }
 
 h2 {
-    font-size: var(--text-3xl);
-    line-height: var(--text-3xl--line-height);
+  margin-top: 1.4em;
+  font-size: var(--text-3xl);
+  line-height: var(--text-3xl--line-height);
 }
 
 h3 {
-    font-size: var(--text-2xl);
-    line-height: var(--text-2x--line-height);
+  margin-top: 1.2em;
+  font-size: var(--text-2xl);
+  line-height: var(--text-2x--line-height);
 }
 
 h4 {
-    font-size: var(--text-xl);
-    line-height: var(--text-xl--line-height);
+  font-size: var(--text-xl);
+  line-height: var(--text-xl--line-height);
 }
 
 h5 {
-    font-size: var(--text-lg);
-    line-height: var(--text-lg--line-height);
+  font-size: var(--text-lg);
+  line-height: var(--text-lg--line-height);
 }
 
 h6 {
-    font-size: var(--text-base);
-    line-height: var(--text-base--line-height);
+  font-size: var(--text-base);
+  line-height: var(--text-base--line-height);
 }
 
 pre code.hljs {

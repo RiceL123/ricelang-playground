@@ -115,6 +115,7 @@ export default async function About() {
         dangerouslySetInnerHTML={{ __html: String(file) }} />
       <MermaidHydrate />
       <p className='w-full text-center pb-4'>by Eric L May 2025</p>
+      <style>{`path.flowchart-link, marker#arrowhead path, .messageLine0, marker[id$="pointEnd"] { stroke: hsl(259.6261682243, 59.7765363128%, 87.9019607843%) !important; stroke-width: 2px !important; }`}</style>
     </div>
   );
 }

@@ -76,10 +76,3 @@ pre code.hljs:hover,
     padding-block: 0.5em;
     backdrop-filter: hue-rotate(270deg);
 }
-
-path.flowchart-link,
-marker#arrowhead path,
-.messageLine0 {
-    stroke: hsl(259.6261682243, 59.7765363128%, 87.9019607843%) !important;
-    stroke-width: 2px !important;
-}
