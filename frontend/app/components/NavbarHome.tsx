@@ -387,9 +387,9 @@ const Navbar = ({ setSourceCode, actions, request }: { setSourceCode: (newSource
             <TooltipTrigger>
               <Link
                 href="/"
-                className="text-xl px-4 py-1 rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition"
+                className="text-xl pl-3 pr-4 py-1 rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition"
               >
-                RiceLang
+                🍚 RiceLang
               </Link>
             </TooltipTrigger>
             <TooltipContent>
