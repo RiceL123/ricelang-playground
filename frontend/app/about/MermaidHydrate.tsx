@@ -7,7 +7,8 @@ export default function MermaidHydrate() {
   useEffect(() => {
     const renderMermaid = async () => {
       const targets = document.querySelectorAll('pre[data-language="mermaid"]');
-
+      mermaid.initialize({ startOnLoad: false });
+      
       targets.forEach((pre, i) => {
         const code = pre.textContent?.trim();
         if (!code) return;

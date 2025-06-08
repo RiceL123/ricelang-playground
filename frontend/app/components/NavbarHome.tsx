@@ -402,7 +402,7 @@ const Navbar = ({ setSourceCode, actions, request }: { setSourceCode: (newSource
           <div className='flex rounded-lg overflow-hidden border border-accent'>
             <FunnyButton onClick={() => request(actions[action].route)}>{action}</FunnyButton>
             <Select onValueChange={(x: keyof typeof actions) => { setAction(x); request(actions[x].route); }}>
-              <SelectTrigger className="w-[40px] rounded-none bg-primary dark:bg-secondary border-primary" aria-label="Select action" />
+              <SelectTrigger className="w-[40px] rounded-none !bg-primary border border-primary" aria-label="Select action" />
               <SelectContent>
                 {Object.entries(actions).map(([key, val], i) => (
                   <SelectItem value={key} key={i}>

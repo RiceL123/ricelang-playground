@@ -63,11 +63,11 @@ export default function Mermaid({ mermaidSrc }: { mermaidSrc: string }) {
 
   return (
     <>
-    <style>
-      {`
+      <style>
+        {`
       #generated-mermaid { height: 100%; }
       `}
-    </style>
+      </style>
       {loading && <Loading message="Rendering Mermaid..." />}
       {error && <pre className="text-red-500">{error}</pre>}
 
@@ -88,7 +88,7 @@ export default function Mermaid({ mermaidSrc }: { mermaidSrc: string }) {
                 <Minus />
               </Button>
               <Button className="bg-blur" variant="outline" onClick={() => setShowSource(prev => !prev)}>
-                {showSource ? "Hide Source" : "Show Source"}
+                {showSource ? "Show Diagram" : "Show Source"}
               </Button>
             </div>
 
