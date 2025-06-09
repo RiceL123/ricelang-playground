@@ -3,6 +3,7 @@ import { Editor, OnChange, OnMount, useMonaco } from "@monaco-editor/react";
 import { useTheme } from 'next-themes'
 
 const ricelang = "ricelang"
+let hasMonted = false;
 
 export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCode: (newSourceCode: string) => void, sourceCode: string }) {
   const { resolvedTheme } = useTheme();
@@ -17,6 +18,8 @@ export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCod
 
 
   const handleEditorDidMount: OnMount = (_editor, monaco) => {
+    if (hasMonted) return;
+    hasMonted = true;
 
     // Define the language
     monaco.languages.register({ id: ricelang });
