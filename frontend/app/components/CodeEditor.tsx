@@ -1,11 +1,16 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { Editor, OnChange, OnMount, useMonaco } from "@monaco-editor/react";
-import { useTheme } from 'next-themes'
+import { useTheme } from "next-themes";
+import { useAtom } from "jotai";
+import { sourceCodeAtom } from "@/lib/io";
 
-const ricelang = "ricelang"
+const ricelang = "ricelang";
 let hasMounted = false;
 
-export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCode: (newSourceCode: string) => void, sourceCode: string }) {
+export default function CodeEditor() {
+  const [sourceCode, setSourceCode] = useAtom(sourceCodeAtom);
   const { resolvedTheme } = useTheme();
   const monaco = useMonaco();
   const [fontSize, setFontSize] = useState(14);
@@ -15,7 +20,6 @@ export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCod
       setFontSize(window.innerWidth < 640 ? 11 : 16);
     }
   }, []);
-
 
   const handleEditorDidMount: OnMount = (_editor, monaco) => {
     if (hasMounted) return;
@@ -40,7 +44,11 @@ export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCod
         "while",
       ],
 
-      brackets: [{ open: '[', close: ']', token: '@brackets' }, { open: '{', close: '}', token: '@brackets' }, { open: '(', close: ')', token: '@brackets' }],
+      brackets: [
+        { open: "[", close: "]", token: "@brackets" },
+        { open: "{", close: "}", token: "@brackets" },
+        { open: "(", close: ")", token: "@brackets" },
+      ],
 
       typeKeywords: ["boolean", "float", "int", "void"],
 
@@ -132,15 +140,15 @@ export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCod
 
     monaco.languages.setLanguageConfiguration(ricelang, {
       comments: {
-        lineComment: '//',
-        blockComment: ['/*', '*/'],
+        lineComment: "//",
+        blockComment: ["/*", "*/"],
       },
       autoClosingPairs: [
-        { open: '{', close: '}' },
-        { open: '[', close: ']' },
-        { open: '(', close: ')' },
-        { open: '"', close: '"', notIn: ['string'] },
-        { open: "'", close: "'", notIn: ['string', 'comment'] },
+        { open: "{", close: "}" },
+        { open: "[", close: "]" },
+        { open: "(", close: ")" },
+        { open: '"', close: '"', notIn: ["string"] },
+        { open: "'", close: "'", notIn: ["string", "comment"] },
       ],
     });
 
@@ -157,52 +165,53 @@ export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCod
           {
             label: 'putStringLn("")',
             insertText: 'putStringLn("$0");',
-            detail: 'Put a String + \\n to stdout',
+            detail: "Put a String + \\n to stdout",
           },
           {
             label: 'putString("")',
             insertText: 'putString("$0");',
-            detail: 'Put a String to stdout',
+            detail: "Put a String to stdout",
           },
           {
-            label: 'putInt()',
-            insertText: 'putInt($0);',
-            detail: 'Put an Int to stdout',
+            label: "putInt()",
+            insertText: "putInt($0);",
+            detail: "Put an Int to stdout",
           },
           {
-            label: 'putIntLn()',
-            insertText: 'putIntLn($0);',
-            detail: 'Put an Int + \\n to stdout',
+            label: "putIntLn()",
+            insertText: "putIntLn($0);",
+            detail: "Put an Int + \\n to stdout",
           },
           {
-            label: 'putFloat()',
-            insertText: 'putFloat($0);',
-            detail: 'Put a Float to stdout',
+            label: "putFloat()",
+            insertText: "putFloat($0);",
+            detail: "Put a Float to stdout",
           },
           {
-            label: 'putFloatLn()',
-            insertText: 'putFloatLn($0);',
-            detail: 'Put a Float + \\n to stdout',
+            label: "putFloatLn()",
+            insertText: "putFloatLn($0);",
+            detail: "Put a Float + \\n to stdout",
           },
           {
-            label: 'putBool()',
-            insertText: 'putBool($0);',
-            detail: 'Put a Bool to stdout',
+            label: "putBool()",
+            insertText: "putBool($0);",
+            detail: "Put a Bool to stdout",
           },
           {
-            label: 'putBoolLn()',
-            insertText: 'putBoolLn($0);',
-            detail: 'Put a Bool + \\n to stdout',
-          }
-        ].map(item => ({
+            label: "putBoolLn()",
+            insertText: "putBoolLn($0);",
+            detail: "Put a Bool + \\n to stdout",
+          },
+        ].map((item) => ({
           ...item,
           kind: monaco.languages.CompletionItemKind.Function,
-          insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-          range
+          insertTextRules:
+            monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+          range,
         }));
         return { suggestions };
-      }
-    })
+      },
+    });
 
     monaco.editor.defineTheme("transparent-theme", {
       base: resolvedTheme === "light" ? "vs" : "vs-dark",
@@ -216,11 +225,11 @@ export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCod
     });
 
     monaco.editor.setTheme("transparent-theme");
-  }
+  };
 
-  const handleEditorChange: OnChange = value => {
+  const handleEditorChange: OnChange = (value) => {
     if (value != undefined) setSourceCode(value);
-  }
+  };
 
   useEffect(() => {
     if (monaco) {
@@ -228,7 +237,7 @@ export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCod
         base: resolvedTheme === "light" ? "vs" : "vs-dark",
         inherit: true,
         rules: [
-          { token: "brackets", foreground: "A0A0A0" },  // Choose a color you like
+          { token: "brackets", foreground: "A0A0A0" }, // Choose a color you like
         ],
         colors: {
           "editor.background": "#00000000",
@@ -242,21 +251,20 @@ export default function CodeEditor({ setSourceCode, sourceCode }: { setSourceCod
   }, [monaco, resolvedTheme]);
 
   return (
-    <div className="h-full w-full flex overflow-hidden bg-primary-foreground/20 backdrop-blur-sm border border-2 border-accent-foreground rounded-xl shadow-sm hover:bg-primary-foreground/30 transition" >
+    <div className="bg-primary-foreground/20 border-accent-foreground hover:bg-primary-foreground/30 flex h-full w-full overflow-hidden rounded-xl border-2 shadow-sm backdrop-blur-sm transition">
       <Editor
         defaultLanguage={ricelang}
         defaultValue="// some comment"
         onMount={handleEditorDidMount}
         onChange={handleEditorChange}
         options={{
-          autoClosingBrackets: 'always',
+          autoClosingBrackets: "always",
           fontSize: fontSize,
           padding: { top: 16 },
           lineNumbersMinChars: 3,
         }}
         theme="transparent-theme"
         value={sourceCode}
-
       />
       <style>{`.monaco-editor { outline: 0; }`}</style>
     </div>

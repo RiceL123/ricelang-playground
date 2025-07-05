@@ -1,23 +1,23 @@
-import Link from 'next/link'
+import Link from "next/link";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { BookOpen, Info } from 'lucide-react'
-import ThemeToggle from './ThemeToggle';
+} from "@/components/ui/tooltip";
+import { BookOpen, Info } from "lucide-react";
+import ThemeToggle from "./ThemeToggle";
 
 export default function Navbar() {
   return (
-    <header className="fixed top-0 w-full h-[48px] pointer-events-none z-40">
-      <div className="mx-auto py-3 px-4 flex place-content-between max-w-[1536px]">
+    <header className="pointer-events-none fixed top-0 z-40 h-[48px] w-full">
+      <div className="mx-auto flex max-w-[1536px] place-content-between px-4 py-3">
         <TooltipProvider>
           <Tooltip>
-            <TooltipTrigger className='pointer-events-auto'>
+            <TooltipTrigger className="pointer-events-auto">
               <Link
                 href="/"
-                className="text-xl pl-3.25 pr-4 py-1 rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition"
+                className="border-accent hover:bg-accent rounded-xl border bg-white/20 py-1 pr-4 pl-3.25 text-xl shadow-sm backdrop-blur-[3px] transition"
               >
                 🍚 RiceLang
               </Link>
@@ -31,13 +31,13 @@ export default function Navbar() {
         <div className="flex gap-4">
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger className='pointer-events-auto'>
+              <TooltipTrigger className="pointer-events-auto">
                 <Link
                   href="/language-definition"
-                  className="flex gap-2 px-4 py-1 items-center rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition"
+                  className="border-accent hover:bg-accent flex items-center gap-2 rounded-xl border bg-white/20 px-4 py-1 shadow-sm backdrop-blur-[3px] transition"
                 >
-                  <p className='hidden sm:block'>language definition</p>
-                  <BookOpen className='h-[1.2rem] w-[1.2rem]' />
+                  <p className="hidden sm:block">language definition</p>
+                  <BookOpen className="h-[1.2rem] w-[1.2rem]" />
                 </Link>
               </TooltipTrigger>
               <TooltipContent>
@@ -48,13 +48,13 @@ export default function Navbar() {
 
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger className='pointer-events-auto'>
+              <TooltipTrigger className="pointer-events-auto">
                 <Link
                   href="/about"
-                  className="flex gap-2 px-4 py-1 items-center rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition"
+                  className="border-accent hover:bg-accent flex items-center gap-2 rounded-xl border bg-white/20 px-4 py-1 shadow-sm backdrop-blur-[3px] transition"
                 >
-                  <p className='hidden sm:block'>about</p>
-                  <Info className='h-[1.2rem] w-[1.2rem]' />
+                  <p className="hidden sm:block">about</p>
+                  <Info className="h-[1.2rem] w-[1.2rem]" />
                 </Link>
               </TooltipTrigger>
               <TooltipContent>
@@ -63,22 +63,18 @@ export default function Navbar() {
             </Tooltip>
           </TooltipProvider>
 
-
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger className='pointer-events-auto'>
-                <ThemeToggle
-                  className="px-4 py-1.5 rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition"
-                />
+              <TooltipTrigger className="pointer-events-auto">
+                <ThemeToggle className="border-accent hover:bg-accent rounded-xl border bg-white/20 px-4 py-1.5 shadow-sm backdrop-blur-[3px] transition" />
               </TooltipTrigger>
               <TooltipContent>
                 <p>Toggle light & dark mode</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-
         </div>
       </div>
     </header>
-  )
+  );
 }

@@ -31,6 +31,7 @@ npm run dev
 - [Mermaid](https://mermaid.js.org/)
 - [Markdown](https://markdownguide.org/) + [remark](https://remark.js.org/)
 - [TeaVM](https://teavm.org/)
+- [Jotai](https://jotai.org)
 - [Vercel](https://vercel.com)
 - [Render](https://render.com)
 - [Docker](https://docker.com)

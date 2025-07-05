@@ -1,9 +1,9 @@
-import Link from 'next/link'
-import Navbar from './components/Navbar'
+import Link from "next/link";
+import Navbar from "./components/Navbar";
 
 export default function NotFound() {
   return (
-    <div className='h-full w-full'>
+    <div className="h-full w-full">
       <Navbar />
       <style>{`
 
@@ -264,44 +264,51 @@ export default function NotFound() {
 	}
 }
       `}</style>
-      <main className='mx-auto my-16 max-w-[960px] px-4'>
-        <h1 className="text-5xl font-extrabold mb-6">404 — Page Not Found</h1>
-        <p className="mb-10 text-lg text-muted-foreground">
+      <main className="mx-auto my-16 max-w-[960px] px-4">
+        <h1 className="mb-6 text-5xl font-extrabold">404 — Page Not Found</h1>
+        <p className="text-muted-foreground mb-10 text-lg">
           You dummy! Navigate back to a real page
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
           <Link
             href="/"
-            className="block p-4 border border-gray-300 rounded-lg shadow hover:shadow-lg transition backdrop-hue-rotate-180 backdrop-blur-[2px]"
+            className="block rounded-lg border border-gray-300 p-4 shadow backdrop-blur-[2px] backdrop-hue-rotate-180 transition hover:shadow-lg"
           >
-            <h2 className="!text-secondary-foreground text-xl font-semibold mb-2">Home</h2>
+            <h2 className="!text-secondary-foreground mb-2 text-xl font-semibold">
+              Home
+            </h2>
             <p className="text-muted-foreground">The RiceLang playground</p>
           </Link>
 
           <Link
             href="/language-definition"
-            className="block p-4 border border-gray-300 rounded-lg shadow hover:shadow-lg transition backdrop-hue-rotate-90 backdrop-blur-[2px]"
+            className="block rounded-lg border border-gray-300 p-4 shadow backdrop-blur-[2px] backdrop-hue-rotate-90 transition hover:shadow-lg"
           >
-            <h2 className="!text-secondary-foreground text-xl font-semibold mb-2">Language Definition</h2>
+            <h2 className="!text-secondary-foreground mb-2 text-xl font-semibold">
+              Language Definition
+            </h2>
             <p className="text-muted-foreground">Read the Docs</p>
           </Link>
 
           <Link
             href="/about"
-            className="block p-4 border border-gray-300 rounded-lg shadow hover:shadow-lg transition backdrop-hue-rotate-270 backdrop-blur-[2px]"
+            className="block rounded-lg border border-gray-300 p-4 shadow backdrop-blur-[2px] backdrop-hue-rotate-270 transition hover:shadow-lg"
           >
-            <h2 className="!text-secondary-foreground text-xl font-semibold mb-2">About</h2>
-            <p className="text-muted-foreground">Learn more about the RiceLang playground development</p>
+            <h2 className="!text-secondary-foreground mb-2 text-xl font-semibold">
+              About
+            </h2>
+            <p className="text-muted-foreground">
+              Learn more about the RiceLang playground development
+            </p>
           </Link>
-
         </div>
       </main>
-      <ul className='circles'>
+      <ul className="circles">
         {Array.from({ length: 20 }).map((_, i) => (
           <li key={i} />
         ))}
       </ul>
     </div>
-  )
+  );
 }

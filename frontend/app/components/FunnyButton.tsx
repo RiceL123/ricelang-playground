@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 
-export default function FunnyButton({ onClick, children }: { onClick?: () => void, children: React.ReactNode }) {
+export default function FunnyButton({
+  onClick,
+  children,
+}: {
+  onClick?: () => void;
+  children: React.ReactNode;
+}) {
   const [clicked, setClicked] = useState(false);
 
   const handleClick = () => {
@@ -12,11 +18,15 @@ export default function FunnyButton({ onClick, children }: { onClick?: () => voi
   return (
     <button
       onClick={handleClick}
-      className="relative overflow-hidden px-4 bg-primary text-primary-foreground h-full"
+      className="text-primary-foreground bg-primary relative h-full overflow-hidden px-4"
     >
       <span className="relative z-10 line-clamp-1">{children}</span>
-      <span className={`absolute top-0 left-0 h-20 bg-accent/20 transition-all duration-300 z-0 ${clicked ? "w-full" : "w-0"}`} />
-      <span className={`absolute top-0 right-0 h-20 bg-accent/20 transition-all duration-300 z-0 ${clicked ? "w-full" : "w-0"}`} />
+      <span
+        className={`bg-accent/20 absolute top-0 left-0 z-0 h-20 transition-all duration-300 ${clicked ? "w-full" : "w-0"}`}
+      />
+      <span
+        className={`bg-accent/20 absolute top-0 right-0 z-0 h-20 transition-all duration-300 ${clicked ? "w-full" : "w-0"}`}
+      />
     </button>
   );
 }

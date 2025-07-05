@@ -1,16 +1,14 @@
-'use client'
+"use client";
 
-import Image from 'next/image'
+import Image from "next/image";
 
-import book from '../images/book.webp'
-import mouse from '../images/mouse.webp'
+import book from "../images/book.webp";
+import mouse from "../images/mouse.webp";
 
 export default function Background() {
   return (
     <div className="fixed inset-0 -z-10">
-      <div
-        className="absolute bottom-0 w-[200%] h-32 overflow-hidden"
-      >
+      <div className="absolute bottom-0 h-32 w-[200%] overflow-hidden">
         <style jsx>{`
           @keyframes wave {
             0% {
@@ -22,14 +20,14 @@ export default function Background() {
           }
         `}</style>
         <svg
-          className="w-full h-full text-blue-400"
+          className="h-full w-full text-blue-400"
           viewBox="0 24 150 28"
           preserveAspectRatio="none"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
             style={{
-              animation: 'wave 10s linear infinite',
+              animation: "wave 10s linear infinite",
             }}
             fill="currentColor"
             opacity="0.7"
@@ -37,7 +35,7 @@ export default function Background() {
           />
           <path
             style={{
-              animation: 'wave 15s linear infinite',
+              animation: "wave 15s linear infinite",
             }}
             fill="rebeccapurple"
             opacity="0.7"
@@ -45,7 +43,7 @@ export default function Background() {
           />
           <path
             style={{
-              animation: 'wave 20s linear infinite',
+              animation: "wave 20s linear infinite",
             }}
             fill="red"
             opacity="0.2"
@@ -53,25 +51,25 @@ export default function Background() {
           />
         </svg>
 
-        <div className='fixed top-0 w-full h-full'>
+        <div className="fixed top-0 h-full w-full">
           <Image
-            className="dark:invert dark:grayscale fixed w-auto bottom-5 left-1/2 md:translate-x-72 animate-hover transition-transform"
+            className="animate-hover fixed bottom-5 left-1/2 w-auto transition-transform md:translate-x-72 dark:grayscale dark:invert"
             src={book}
             width={352}
             height={268}
-            alt='background book prop'
+            alt="background book prop"
             priority
           />
           <Image
-            className="dark:invert dark:grayscale fixed w-auto top-0 left-0 animate-hover-15 transition-transform will-change-transform"
+            className="animate-hover-15 fixed top-0 left-0 w-auto transition-transform will-change-transform dark:grayscale dark:invert"
             src={mouse}
             width={315}
             height={534}
-            alt='background computer mouse prop'
+            alt="background computer mouse prop"
             priority
           />
         </div>
       </div>
     </div>
-  )
+  );
 }

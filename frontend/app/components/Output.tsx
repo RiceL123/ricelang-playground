@@ -1,38 +1,44 @@
-import React from "react";
+"use client";
+
 import Loading from "./Loading";
 import Mermaid from "./Mermaid";
-
-interface OutputProp {
-  isAST: boolean;
-  output: string;
-  verbose: string;
-}
+import { useAtom } from "jotai";
+import { loadingAtom, readOutputAtom } from "@/lib/io";
 
 function Separator({ text }: { text: string }) {
   return (
-    <div className="relative flex py-3 items-center">
-      <div className="flex-grow border-t border-muted-foreground"></div>
-      <span className="flex-shrink mx-4 text-muted-foreground">{text}</span>
-      <div className="flex-grow border-t border-muted-foreground"></div>
+    <div className="relative flex items-center py-3">
+      <div className="border-muted-foreground flex-grow border-t"></div>
+      <span className="text-muted-foreground mx-4 flex-shrink">{text}</span>
+      <div className="border-muted-foreground flex-grow border-t"></div>
     </div>
-  )
+  );
 }
 
-const Output = ({ output, loading }: { output: OutputProp, loading: boolean }) => {
+const Output = () => {
+  const [loading] = useAtom(loadingAtom);
+  const [output] = useAtom(readOutputAtom);
+
   return (
-    <div className="h-full w-full max-w-full max-h-full flex p-4 overflow-auto rounded-xl bg-primary-foreground/20 backdrop-blur-[4px] border border-2 border-accent-foreground shadow-sm hover:bg-primary-foreground/30 transition">
-      {loading
-        ? <Loading message="Compiling..." />
-        : output.isAST
-          ? <Mermaid mermaidSrc={output.output} />
-          : <div className="w-full h-full">
-            {output.verbose && output.verbose !== "" && (<><Separator text="Verbose" /><pre >{output.verbose}</pre></>)}
-            <Separator text="Output" />
-            <pre>{output.output}</pre>
-          </div>
-      }
-    </div >
-  )
-}
+    <div className="bg-primary-foreground/20 border-accent-foreground hover:bg-primary-foreground/30 flex h-full max-h-full w-full max-w-full overflow-auto rounded-xl border-2 p-4 shadow-sm backdrop-blur-[4px] transition">
+      {loading ? (
+        <Loading message="Compiling..." />
+      ) : output.isAST ? (
+        <Mermaid mermaidSrc={output.output} />
+      ) : (
+        <div className="h-full w-full">
+          {output.verbose && output.verbose !== "" && (
+            <>
+              <Separator text="Verbose" />
+              <pre>{output.verbose}</pre>
+            </>
+          )}
+          <Separator text="Output" />
+          <pre>{output.output}</pre>
+        </div>
+      )}
+    </div>
+  );
+};
 
-export default React.memo(Output);
+export default Output;

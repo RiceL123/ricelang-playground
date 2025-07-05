@@ -1,32 +1,35 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import { ArrowUp } from 'lucide-react'
+import { useEffect, useState } from "react";
+import { ArrowUp } from "lucide-react";
 
 export default function ScrollToTopButton() {
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setVisible(window.scrollY > 200)
-    }
+      setVisible(window.scrollY > 200);
+    };
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <button
       onClick={scrollToTop}
-      className={`fixed right-5 bottom-5 z-50 p-2 rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition ${visible ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-        }`}
+      className={`border-accent hover:bg-accent fixed right-5 bottom-5 z-50 rounded-xl border bg-white/20 p-2 shadow-sm backdrop-blur-[3px] transition ${
+        visible
+          ? "pointer-events-auto opacity-100"
+          : "pointer-events-none opacity-0"
+      }`}
       aria-label="Scroll to top"
     >
-      <ArrowUp className="w-5 h-5" />
+      <ArrowUp className="h-5 w-5" />
     </button>
-  )
+  );
 }

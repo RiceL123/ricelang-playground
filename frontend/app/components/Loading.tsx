@@ -1,7 +1,9 @@
 export default function Loading({ message }: { message: string }) {
-  return (<div className="flex gap-2 items-center">
-    <div>{message}</div>
-    <style>{`
+  return (
+    <div className="flex items-center gap-2">
+      <div>{message}</div>
+      <style>
+        {`
 .loader {
   --c:no-repeat linear-gradient(var(--primary) 0 0);
   background: 
@@ -22,7 +24,8 @@ export default function Loading({ message }: { message: string }) {
   60%,100%{background-position: 0 50%, 0 100%,50% 100%,100% 100%,100% 50%,100% 0,50% 0,0 0,  50% 50% }
 }
         `}
-    </style>
-    <div className="loader"></div>
-  </div>)
+      </style>
+      <div className="loader"></div>
+    </div>
+  );
 }
