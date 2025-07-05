@@ -1,101 +1,100 @@
 #definition ul {
-    list-style-type: disc;
-    padding-left: 2em;
+  list-style-type: disc;
+  padding-left: 2em;
 }
 
 #definition ol {
-    list-style-type: decimal;
-    padding-left: 2em;
+  list-style-type: decimal;
+  padding-left: 2em;
 }
 
 #definition li::marker {
-    color: var(--muted-foreground);
+  color: var(--muted-foreground);
 }
 
 #definition a {
-    text-decoration: underline;
-    text-underline-offset: 1px;
+  text-decoration: underline;
+  text-underline-offset: 1px;
 }
 
 #definition a:hover {
-    text-underline-offset: 4px;
+  text-underline-offset: 4px;
 }
 
 #definition code:not(pre code) {
-    padding-inline: 0.2em;
-    padding-block: 0.1em;
-    background: #91919144;
-    border-radius: var(--radius-sm);
+  padding-inline: 0.2em;
+  padding-block: 0.1em;
+  background: #91919144;
+  border-radius: var(--radius-sm);
 }
 
 #definition pre {
-    position: relative;
-    backdrop-filter: blur(var(--blur-sm)) grayscale(100%);
+  position: relative;
+  backdrop-filter: blur(var(--blur-sm)) grayscale(100%);
 }
 
 pre code.hljs,
 .dark pre code.hljs {
-    padding-top: 1.5em;
+  padding-top: 1.5em;
 }
 
 pre code.hljs,
 span.katex-display {
-    margin-block: 0.5em;
-    border-radius: var(--radius-md);
-    background-color: #ffffff07;
-    border: var(--muted-foreground) 1px solid;
-    transition: all 0.2s ease;
+  margin-block: 0.5em;
+  border-radius: var(--radius-md);
+  background-color: #ffffff07;
+  border: var(--muted-foreground) 1px solid;
+  transition: all 0.2s ease;
 }
 
 #definition pre::before {
-    content: 'ricelang';
-    position: absolute;
-    top: 0.8em;
-    right: 1.2em;
-    font-size: 0.6rem;
-    pointer-events: none;
+  content: "ricelang";
+  position: absolute;
+  top: 0.8em;
+  right: 1.2em;
+  font-size: 0.6rem;
+  pointer-events: none;
 }
 
 span.katex-display {
-    padding-block: 0.5em;
-    overflow: auto;
-    backdrop-filter: blur(var(--blur-sm)) hue-rotate(60deg);
-    color: color-mix(in srgb, var(--muted-foreground) 60%, black);
+  padding-block: 0.5em;
+  overflow: auto;
+  backdrop-filter: blur(var(--blur-sm)) hue-rotate(60deg);
+  color: color-mix(in srgb, var(--muted-foreground) 60%, black);
 }
 
 span.katex-display .katex {
-    font-size: var(--text-base) !important;
+  font-size: var(--text-base) !important;
 }
 
 .dark span.katex-display {
-    color: color-mix(in srgb, var(--muted-foreground) 60%, white);
+  color: color-mix(in srgb, var(--muted-foreground) 60%, white);
 }
 
 .katex *:not(span.katex-display .katex *) {
-    font-size: var(--text-base) !important;
-    line-height: var(--text-base--line-height) !important;
-    color: color-mix(in srgb, var(--muted-foreground) 60%, black);
+  font-size: var(--text-base) !important;
+  line-height: var(--text-base--line-height) !important;
+  color: color-mix(in srgb, var(--muted-foreground) 60%, black);
 }
 
 .dark .katex *:not(span.katex-display .katex *) {
-    color: color-mix(in srgb, var(--muted-foreground) 60%, white);
+  color: color-mix(in srgb, var(--muted-foreground) 60%, white);
 }
 
 span.katex-display:hover {
-    color: var(--secondary-foreground)
+  color: var(--secondary-foreground);
 }
 
 @media (max-width: 500px) {
-
-    .pre code.hljs,
-    .katex * {
-        font-size: var(--text-xs) !important;
-        line-height: var(--text-xs--line-height) !important;
-    }
+  .pre code.hljs,
+  .katex * {
+    font-size: var(--text-xs) !important;
+    line-height: var(--text-xs--line-height) !important;
+  }
 }
 
 pre code.hljs:hover,
 span.katex-display:hover {
-    border-radius: var(--radius-2xl);
-    border-color: var(--secondary-foreground);
+  border-radius: var(--radius-2xl);
+  border-color: var(--secondary-foreground);
 }

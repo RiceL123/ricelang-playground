@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useRef, useState } from "react";
 import mermaid from "mermaid";
 import { useTheme } from "next-themes";
@@ -53,7 +54,7 @@ export default function Mermaid({ mermaidSrc }: { mermaidSrc: string }) {
         loading: "Rendering mermaid chart...",
         success: "Rendered mermaid chart",
         error: "Failed to render mermaid chart",
-      }
+      },
     );
 
     return () => {
@@ -72,7 +73,7 @@ export default function Mermaid({ mermaidSrc }: { mermaidSrc: string }) {
       {error && <pre className="text-red-500">{error}</pre>}
 
       {showSource && (
-        <pre className="absolute w-full overflow-x-auto z-10 bg-blur">
+        <pre className="bg-blur absolute z-10 w-full overflow-x-auto">
           <code>{mermaidSrc}</code>
         </pre>
       )}
@@ -81,28 +82,40 @@ export default function Mermaid({ mermaidSrc }: { mermaidSrc: string }) {
         {({ zoomIn, zoomOut }) => (
           <>
             <div className="absolute top-2 right-2 z-20 flex gap-2">
-              <Button className="bg-blur" variant="outline" onClick={() => zoomIn()}>
+              <Button
+                className="bg-blur"
+                variant="outline"
+                onClick={() => zoomIn()}
+              >
                 <Plus />
               </Button>
-              <Button className="bg-blur" variant="outline" onClick={() => zoomOut()}>
+              <Button
+                className="bg-blur"
+                variant="outline"
+                onClick={() => zoomOut()}
+              >
                 <Minus />
               </Button>
-              <Button className="bg-blur" variant="outline" onClick={() => setShowSource(prev => !prev)}>
+              <Button
+                className="bg-blur"
+                variant="outline"
+                onClick={() => setShowSource((prev) => !prev)}
+              >
                 {showSource ? "Show Diagram" : "Show Source"}
               </Button>
             </div>
 
             <TransformComponent
               wrapperStyle={{ height: "100%", width: "100%" }}
-              contentStyle={{ minHeight: "100%", height: "100%", minWidth: "100%" }}
+              contentStyle={{
+                minHeight: "100%",
+                height: "100%",
+                minWidth: "100%",
+              }}
             >
               <div
                 ref={ref}
-                className={`
-                  h-full w-full transition-opacity duration-300 
-                  ${resolvedTheme === "dark" ? "invert" : ""} 
-                  ${showSource ? "opacity-0" : "opacity-100"}
-                `}
+                className={`h-full w-full transition-opacity duration-300 ${resolvedTheme === "dark" ? "invert" : ""} ${showSource ? "opacity-0" : "opacity-100"} `}
               />
             </TransformComponent>
           </>

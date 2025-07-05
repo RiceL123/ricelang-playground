@@ -7,6 +7,7 @@
 RiceLang is a simple C/Java like programming language created by yours truly: RiceL123. From source code to an [AST](https://wikipedia.org/wiki/Abstract_syntax_tree), RiceLang programs can compile to Java byte code or transpile to JavaScript.
 
 An example of a simple RiceLang program is shown below.
+
 ```ricelang
 int main() {
 	putStringLn("T-T");
@@ -15,7 +16,9 @@ int main() {
 ```
 
 ## Grammar
+
 The following conventions are adopted for defining grammar rules for syntax.
+
 - Terminal symbols: $\textbf{bold}$
 - Nonterminal symbols: $\textit{italics}$
 - symbols can be grouped with brackets `(` `)` (e.g. $(~A~B~)$)
@@ -93,24 +96,33 @@ $$
 $$
 
 ## Program Structure
+
 A RiceLang program is a collection of function and variable declarations in a single file.
 
 The entry point of the program is the `main` function which must have a return type of `int`. Due to scope rules, it will usually be the last function in a program. `main` cannot call itself recursively.
 
 ### Comments
+
 RiceLang supports single line comments and multi-line comments. It does not support nesting of multi line comments.
+
 ```ricelang
 // this is a single line comment
 /*
 this is a multi line comment
 */
 ```
+
 All comments are ignored by the compiler.
+
 ### Separators
+
 White space (like new lines, tabs or spaces) as well as the following can be used as separators
+
 - `{`, `}`, `(`, `)`, `[`, `]`, `;`, `,`
-When the AST is generated, all separator tokens and white space is omitted.
+  When the AST is generated, all separator tokens and white space is omitted.
+
 ### Identifiers
+
 Identifiers are used to define both variables and function names and must be 1 or more characters long. They start with a letter or underscore and end with a letter, number or underscore.
 
 $$
@@ -122,9 +134,11 @@ $$
 $$
 
 ## Operators
+
 There are 14 operators. Ordered from highest to lowest precedence with their associativity they are:
+
 1. `+`, `-`, `!` (right-associative) // `+` and `-` as unary operators
-2.  `*`, `/` (left-associative)
+2. `*`, `/` (left-associative)
 3. `+`, `-` (left-associative) // as binary operators
 4. `<`, `<=`, `>`, `>=` (left-associative)
 5. `==`, `!=` (left-associative)
@@ -133,9 +147,11 @@ There are 14 operators. Ordered from highest to lowest precedence with their ass
 8. `=` (right-associative)
 
 ## Basic Types
+
 RiceLang programs operate on 3 primitive data types with operators to form expressions.
 
 ### int
+
 An $\textbf{INTLITERAL}$ is a decimal number of at least 1 digit. They are of type `int`.
 
 $$
@@ -145,7 +161,8 @@ $$
 $$
 
 The value of an `int` type is a 32-bit signed integer. They can be operated on by
-- `+`, `-`, `*`, `/` to produce  `int` values
+
+- `+`, `-`, `*`, `/` to produce `int` values
 - `<`, `>`, `<=`, `>=`, `==`, `!=` to produce `boolean` values
 
 ```ricelang
@@ -156,6 +173,7 @@ boolean b = i > j; // true
 ```
 
 ### float
+
 A $\textbf{FLOATLITERAL}$ is made up of a whole-number, decimal point, a fractional part and an exponent. It is of type `float`.
 
 $$
@@ -170,7 +188,8 @@ $$
 $$
 
 The value of a `float` type is a single-precision 32-bit [IEEE 754](https://wikipedia.org/wiki/IEEE_754) floating point. They can be operated on by
-- `+`, `-`, `*`, `/` to produce  `float` values
+
+- `+`, `-`, `*`, `/` to produce `float` values
 - `<`, `>`, `<=`, `>=`, `==`, `!=` to produce `boolean` values
 
 Coercion on an `int` to a `float` will automatically occur for in expressions including for `byebye` statements, declarations and functions arguments.
@@ -181,7 +200,9 @@ int j = -2;
 float k = i / j; // -1.5 (j converted to -2.0)
 boolean b = i > j; // true (j is converted to -2.0)
 ```
+
 ### boolean
+
 A $\textbf{BOOLEANLITERAL}$ is either true or false and is of type `boolean`.
 
 $$
@@ -189,6 +210,7 @@ $$
 $$
 
 Although technically `boolean` only needs 1 bit, they will typically use a whole byte. They can be operated on by
+
 - `!`, `!=`, `==`, `&&`, `||` to produce `boolean` values
 
 When `&&` or `||` are used, they are evaluated left to right and will try to [short-circuit](https://wikipedia.org/wiki/Short-circuit_evaluation).
@@ -199,7 +221,9 @@ boolean j = !true;
 boolean k = i && j; // false
 boolean l = false && boolFunc(); // shortcircuit: boolFunc wont be called
 ```
+
 ### string literals
+
 A $\textbf{STRINGLITERAL}$ is zero or more characters surrounded by quotation marks.
 
 $$
@@ -214,7 +238,9 @@ $\textit{character}$ refers to [ASCII](https://wikipedia.org/wiki/ASCII) charact
 putString("Hewwo world\n");
 putStringLn("Byebye world");
 ```
+
 ## Arrays
+
 Ricelang only supports 1-dimensional arrays of type `int`, `float` and `boolean`. Arrays have a fixed size determined by an $\textbf{INTLITERAL}$ in the subscript or by the length of an array initialiser ($\textbf{\{}~\textit{expr}~(~\textbf{,}~\textit{expr}~)*~\textbf{\}}$). Arrays are filled with default values meaning `int` and `float` arrays will be filled with zeros and `boolean` arrays filled with `false`.
 
 ```ricelang
@@ -247,6 +273,7 @@ int main() {
 ```
 
 ## Variables
+
 There are 3 types of variables being, global variables, local variables and function parameters. Global and local variables are similar in that they are both declared by a $\textit{type}$, $\textit{identifier}$ and optionally a list of declarations.
 
 $$
@@ -271,6 +298,7 @@ int fun(int b) { // function parameter - same scope as c
 Similar to arrays, variables are also initialised to default values if unspecified; `int` and `float` default to `0` and `booleans` default to `false`.
 
 ## Statements
+
 Statements can either be just a single statement or a compound statement that contains zero or more variable declarations followed by zero or more statements.
 
 $$
@@ -290,7 +318,7 @@ int main() {
 
 	{ // introduce a new compound statement
 		// b decl is closer
-		int b = 2; 
+		int b = 2;
 		for (; b < 10; b = b + 1)
 			putIntLn(b);
 	}
@@ -298,6 +326,7 @@ int main() {
 ```
 
 ### If
+
 If statements control the flow of a program based on the evaluation of its expression.
 
 $$
@@ -305,6 +334,7 @@ $$
 $$
 
 When multiple if statements have a single `else` statement, the `else` is attached to the innermost if.
+
 ```ricelang
 // the following nested if statements with a single else are equivalent
 if (1 < 2) if (3 == 5) putString("nani"); else putString("hello");
@@ -315,6 +345,7 @@ if (1 < 2) {
 ```
 
 ### While
+
 If a while statement's $\textit{expr}$ is $\textbf{true}$, it will continuously execute its $\textit{stmt}$ and re-evaluate its $\textit{expr}$ until it is $\textbf{false}$.
 
 $$
@@ -329,6 +360,7 @@ while (i < 5) {
 ```
 
 ### For
+
 For statements are equivalent to while statements with $\textit{expr1}$ executing once before entering and $\textit{expr3}$ executing every loop after the $\textit{stmt}$. There is an exception for the behaviour of $\textbf{continue}$; control passes to $\textit{expr3}$ instead of straight to the conditional.
 
 $$
@@ -336,6 +368,7 @@ $$
 $$
 
 If $\textit{expr2}$ is omitted, it is decorated with $\textbf{true}$ resulting in an infinite loop.
+
 ```ricelang
 for (i = 0; i < 5; i = i + 1) {
 	putIntLn(i);
@@ -345,6 +378,7 @@ for (;;) {} // infinite loop
 ```
 
 ### Break
+
 $\textbf{break}$ statements exit the control of the current loop.
 
 $$
@@ -357,7 +391,9 @@ while (true) {
 }
 // control is now here
 ```
+
 ### Continue
+
 $\textbf{continue}$ statements pass the control back to the start of the loop or to $\textit{expr3}$ in the case of for loops.
 
 $$
@@ -370,17 +406,20 @@ while (true) {
 	putStringLn("hello"); // will not execute
 }
 ```
+
 ### Byebye
+
 $\textbf{byebye}$ acts as a return statement which transfers control back to the caller of the function that contains it.
 
 $$
 \textit{return-stmt}\rightarrow\textbf{byebye}~\textit{expr}?~\textbf{;}
 $$
 
-$\textbf{byebye}$ without an $\textit{expr}$ must be in a void function. 
+$\textbf{byebye}$ without an $\textit{expr}$ must be in a void function.
 $\textbf{byebye}$ with an $\textit{expr}$ must have the $\textit{expr}$ assignable to the function type.
 
 RiceLang does not do data-flow analysis and as such, puts the burden of ensuring all possible branches have a `byebye` onto the user. A simple solution would be to include a `byebye` at the end of the function.
+
 ```ricelang
 int fun(boolean b) {
     if (b) {
@@ -391,7 +430,9 @@ int fun(boolean b) {
     // could just have a byebye here
 }
 ```
+
 ### Expression Statements
+
 An expression statement is just an expression followed by a semicolon. This will most typically be used for expressions that are assignments or function calls.
 
 $$
@@ -404,7 +445,9 @@ i = 0;
 ```
 
 ## Scope rules
+
 Scope rules govern declarations and their uses.
+
 - No identifier can defined more than once in the same block (this means function parameters must not collide with the local variable declarations in a function's body)
 - For every occurrence of an identifier, there must be some declaration in the same or an outer scope
 - An occurrence of an identifier will use the declaration that is the inner most scope that is equal to greater than its own scope (this produces the possibility of scope holes)
@@ -423,6 +466,7 @@ int main() {
 ```
 
 ## Functions
+
 Functions in RiceLang require that they be declared before they are called. This means that one will typically find `main` at the bottom of a program. Formally, a declaration is as follows.
 
 $$
@@ -450,17 +494,21 @@ While functions support recursion, they do not support overloading.
 Functions must return one of `int`, `float`, `boolean`, `void` and have a corresponding `byebye` statement. Functions cannot return arrays.
 
 ### Built-in
+
 RiceLang consists of 11 built-in functions for I/O.
 
 **Input functions** will block and parse a line from stdin and its value if valid. In the case of the RiceLang playground, any program that calls the built-in input functions that
+
 - uses the legacy run command will timeout as stdin isn't available
 - uses vanilla JavaScript transpilation will use the browser's `prompt()` function
+
 ```ricelang
 int i = getInt(); // read and a parse a line of stdin to an int
 float f = getFloat(); // as above but for float
 ```
 
 **Output functions** will print a particular data type to stdout. These functions all return `void`.
+
 ```ricelang
 putInt(int x);         // prints value of x to stdout
 putIntLn(int x);       // prints value of x to stdout + "\n"

@@ -35,7 +35,7 @@ import examples from "@/lib/examples.json";
 
 const Navbar = () => {
   const [action, setAction] = useState<keyof typeof actions>(
-    Object.keys(actions)[0]
+    Object.keys(actions)[0],
   );
   const [, setSourceCode] = useAtom(writeSourceCodeAtom);
   const [, request] = useAtom(writeOutputAtom);
@@ -58,14 +58,14 @@ const Navbar = () => {
   }, [action, request]);
 
   return (
-    <header className="w-full h-[48px]">
-      <div className="mx-auto py-3 px-4 flex place-content-between max-w-[1536px]">
+    <header className="h-[48px] w-full">
+      <div className="mx-auto flex max-w-[1536px] place-content-between px-4 py-3">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
               <Link
                 href="/"
-                className="text-xl pl-3.25 pr-4 py-1 rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition"
+                className="border-accent hover:bg-accent rounded-xl border bg-white/20 py-1 pr-4 pl-3.25 text-xl shadow-sm backdrop-blur-[3px] transition"
               >
                 🍚 RiceLang
               </Link>
@@ -77,7 +77,7 @@ const Navbar = () => {
         </TooltipProvider>
 
         <div className="flex gap-4">
-          <div className="flex rounded-lg overflow-hidden border border-accent">
+          <div className="border-accent flex overflow-hidden rounded-lg border">
             <FunnyButton onClick={() => request(actions[action].route)}>
               {action}
             </FunnyButton>
@@ -88,7 +88,7 @@ const Navbar = () => {
               }}
             >
               <SelectTrigger
-                className="w-[40px] rounded-none !bg-primary border border-primary"
+                className="!bg-primary border-primary w-[40px] rounded-none border"
                 aria-label="Select action"
               />
               <SelectContent>
@@ -106,12 +106,12 @@ const Navbar = () => {
 
           <Select onValueChange={handleExampleChange}>
             <SelectTrigger
-              className="hidden sm:flex w-[48px] md:w-[180px] rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition"
+              className="border-accent hover:bg-accent hidden w-[48px] rounded-xl border bg-white/20 shadow-sm backdrop-blur-[3px] transition sm:flex md:w-[180px]"
               aria-label="Select example"
             >
               <SelectValue placeholder="examples" />
             </SelectTrigger>
-            <SelectContent className="bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm">
+            <SelectContent className="border-accent border bg-white/20 shadow-sm backdrop-blur-[3px]">
               {Object.keys(examples).map((x, i) => (
                 <SelectItem key={i} value={x}>
                   {x}
@@ -125,7 +125,7 @@ const Navbar = () => {
               <TooltipTrigger className="hidden sm:block">
                 <Link
                   href="/language-definition"
-                  className="flex gap-2 px-4 py-1 items-center rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition"
+                  className="border-accent hover:bg-accent flex items-center gap-2 rounded-xl border bg-white/20 px-4 py-1 shadow-sm backdrop-blur-[3px] transition"
                 >
                   <p className="hidden lg:block">language definition</p>
                   <BookOpen className="h-[1.2rem] w-[1.2rem]" />
@@ -142,7 +142,7 @@ const Navbar = () => {
               <TooltipTrigger className="hidden sm:block">
                 <Link
                   href="/about"
-                  className="flex gap-2 px-4 py-1 items-center rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition"
+                  className="border-accent hover:bg-accent flex items-center gap-2 rounded-xl border bg-white/20 px-4 py-1 shadow-sm backdrop-blur-[3px] transition"
                 >
                   <p className="hidden lg:block">about</p>
                   <Info className="h-[1.2rem] w-[1.2rem]" />
@@ -157,7 +157,7 @@ const Navbar = () => {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger className="hidden sm:block">
-                <ThemeToggle className="px-4 py-1.5 rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition" />
+                <ThemeToggle className="border-accent hover:bg-accent rounded-xl border bg-white/20 px-4 py-1.5 shadow-sm backdrop-blur-[3px] transition" />
               </TooltipTrigger>
               <TooltipContent>
                 <p>Toggle light & dark mode</p>
@@ -166,7 +166,7 @@ const Navbar = () => {
           </TooltipProvider>
 
           <DropdownMenu>
-            <DropdownMenuTrigger className="sm:hidden px-4 py-1.5 rounded-xl bg-white/20 backdrop-blur-[3px] border border-accent shadow-sm hover:bg-accent transition">
+            <DropdownMenuTrigger className="border-accent hover:bg-accent rounded-xl border bg-white/20 px-4 py-1.5 shadow-sm backdrop-blur-[3px] transition sm:hidden">
               <Menu className="h-[1.2rem] w-[1.2rem]" />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -194,14 +194,14 @@ const Navbar = () => {
               <DropdownMenuItem>
                 <Link
                   href="/language-definition"
-                  className="flex gap-2 items-center"
+                  className="flex items-center gap-2"
                 >
                   <BookOpen className="h-[1.2rem] w-[1.2rem]" />
                   <p className="py-2">language definition</p>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link href="/about" className="flex gap-2 items-center">
+                <Link href="/about" className="flex items-center gap-2">
                   <Info className="h-[1.2rem] w-[1.2rem]" />
                   <p className="py-2">about</p>
                 </Link>

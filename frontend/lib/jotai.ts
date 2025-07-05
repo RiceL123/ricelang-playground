@@ -1,9 +1,8 @@
 import { atom } from "jotai";
 import { toast } from "sonner";
-import { WasmInstance } from "@/app/components/TeaVMProvider";
 import examples from "@/lib/examples.json";
-
-export const BACKEND_URL = "http://127.0.0.1:8080";
+import { teavmAtom, WasmOutput } from "../app/components/TeamVM";
+import { BACKEND_URL } from "./utils";
 
 export const actions: Record<
   string,
@@ -48,7 +47,7 @@ async function getLegacyOutput(
   route: string,
   code: string,
   start: number,
-  isAST = false
+  isAST = false,
 ): Promise<[{ output: string; verbose: string; isAST: boolean }, boolean]> {
   let result;
   let output;
@@ -82,11 +81,6 @@ async function getLegacyOutput(
   return [output, error];
 }
 
-// TeaVM
-export const teavmAtom = atom<WasmInstance["exports"] | undefined | null>(
-  undefined
-);
-
 // Loading
 export const loadingAtom = atom(false);
 
@@ -94,11 +88,11 @@ export const loadingAtom = atom(false);
 export const sourceCodeAtom = atom(
   Object.values(examples)[
     Math.floor(Math.random() * Object.keys(examples).length)
-  ]
+  ],
 );
 
 export const writeSourceCodeAtom = atom(null, (_get, set, sourceCode: string) =>
-  set(sourceCodeAtom, sourceCode)
+  set(sourceCodeAtom, sourceCode),
 );
 
 // Output
@@ -135,7 +129,7 @@ export const writeOutputAtom = atom(
           return;
         }
 
-        let result;
+        let result: WasmOutput;
         let isAST = false;
 
         switch (action) {
@@ -164,7 +158,7 @@ export const writeOutputAtom = atom(
             const n =
               result.output.length - "console.log(stdout.join('\\n'));".length;
             result.output = Function(
-              result.output.slice(0, n) + "\n return stdout.join('\\n');"
+              result.output.slice(0, n) + "\n return stdout.join('\\n');",
             )();
 
             // result.output = Function(result.output.replace("console.log(stdout.join('\\n'));", "\nreturn stdout.join('\\n');"))();
@@ -183,13 +177,12 @@ export const writeOutputAtom = atom(
         });
 
         if (result.error) throw new Error();
-
       })().finally(() => set(loadingAtom, false)),
       {
         loading: `Compiling ${action == "/run/legacy" || !get(teavmAtom) ? "Spring Boot" : "Wasm"}: ${action}...`,
         success: `Completed: ${action}`,
         error: `Error: ${action}`,
-      }
+      },
     );
-  }
+  },
 );

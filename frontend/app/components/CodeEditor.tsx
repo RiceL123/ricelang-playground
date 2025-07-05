@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { Editor, OnChange, OnMount, useMonaco } from "@monaco-editor/react";
 import { useTheme } from "next-themes";
@@ -249,7 +251,7 @@ export default function CodeEditor() {
   }, [monaco, resolvedTheme]);
 
   return (
-    <div className="h-full w-full flex overflow-hidden bg-primary-foreground/20 backdrop-blur-sm border border-2 border-accent-foreground rounded-xl shadow-sm hover:bg-primary-foreground/30 transition">
+    <div className="bg-primary-foreground/20 border-accent-foreground hover:bg-primary-foreground/30 flex h-full w-full overflow-hidden rounded-xl border-2 shadow-sm backdrop-blur-sm transition">
       <Editor
         defaultLanguage={ricelang}
         defaultValue="// some comment"
