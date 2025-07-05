@@ -3,7 +3,7 @@
 import Loading from "./Loading";
 import Mermaid from "./Mermaid";
 import { useAtom } from "jotai";
-import { loadingAtom, readOutputAtom } from "@/lib/jotai";
+import { loadingAtom, readOutputAtom } from "@/lib/io";
 
 function Separator({ text }: { text: string }) {
   return (

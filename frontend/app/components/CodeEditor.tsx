@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Editor, OnChange, OnMount, useMonaco } from "@monaco-editor/react";
 import { useTheme } from "next-themes";
 import { useAtom } from "jotai";
-import { sourceCodeAtom } from "@/lib/jotai";
+import { sourceCodeAtom } from "@/lib/io";
 
 const ricelang = "ricelang";
 let hasMounted = false;

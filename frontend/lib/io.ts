@@ -1,8 +1,8 @@
 import { atom } from "jotai";
 import { toast } from "sonner";
 import examples from "@/lib/examples.json";
-import { teavmAtom, WasmOutput } from "../app/components/TeamVM";
-import { BACKEND_URL } from "./utils";
+import { teavmAtom, WasmOutput } from "@/app/components/TeamVM";
+import { BACKEND_URL } from "@/lib/utils";
 
 export const actions: Record<
   string,

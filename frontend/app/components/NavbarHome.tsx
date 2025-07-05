@@ -30,7 +30,7 @@ import { useEffect, useState } from "react";
 import FunnyButton from "./FunnyButton";
 import React from "react";
 import { useAtom } from "jotai";
-import { writeSourceCodeAtom, actions, writeOutputAtom } from "@/lib/jotai";
+import { writeSourceCodeAtom, actions, writeOutputAtom } from "@/lib/io";
 import examples from "@/lib/examples.json";
 
 const Navbar = () => {
