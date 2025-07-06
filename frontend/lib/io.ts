@@ -1,4 +1,4 @@
-import { atom } from "jotai";
+import { atom, Getter, Setter } from "jotai";
 import { toast } from "sonner";
 import examples from "@/lib/examples.json";
 import { teavmAtom, WasmOutput } from "@/app/components/TeamVM";
@@ -47,7 +47,7 @@ async function getLegacyOutput(
   route: string,
   code: string,
   start: number,
-  isAST = false,
+  isAST = false
 ): Promise<[{ output: string; verbose: string; isAST: boolean }, boolean]> {
   let result;
   let output;
@@ -88,11 +88,11 @@ export const loadingAtom = atom(false);
 export const sourceCodeAtom = atom(
   Object.values(examples)[
     Math.floor(Math.random() * Object.keys(examples).length)
-  ],
+  ]
 );
 
 export const writeSourceCodeAtom = atom(null, (_get, set, sourceCode: string) =>
-  set(sourceCodeAtom, sourceCode),
+  set(sourceCodeAtom, sourceCode)
 );
 
 // Output
@@ -104,85 +104,85 @@ export const outputAtom = atom({
 
 export const readOutputAtom = atom((get) => get(outputAtom));
 
+async function compileOutput(
+  get: Getter,
+  set: Setter,
+  action: (typeof actions)[keyof typeof actions]["route"]
+) {
+  const start = performance.now();
+  set(loadingAtom, true);
+
+  const wasm = get(teavmAtom);
+  const code = get(sourceCodeAtom);
+
+  if (action == "/run/legacy") {
+    const [output, error] = await getLegacyOutput("/run", code, start);
+    set(outputAtom, output);
+    if (error) throw new Error();
+    return;
+  }
+
+  if (!wasm) {
+    const [output, error] = await getLegacyOutput(action, code, start);
+    set(outputAtom, output);
+    if (error) throw new Error();
+    return;
+  }
+
+  let result: WasmOutput;
+  let isAST = false;
+
+  switch (action) {
+    case "/jasmin":
+      result = wasm.getJasmin(code);
+      break;
+    case "/javascript":
+      result = wasm.getVanillaJS(code);
+      break;
+    case "/nodejs":
+      result = wasm.getNodeJS(code);
+      break;
+    case "/ast":
+      result = wasm.getMermaid(code);
+      if (result.error) break;
+      isAST = true;
+      break;
+    case "/run":
+      result = wasm.getVanillaJS(code);
+      if (result.error) break;
+
+      const n =
+        result.output.length - "console.log(stdout.join('\\n'));".length;
+      result.output = Function(
+        result.output.slice(0, n) + "\n return stdout.join('\\n');"
+      )();
+
+      break;
+    default:
+      result = { output: "Unknown action", verbose: "", error: true };
+  }
+
+  set(outputAtom, {
+    output: result.output,
+    verbose:
+      result.verbose +
+      `\nCompleted in ${(performance.now() - start).toFixed(2)} ms`,
+    isAST,
+  });
+
+  if (result.error) throw new Error();
+}
+
 export const writeOutputAtom = atom(
   null,
   async (get, set, action: (typeof actions)[keyof typeof actions]["route"]) => {
     toast.promise(
-      (async () => {
-        const start = performance.now();
-        set(loadingAtom, true);
-
-        const wasm = get(teavmAtom);
-        const code = get(sourceCodeAtom);
-
-        if (action == "/run/legacy") {
-          const [output, error] = await getLegacyOutput("/run", code, start);
-          set(outputAtom, output);
-          if (error) throw new Error();
-          return;
-        }
-
-        if (!wasm) {
-          const [output, error] = await getLegacyOutput(action, code, start);
-          set(outputAtom, output);
-          if (error) throw new Error();
-          return;
-        }
-
-        let result: WasmOutput;
-        let isAST = false;
-
-        switch (action) {
-          case "/jasmin":
-            result = wasm.getJasmin(code);
-            break;
-          case "/javascript":
-            result = wasm.getVanillaJS(code);
-            break;
-          case "/nodejs":
-            result = wasm.getNodeJS(code);
-            break;
-          case "/ast":
-            result = wasm.getMermaid(code);
-            if (result.error) break;
-            isAST = true;
-            break;
-          case "/run":
-            result = wasm.getVanillaJS(code);
-            if (result.error) break;
-
-            // result.verbose += result.output
-
-            // result.output will always have a `console.log(stdout.join('\n'));`
-
-            const n =
-              result.output.length - "console.log(stdout.join('\\n'));".length;
-            result.output = Function(
-              result.output.slice(0, n) + "\n return stdout.join('\\n');",
-            )();
-
-            // result.output = Function(result.output.replace("console.log(stdout.join('\\n'));", "\nreturn stdout.join('\\n');"))();
-
-            break;
-          default:
-            result = { output: "Unknown action", verbose: "", error: true };
-        }
-
-        set(outputAtom, {
-          output: result.output,
-          verbose:
-            result.verbose +
-            `\nCompleted in ${(performance.now() - start).toFixed(2)} ms`,
-          isAST,
-        });
-
-        if (result.error) throw new Error();
-      })().finally(() => set(loadingAtom, false)),
+      compileOutput(get, set, action).finally(() => set(loadingAtom, false)),
       {
         loading: `Compiling ${action == "/run/legacy" || !get(teavmAtom) ? "Spring Boot" : "Wasm"}: ${action}...`,
         success: `Completed: ${action}`,
         error: `Error: ${action}`,
-      },
+      }
     );
-  },
+  }
 );
