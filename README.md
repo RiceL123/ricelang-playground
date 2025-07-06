@@ -1,7 +1,13 @@
 # ricelang playground
-ricelang is a simple programming language that supports a weird blend of c and java syntax that compiles to java byte code and runs on the JVM.
+ricelang is a simple programming language that supports a weird blend of c and java syntax that compiles to java byte code and runs on the JVM or transpiles to JavaScript.
 
 ## running
+```sh
+./run.sh
+```
+
+---
+Manually
 ```sh
 # compile wasm and copy to the frontend
 cd wasm/
